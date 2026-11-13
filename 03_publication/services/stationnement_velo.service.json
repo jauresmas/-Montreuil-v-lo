@@ -1,0 +1,70 @@
+{
+  "id": "stationnement_velo",
+  "titre": "Stationnement vélo et stations Vélib'",
+  "type": "Couche d'entités",
+  "geometrie": "Point",
+  "nb_entites": 386,
+  "emprise_wgs84": [
+    2.41583,
+    48.8487,
+    2.4792,
+    48.87833
+  ],
+  "systeme": "EPSG:4326",
+  "champs": [
+    {
+      "nom": "osm_id",
+      "alias": "Identifiant OSM",
+      "type": "Texte"
+    },
+    {
+      "nom": "type",
+      "alias": "Type",
+      "type": "Texte"
+    },
+    {
+      "nom": "capacite",
+      "alias": "Capacité (places)",
+      "type": "Réel"
+    },
+    {
+      "nom": "support",
+      "alias": "Type de support",
+      "type": "Texte"
+    },
+    {
+      "nom": "couvert",
+      "alias": "Couvert",
+      "type": "Booléen"
+    },
+    {
+      "nom": "nom",
+      "alias": "Nom",
+      "type": "Texte"
+    },
+    {
+      "nom": "operateur",
+      "alias": "Opérateur / réseau",
+      "type": "Texte"
+    },
+    {
+      "nom": "annee_apparition",
+      "alias": "Année d'apparition",
+      "type": "Réel"
+    },
+    {
+      "nom": "quartier",
+      "alias": "Quartier",
+      "type": "Texte"
+    },
+    {
+      "nom": "osm_url",
+      "alias": "Fiche OpenStreetMap",
+      "type": "Texte"
+    }
+  ],
+  "version": "2026.11.13",
+  "modifie": "2026-11-13T21:24:07+00:00",
+  "url": "services/stationnement_velo.geojson",
+  "description": "Arceaux, abris, consignes et stations Vélib' ouverts au public, avec capacité et année d'apparition."
+}

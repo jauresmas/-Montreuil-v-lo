@@ -1,0 +1,65 @@
+{
+  "commune": "Montreuil",
+  "code_insee": "93048",
+  "osm_date_donnees": "2026-07-27T09:00Z",
+  "periode_historique": [
+    "2014-01-01",
+    "2026-07-27T09:00Z"
+  ],
+  "fichiers": [
+    {
+      "fichier": "commune.geojson",
+      "source": "API Découpage administratif",
+      "url": "https://geo.api.gouv.fr/communes/93048?format=geojson&geometry=contour&fields=nom,code,population,surface,codeDepartement",
+      "extrait_le": "2026-11-13T20:53:05+00:00",
+      "nb_objets": 1,
+      "octets": 5505,
+      "sha256": "c34b10481f662010eed230cc9d9092f59352c358ccef9de6ac49efd5cabef4e7"
+    },
+    {
+      "fichier": "iris.geojson",
+      "source": "IGN, contours IRIS",
+      "url": "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=STATISTICALUNITS.IRISGE%3Airis_ge&outputFormat=application%2Fjson&CQL_FILTER=code_insee%3D%2793048%27",
+      "extrait_le": "2026-11-13T20:53:21+00:00",
+      "nb_objets": 41,
+      "octets": 101134,
+      "sha256": "969eeb5c8db4b5bf6cab6dbdcf228df3d6e565b5c1e0943161e0c44156e1429b"
+    },
+    {
+      "fichier": "osm_amenagements_historique.geojson",
+      "source": "OpenStreetMap via ohsome (elementsFullHistory)",
+      "url": "https://api.ohsome.org/v1/elementsFullHistory/geometry",
+      "extrait_le": "2026-11-13T20:53:34+00:00",
+      "nb_objets": 9604,
+      "octets": 9917514,
+      "sha256": "5f234b0bfdefe4d63e3411b7cd89b12504664d23fe4354df0968d0924b66e92f"
+    },
+    {
+      "fichier": "osm_stationnement_historique.geojson",
+      "source": "OpenStreetMap via ohsome (elementsFullHistory)",
+      "url": "https://api.ohsome.org/v1/elementsFullHistory/geometry",
+      "extrait_le": "2026-11-13T20:54:31+00:00",
+      "nb_objets": 1018,
+      "octets": 575784,
+      "sha256": "68b3259405205596af0d4935b681f24be042ef6806cd43946f4d20c05f780334"
+    },
+    {
+      "fichier": "voirie_longueur_annuelle.json",
+      "source": "OpenStreetMap via ohsome",
+      "url": "https://api.ohsome.org/v1/elements/length",
+      "extrait_le": "2026-11-13T20:54:32+00:00",
+      "nb_objets": 14,
+      "octets": 1183,
+      "sha256": "550ff926cbe9d8d20ce8c6495daa7aeaa5d02e60596195320ecfaab87fa6f148"
+    },
+    {
+      "fichier": "voirie_longueur_iris.json",
+      "source": "OpenStreetMap via ohsome",
+      "url": "https://api.ohsome.org/v1/elements/length/groupBy/boundary",
+      "extrait_le": "2026-11-13T20:54:33+00:00",
+      "nb_objets": 41,
+      "octets": 5778,
+      "sha256": "98fc4a3c6653fc4cf93af5546442637dc3d99bd0731809d2a9f47169c538349a"
+    }
+  ]
+}

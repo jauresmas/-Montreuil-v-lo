@@ -1,0 +1,61 @@
+# Étape 5 sur GitHub : campagne annuelle automatique.
+#
+# Le 15 janvier (ou à la demande), GitHub collecte les données, les traite et lance le contrôle qualité.
+# Si aucun contrôle ne bloque, il ouvre une pull request avec le rapport d'écarts.
+# Fusionner la pull request vaut validation métier et déclenche la publication (voir publier-et-mettre-en-ligne.yml).
+# Si un contrôle bloque, le workflow échoue et rien n'est proposé.
+
+name: Mise à jour annuelle
+
+on:
+  schedule:
+    - cron: "0 7 15 1 *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  campagne:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Installation
+        run: pip install -r requirements.txt
+
+      - name: Collecte, traitement, contrôle qualité et rapport d'écarts
+        env:
+          PYTHONIOENCODING: utf-8
+        run: python 05_mise_a_jour/maj_annuelle.py
+
+      - name: Rapport de la campagne
+        id: rapport
+        run: |
+          f=$(ls -t 05_mise_a_jour/a_valider/rapport_ecarts_*.md | head -1)
+          echo "fichier=$f" >> "$GITHUB_OUTPUT"
+          echo "version=$(basename "$f" .md | sed 's/^rapport_ecarts_//')" >> "$GITHUB_OUTPUT"
+
+      - name: Couche des écarts (à ouvrir dans QGIS)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ecarts-${{ steps.rapport.outputs.version }}
+          path: 05_mise_a_jour/a_valider/
+
+      - name: Pull request à valider
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: campagne/${{ steps.rapport.outputs.version }}
+          title: "Campagne ${{ steps.rapport.outputs.version }} à valider"
+          body-path: ${{ steps.rapport.outputs.fichier }}
+          commit-message: "Campagne ${{ steps.rapport.outputs.version }} : traitement et contrôle qualité"
+          add-paths: |
+            02_traitement/sorties
+            01_donnees/brutes/manifest.json
+            05_mise_a_jour/journal_maj.md

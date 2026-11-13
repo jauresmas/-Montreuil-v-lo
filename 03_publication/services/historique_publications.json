@@ -1,0 +1,11 @@
+[
+  {
+    "version": "2026.11.13",
+    "publie_le": "2026-11-13T21:24:07+00:00",
+    "donnees_osm": "2026-07-27",
+    "statut_qc": "OK",
+    "valide_par": "Référent mobilité (démonstration)",
+    "km_total": 75.31,
+    "nb_objets": 588
+  }
+]

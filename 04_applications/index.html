@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Montreuil à vélo · Portail</title>
+<meta name="description" content="Portail des données et applications de suivi des aménagements cyclables de Montreuil">
+<link rel="stylesheet" href="https://js.arcgis.com/calcite-components/2.13.2/calcite.css">
+<script type="module" src="https://js.arcgis.com/calcite-components/2.13.2/calcite.esm.js"></script>
+<link rel="stylesheet" href="assets/commun.css">
+<style>
+  body { background: #f8f8f8; }
+  a { color: var(--mv-bleu); }
+  .conteneur { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+  .nav-liens { display: flex; gap: 2px; padding-inline-end: 12px; }
+  .nav-liens a { color: #323232; text-decoration: none; font-size: 14px; padding: 8px 12px; border-bottom: 2px solid transparent; }
+  .nav-liens a:hover { color: var(--mv-bleu); border-bottom-color: var(--mv-bleu); }
+
+  .heros { position: relative; overflow: hidden; background: #0b2239; color: #fff; }
+  .heros svg.reseau { position: absolute; right: -40px; top: -30px; height: 140%; opacity: .55; pointer-events: none; }
+  .heros .conteneur { position: relative; padding-top: 56px; padding-bottom: 44px; }
+  .heros .surtitre { font-size: 13px; letter-spacing: .6px; text-transform: uppercase; color: #9ec5f4; }
+  .heros h1 { font-size: 40px; line-height: 1.12; margin: 8px 0 10px; font-weight: 600; max-width: 640px; }
+  .heros p.intro { font-size: 16px; line-height: 1.5; max-width: 600px; margin: 0 0 22px; color: #dce7f3; }
+  .heros calcite-input { max-width: 520px; }
+  .chiffres { display: grid; grid-template-columns: repeat(4, minmax(0, 170px)); gap: 12px; margin-top: 30px; }
+  .chiffre { border-left: 3px solid #3987e5; padding: 2px 0 2px 12px; }
+  .chiffre b { display: block; font-size: 26px; font-weight: 600; }
+  .chiffre span { font-size: 12.5px; color: #c4d4e6; }
+
+  section.bloc { padding: 36px 0 8px; }
+  .bloc h2 { font-size: 22px; font-weight: 600; margin: 0 0 4px; color: #151515; }
+  .bloc .chapo { color: #6a6a6a; margin: 0 0 18px; font-size: 14px; }
+
+  .applis { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .appli { display: grid; grid-template-columns: 46% 1fr; background: #fff; box-shadow: var(--mv-carte-ombre); border-radius: 3px; overflow: hidden; }
+  .appli img { width: 100%; height: 100%; object-fit: cover; display: block; background: #e9ecef; min-height: 180px; }
+  .appli .txt { padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; }
+  .appli h3 { margin: 0; font-size: 18px; color: #151515; }
+  .appli p { margin: 0; font-size: 13.5px; color: #4a4a4a; line-height: 1.5; flex: 1; }
+
+  .filtres { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .grille-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+  .item { background: #fff; border-radius: 3px; box-shadow: var(--mv-carte-ombre); display: flex; flex-direction: column; overflow: hidden; }
+  .item .vign { aspect-ratio: 3 / 2; background: #eef0f2; display: grid; place-items: center; color: #9aa3ad; }
+  .item .vign img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .item .corps { padding: 12px 14px 10px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .item .type { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #6a6a6a; }
+  .item h3 { margin: 0; font-size: 15px; line-height: 1.3; color: #151515; }
+  .item p { margin: 0; font-size: 13px; color: #4a4a4a; line-height: 1.45; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .item .meta { font-size: 12px; color: #6a6a6a; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .item .actions { display: flex; gap: 8px; padding: 0 14px 12px; }
+  .partage { display: inline-flex; align-items: center; gap: 4px; }
+
+  .chaine { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+  .etape { background: #fff; border-radius: 3px; box-shadow: var(--mv-carte-ombre); padding: 14px; border-top: 4px solid var(--c); position: relative; }
+  .etape .num { width: 30px; height: 30px; border-radius: 50%; background: var(--c); color: #fff; display: grid; place-items: center; font-weight: 600; }
+  .etape h3 { margin: 10px 0 4px; font-size: 15px; color: var(--c-texte, var(--c)); }
+  .etape .quoi { font-size: 12.5px; color: #4a4a4a; line-height: 1.45; margin: 0 0 8px; }
+  .etape .etat { font-size: 12.5px; color: #151515; line-height: 1.45; border-top: 1px solid #eee; padding-top: 8px; }
+  .etape .etat calcite-icon { vertical-align: -3px; }
+  .cycle { margin-top: 10px; font-size: 13px; color: #6a6a6a; display: flex; align-items: center; gap: 6px; }
+
+  .deux { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; align-items: start; }
+  .tableau { background: #fff; box-shadow: var(--mv-carte-ombre); border-radius: 3px; overflow: auto; }
+  .tableau table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .tableau th { text-align: left; font-weight: 600; color: #4a4a4a; padding: 9px 12px; border-bottom: 1px solid #e3e3e3; background: #fafafa; }
+  .tableau td { padding: 8px 12px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  .tableau td.n { text-align: right; font-variant-numeric: tabular-nums; }
+  .statut { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; white-space: nowrap; }
+  .statut.OK { color: #006300; } .statut.INFO { color: #4a4a4a; } .statut.ALERTE { color: #8c4a00; } .statut.BLOQUANT { color: #b02a2a; }
+
+  footer.pied { margin-top: 44px; background: #fff; border-top: 1px solid #e3e3e3; padding: 22px 0 30px; font-size: 12.5px; color: #6a6a6a; line-height: 1.6; }
+
+  dialog.fiche { width: min(860px, calc(100vw - 32px)); max-height: calc(100vh - 48px); border: 0; padding: 0; border-radius: 4px;
+    box-shadow: 0 8px 40px rgba(0,0,0,.35); font-family: var(--mv-police); color: #323232; }
+  dialog.fiche::backdrop { background: rgba(0,0,0,.45); }
+  .fiche-tete { display: flex; gap: 16px; padding: 18px 20px 0; align-items: flex-start; }
+  .fiche-tete img { width: 150px; aspect-ratio: 3/2; object-fit: cover; border-radius: 2px; background: #eef0f2; flex: none; }
+  .fiche-tete h2 { margin: 2px 0 6px; font-size: 20px; color: #151515; }
+  .fiche-tete .type { font-size: 13px; color: #6a6a6a; display: flex; gap: 6px; align-items: center; }
+  .fiche-onglets { padding: 0 20px; }
+  .fiche-corps { padding: 14px 20px 20px; overflow: auto; max-height: calc(100vh - 300px); font-size: 13.5px; line-height: 1.55; }
+  .fiche-corps dl { display: grid; grid-template-columns: 180px 1fr; gap: 6px 14px; margin: 12px 0 0; }
+  .fiche-corps dt { color: #6a6a6a; } .fiche-corps dd { margin: 0; }
+  .fiche-pied { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 20px; border-top: 1px solid #eee; }
+
+  @media (max-width: 960px) {
+    .applis, .deux { grid-template-columns: 1fr; }
+    .chaine { grid-template-columns: 1fr 1fr; }
+    .chiffres { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .heros h1 { font-size: 30px; }
+    .nav-liens { display: none; }
+  }
+  @media (max-width: 560px) {
+    .heros svg.reseau { opacity: .2; }
+    .appli { grid-template-columns: 1fr; }
+    .appli img { aspect-ratio: 3/2; min-height: 0; }
+    .chaine { grid-template-columns: 1fr; }
+    .fiche-tete img { display: none; }
+    .fiche-corps dl { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<calcite-navigation>
+  <calcite-navigation-logo slot="logo" icon="biking" heading="Montreuil à vélo" description="Portail des données cyclables"></calcite-navigation-logo>
+  <nav slot="content-end" class="nav-liens" aria-label="Sections">
+    <a href="#applications">Applications</a><a href="#donnees">Données</a><a href="#chaine">Chaîne de production</a><a href="#qualite">Qualité</a>
+  </nav>
+</calcite-navigation>
+
+<header class="heros">
+  <svg class="reseau" id="reseau" aria-hidden="true"></svg>
+  <div class="conteneur">
+    <div class="surtitre">Montreuil · Mobilités actives</div>
+    <h1>Suivre chaque année les aménagements cyclables</h1>
+    <p class="intro">Carte interactive, tableau de bord des élus et données ouvertes, produits par une chaîne SIG automatisée
+      et republiés à chaque campagne annuelle après contrôle qualité et validation métier.</p>
+    <calcite-input id="q" icon="search" scale="l" placeholder="Rechercher une application ou un jeu de données" clearable label="Rechercher"></calcite-input>
+    <div class="chiffres" id="chiffres"></div>
+  </div>
+</header>
+
+<main class="conteneur">
+  <section class="bloc" id="applications">
+    <h2>Applications</h2>
+    <p class="chapo">Une carte pour explorer le réseau année par année, et un tableau de bord de synthèse pour les élus.</p>
+    <div class="applis" id="applis"></div>
+  </section>
+
+  <section class="bloc" id="donnees">
+    <h2>Données</h2>
+    <p class="chapo">Couches publiées en GeoJSON, avec leur descripteur de service (champs, alias, emprise).</p>
+    <div class="filtres" id="filtres"></div>
+    <div class="grille-items" id="items"></div>
+  </section>
+
+  <section class="bloc" id="chaine">
+    <h2>Chaîne de production</h2>
+    <p class="chapo">État réel de la dernière exécution de chaque étape.</p>
+    <div class="chaine" id="etapes"></div>
+    <div class="cycle"><calcite-icon icon="refresh" scale="s"></calcite-icon>Cycle annuel : la mise à jour relance les étapes 1 à 4 et archive la version précédente.</div>
+  </section>
+
+  <section class="bloc" id="qualite">
+    <h2>Qualité et versions</h2>
+    <p class="chapo" id="qc-chapo"></p>
+    <div class="deux">
+      <div class="tableau"><table><thead><tr><th>Code</th><th>Contrôle</th><th>Statut</th><th>Résultat</th></tr></thead><tbody id="qc"></tbody></table></div>
+      <div class="tableau"><table><thead><tr><th>Version</th><th>Données OSM</th><th class="n">Réseau</th><th>Validée par</th></tr></thead><tbody id="versions"></tbody></table></div>
+    </div>
+  </section>
+</main>
+
+<footer class="pied">
+  <div class="conteneur">
+    Sources : aménagements et stationnement © contributeurs OpenStreetMap (licence ODbL), historique via l'API ohsome (HeiGIT) ·
+    IRIS © IGN, Géoplateforme · limite communale : API Découpage administratif (geo.api.gouv.fr) · fonds de carte © IGN.<br>
+    Projet indépendant, non officiel. Réalisé avec des briques ouvertes : Calcite Design System (Apache-2.0),
+    MapLibre GL JS (BSD-3), Chart.js (MIT).
+  </div>
+</footer>
+
+<dialog class="fiche" id="fiche" aria-labelledby="fiche-titre"></dialog>
+
+<script src="data/donnees.js"></script>
+<script src="assets/commun.js"></script>
+<script>
+(function () {
+  const { D, fmt, echapper, A0, A1, dateDonnees, couleurType } = MV;
+  const ind = D.indicateurs, t = ind.totaux, qc = D.qc;
+  const depuis2020 = ind.par_annee.filter((p) => p.annee >= 2020).reduce((s, p) => s + p.km, 0);
+  if (window.innerWidth < 560) document.querySelector("calcite-navigation-logo").description = "Portail des données cyclables";
+
+  // ---------- Bandeau : le réseau réel en filigrane ----------
+  (function dessiner() {
+    const fc = D.couches.amenagements_cyclables, [[x0, y0], [x1, y1]] = MV.emprise(D.couches.commune);
+    const k = Math.cos(((y0 + y1) / 2) * Math.PI / 180), W = 700, H = W * (y1 - y0) / ((x1 - x0) * k);
+    const px = (c) => `${(((c[0] - x0) * k) / ((x1 - x0) * k)) * W},${((y1 - c[1]) / (y1 - y0)) * H}`;
+    const svg = document.getElementById("reseau");
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.innerHTML = fc.features.map((f) => {
+      const g = f.geometry, lignes = g.type === "LineString" ? [g.coordinates] : g.coordinates;
+      const recent = (f.properties.annee_realisation || 0) >= 2020;
+      return `<path d="${lignes.map((l) => "M" + l.map(px).join("L")).join("")}" fill="none" stroke="${recent ? "#6da7ec" : "#3c5a7a"}" stroke-width="${recent ? 2.4 : 1.6}" stroke-linecap="round"/>`;
+    }).join("");
+  })();
+  document.getElementById("chiffres").innerHTML = [
+    [fmt.n1(t.km_total) + " km", "d'aménagements cyclables"],
+    [fmt.n1(depuis2020) + " km", "réalisés depuis 2020"],
+    [fmt.n0(100 * t.part_site_propre) + " %", "en site propre"],
+    [fmt.n0(t.places_declarees), "places de stationnement vélo"],
+  ].map(([v, l]) => `<div class="chiffre"><b>${v}</b><span>${l}</span></div>`).join("");
+
+  // ---------- Applications ----------
+  const ICONES_TYPE = { "Application web": "map", "Tableau de bord": "dashboard", "Couche d'entités": "layers", "Fichier GeoJSON": "file", "Document": "file-report" };
+  const partage = (p) => `<span class="partage"><calcite-icon icon="${p === "Public" ? "globe" : "organization"}" scale="s"></calcite-icon>${p}</span>`;
+  const applis = D.catalogue.filter((i) => i.type === "Application web" || i.type === "Tableau de bord");
+  document.getElementById("applis").innerHTML = applis.map((a) => `
+    <article class="appli" data-cherche="${echapper((a.titre + " " + a.description + " " + a.tags.join(" ")).toLowerCase())}">
+      <img src="${a.vignette}" alt="Aperçu : ${echapper(a.titre)}">
+      <div class="txt">
+        <div class="meta" style="font-size:12px;color:#6a6a6a;display:flex;gap:6px;align-items:center"><calcite-icon icon="${a.icone}" scale="s"></calcite-icon>${a.type} · ${partage(a.partage)}</div>
+        <h3>${echapper(a.titre)}</h3><p>${echapper(a.description)}</p>
+        <div><calcite-button href="${a.url}" icon-end="launch">Ouvrir</calcite-button></div>
+      </div>
+    </article>`).join("");
+
+  // ---------- Éléments de données ----------
+  const items = D.catalogue.filter((i) => !applis.includes(i));
+  const familles = ["Tous", ...new Set(items.map((i) => i.type))];
+  let famille = "Tous";
+  document.getElementById("filtres").innerHTML = familles.map((f) =>
+    `<calcite-chip value="${f}" ${f === "Tous" ? 'kind="brand"' : ""} appearance="${f === "Tous" ? "solid" : "outline-fill"}" scale="s" style="cursor:pointer" data-f="${f}">${f}</calcite-chip>`).join("");
+  document.getElementById("filtres").addEventListener("click", (e) => {
+    const c = e.target.closest("calcite-chip"); if (!c) return;
+    famille = c.dataset.f;
+    document.querySelectorAll("#filtres calcite-chip").forEach((x) => {
+      const on = x.dataset.f === famille; x.kind = on ? "brand" : "neutral"; x.appearance = on ? "solid" : "outline-fill";
+    });
+    filtrer();
+  });
+  document.getElementById("items").innerHTML = items.map((i, n) => `
+    <article class="item" data-n="${n}" data-type="${i.type}" data-cherche="${echapper((i.titre + " " + i.description + " " + i.tags.join(" ")).toLowerCase())}">
+      <div class="vign">${i.vignette ? `<img src="${i.vignette}" alt="" loading="lazy">` : `<calcite-icon icon="${ICONES_TYPE[i.type] || "file"}" scale="l"></calcite-icon>`}</div>
+      <div class="corps">
+        <div class="type"><calcite-icon icon="${ICONES_TYPE[i.type] || "file"}" scale="s"></calcite-icon>${i.type}${i.nb_entites != null ? ` · ${fmt.n0(i.nb_entites)} entités` : ""}</div>
+        <h3>${echapper(i.titre)}</h3><p>${echapper(i.description)}</p>
+        <div class="meta">Mis à jour le ${fmt.date(i.modifie)} · ${echapper(i.proprietaire)} · ${partage(i.partage)}</div>
+      </div>
+      <div class="actions">
+        <calcite-button appearance="outline" scale="s" data-fiche="${n}">Détails</calcite-button>
+        <calcite-button appearance="transparent" scale="s" icon-start="download" href="${i.url}" download>Télécharger</calcite-button>
+      </div>
+    </article>`).join("");
+  const champ = document.getElementById("q");
+  function filtrer() {
+    const q = (champ.value || "").toLowerCase().trim();
+    document.querySelectorAll(".item").forEach((el) => {
+      el.hidden = !((famille === "Tous" || el.dataset.type === famille) && (!q || el.dataset.cherche.includes(q)));
+    });
+    document.querySelectorAll(".appli").forEach((el) => { el.hidden = q && !el.dataset.cherche.includes(q); });
+  }
+  champ.addEventListener("calciteInputInput", filtrer);
+
+  // ---------- Fiche d'élément (vue d'ensemble / données) ----------
+  const fiche = document.getElementById("fiche");
+  document.getElementById("items").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-fiche]"); if (!b) return;
+    ouvrirFiche(items[+b.dataset.fiche]);
+  });
+  function ouvrirFiche(i) {
+    const s = i.service ? D.services[i.service] : null;
+    const e = s && s.emprise_wgs84;
+    fiche.innerHTML = `
+      <div class="fiche-tete">${i.vignette ? `<img src="${i.vignette}" alt="">` : ""}
+        <div style="flex:1;min-width:0"><div class="type"><calcite-icon icon="${ICONES_TYPE[i.type] || "file"}" scale="s"></calcite-icon>${i.type}</div>
+          <h2 id="fiche-titre">${echapper(i.titre)}</h2>
+          <div class="type">Propriétaire : ${echapper(i.proprietaire)} · Mis à jour le ${fmt.date(i.modifie)} · ${partage(i.partage)}</div></div>
+        <calcite-action icon="x" text="Fermer" id="fiche-fermer"></calcite-action>
+      </div>
+      <div class="fiche-onglets"><calcite-tabs>
+        <calcite-tab-nav slot="title-group"><calcite-tab-title selected>Vue d'ensemble</calcite-tab-title>${s ? "<calcite-tab-title>Données</calcite-tab-title>" : ""}</calcite-tab-nav>
+        <calcite-tab selected><div class="fiche-corps">
+          <p>${echapper(i.description)}</p>
+          <dl>
+            <dt>Type</dt><dd>${i.type}</dd>
+            ${s ? `<dt>Géométrie</dt><dd>${s.geometrie} · ${fmt.n0(s.nb_entites)} entités</dd><dt>Système de coordonnées</dt><dd>${s.systeme} (WGS 84) ; Lambert-93 dans le GeoPackage de travail</dd>
+            <dt>Emprise</dt><dd>${e.map((x) => x.toFixed(4)).join(", ")}</dd><dt>URL du service</dt><dd><code>03_publication/${s.url}</code></dd>` : ""}
+            <dt>Version</dt><dd>${i.version}</dd>
+            <dt>Mots-clés</dt><dd>${i.tags.map(echapper).join(", ")}</dd>
+            <dt>Licence</dt><dd>${i.type === "Document" ? "Usage interne" : "Open Database License (ODbL), données issues d'OpenStreetMap"}</dd>
+          </dl></div></calcite-tab>
+        ${s ? `<calcite-tab><div class="fiche-corps"><div class="tableau" style="box-shadow:none"><table><thead><tr><th>Champ</th><th>Alias</th><th>Type</th></tr></thead><tbody>
+          ${s.champs.map((c) => `<tr><td><code>${c.nom}</code></td><td>${echapper(c.alias)}</td><td>${c.type}</td></tr>`).join("")}</tbody></table></div></div></calcite-tab>` : ""}
+      </calcite-tabs></div>
+      <div class="fiche-pied"><calcite-button appearance="outline" id="fiche-ok">Fermer</calcite-button>
+        <calcite-button icon-start="download" href="${i.url}" download>Télécharger</calcite-button></div>`;
+    fiche.showModal();
+    fiche.querySelector("#fiche-fermer").onclick = fiche.querySelector("#fiche-ok").onclick = () => fiche.close();
+  }
+  fiche.addEventListener("click", (e) => { if (e.target === fiche) fiche.close(); });
+
+  // ---------- Chaîne de production ----------
+  const derniere = D.historique[D.historique.length - 1] || {};
+  const nb = (s) => qc.controles.filter((c) => c.statut === s).length;
+  const collecte = ind.meta.sources.length ? fmt.date(ind.meta.sources[0].extrait_le) : "inconnue";
+  const ok = `<calcite-icon icon="check-circle" scale="s" style="color:#006300"></calcite-icon>`;
+  const alerte = `<calcite-icon icon="exclamation-mark-triangle" scale="s" style="color:#8c4a00"></calcite-icon>`;
+  const ETAPES = [
+    { n: 1, c: "#2e7d32", titre: "Données", quoi: "Collecte multi-sources : OSM (historique complet), IRIS IGN, limite communale, linéaire de voirie.",
+      etat: `${ok} ${ind.meta.sources.length} fichiers extraits le ${collecte} · OSM au ${fmt.date(dateDonnees)}` },
+    { n: 2, c: "#1f5fa8", titre: "Traitement", quoi: "Nettoyage, normalisation au schéma national, datation annuelle, contrôle qualité automatique.",
+      etat: `${qc.statut_global === "OK" ? ok : alerte} ${nb("OK")} contrôles conformes, ${nb("ALERTE")} alerte, ${nb("BLOQUANT")} bloquant · ${fmt.n0(t.nb_objets)} tronçons` },
+    { n: 3, c: "#5b3fa0", titre: "Publication", quoi: "Couches GeoJSON, descripteurs de service, export au schéma national, archivage.",
+      etat: `${ok} Version ${D.version}${derniere.valide_par ? ` validée par ${echapper(derniere.valide_par)}` : ""}` },
+    { n: 4, c: "#13817f", titre: "Carte web + tableau de bord", quoi: "Application cartographique avec curseur temporel et tableau de bord des élus.",
+      etat: `${ok} <a href="carte/index.html">Carte</a> · <a href="tableau-de-bord/index.html">Tableau de bord</a>` },
+    { n: 5, c: "#c46a00", titre: "Mise à jour annuelle", quoi: "Reprise des données, validation métier, republication, archivage de la version N-1.",
+      etat: `${ok} ${D.historique.length} version(s) publiée(s) · prochaine campagne : janvier ${new Date(D.historique[0]?.publie_le || Date.now()).getFullYear() + 1}` },
+  ];
+  document.getElementById("etapes").innerHTML = ETAPES.map((e) => `<article class="etape" style="--c:${e.c}">
+    <div class="num">${e.n}</div><h3>${e.titre}</h3><p class="quoi">${e.quoi}</p><div class="etat">${e.etat}</div></article>`).join("");
+
+  // ---------- Qualité et versions ----------
+  const ICO = { OK: "check-circle", INFO: "information", ALERTE: "exclamation-mark-triangle", BLOQUANT: "x-circle" };
+  document.getElementById("qc-chapo").textContent = `Statut de la version ${qc.version} : ${qc.statut_global}. Tout contrôle bloquant interdit la republication ; les alertes doivent être validées par le référent métier.`;
+  document.getElementById("qc").innerHTML = qc.controles.map((c) => `<tr><td>${c.code}</td><td>${echapper(c.controle)}</td>
+    <td><span class="statut ${c.statut}"><calcite-icon icon="${ICO[c.statut]}" scale="s"></calcite-icon>${c.statut}</span></td><td>${echapper(c.valeur)}</td></tr>`).join("");
+  document.getElementById("versions").innerHTML = [...D.historique].reverse().map((h) => `<tr><td>${h.version}</td><td>${fmt.date(h.donnees_osm)}</td>
+    <td class="n">${fmt.km(h.km_total)}</td><td>${echapper(h.valide_par || "non renseigné")}</td></tr>`).join("");
+})();
+</script>
+</body>
+</html>

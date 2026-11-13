@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carte cyclable de Montreuil</title>
+<meta name="description" content="Carte interactive de suivi annuel des aménagements cyclables de Montreuil">
+<link rel="stylesheet" href="https://js.arcgis.com/calcite-components/2.13.2/calcite.css">
+<script type="module" src="https://js.arcgis.com/calcite-components/2.13.2/calcite.esm.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<link rel="stylesheet" href="../assets/commun.css">
+<style>
+  body { overflow: hidden; }
+  calcite-shell { --calcite-shell-panel-width: 320px; }
+  calcite-navigation-logo { --calcite-navigation-logo-heading-text-color: #151515; }
+  .nav-fin { display: flex; align-items: center; gap: 4px; padding-inline-end: 8px; }
+  .recherche { position: relative; width: 300px; }
+  .resultats { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: #fff; z-index: 20;
+    box-shadow: 0 2px 8px rgba(0,0,0,.18); border-radius: 2px; overflow: hidden; }
+  .resultats button { display: block; width: 100%; text-align: left; border: 0; background: #fff; padding: 9px 12px;
+    font: 13px var(--mv-police); color: #323232; cursor: pointer; border-bottom: 1px solid #f0f0f0; }
+  .resultats button:hover, .resultats button:focus-visible { background: #f0f6fb; outline: none; }
+  .resultats .vide { padding: 10px 12px; font-size: 13px; color: #6a6a6a; }
+
+  #vue { position: relative; width: 100%; height: 100%; }
+  #carte { position: absolute; inset: 0; }
+  .ctl-pile { top: 15px; left: 15px; }
+
+  /* Panneaux */
+  .bloc-contenu { display: flex; flex-direction: column; gap: 10px; }
+  .case-type { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+  .case-type .km { margin-left: auto; color: #6a6a6a; font-variant-numeric: tabular-nums; }
+  .trait { width: 28px; height: 10px; flex: none; }
+  .legende-couche { padding: 12px 15px; border-bottom: 1px solid #ececec; }
+  .legende-couche h3 { margin: 0 0 2px; font-size: 14px; font-weight: 600; color: #151515; }
+  .legende-couche p { margin: 0 0 8px; font-size: 12px; color: #6a6a6a; }
+  .legende-ligne { display: flex; align-items: center; gap: 10px; font-size: 13px; padding: 3px 0; }
+  .legende-ligne .km { margin-left: auto; color: #6a6a6a; font-variant-numeric: tabular-nums; }
+  .degrade { height: 12px; border-radius: 2px; margin: 4px 0 2px; }
+  .degrade-labels { display: flex; justify-content: space-between; font-size: 12px; color: #6a6a6a; }
+  .galerie { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px 15px; }
+  .fond { border: 2px solid transparent; border-radius: 3px; padding: 0; background: #fff; cursor: pointer; text-align: left;
+    box-shadow: 0 1px 2px rgba(0,0,0,.2); overflow: hidden; font: 13px var(--mv-police); color: #323232; }
+  .fond img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; background: #eee; }
+  .fond span { display: block; padding: 6px 8px; }
+  .fond[aria-pressed="true"] { border-color: var(--mv-bleu); }
+  .fond[aria-pressed="true"] span { color: var(--mv-bleu); font-weight: 600; }
+  .apropos { padding: 12px 15px; font-size: 13px; line-height: 1.55; }
+  .apropos h3 { font-size: 14px; margin: 14px 0 4px; color: #151515; }
+  .apropos ul { padding-left: 18px; margin: 4px 0; }
+  .apropos a { color: var(--mv-bleu); }
+  .puce-qc { display: inline-flex; align-items: center; gap: 4px; }
+
+  /* Curseur temporel type « Time Slider » */
+  .temps { position: absolute; z-index: 3; left: 50%; bottom: 28px; transform: translateX(-50%); width: min(680px, calc(100% - 32px));
+    background: #fff; border-radius: 3px; box-shadow: 0 1px 2px rgba(0,0,0,.25), 0 4px 14px rgba(0,0,0,.12); padding: 10px 14px 8px; }
+  .temps-haut { display: flex; align-items: center; gap: 12px; }
+  .temps-texte { flex: 1; min-width: 0; }
+  .temps-titre { font-size: 15px; font-weight: 600; color: #151515; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .temps-sous { font-size: 12.5px; color: #4a4a4a; margin-top: 1px; }
+  .piste-temps { position: relative; margin-top: 8px; }
+  .histo { position: relative; height: 34px; }
+  .histo .b { position: absolute; bottom: 0; width: 18px; transform: translateX(-50%); border-radius: 3px 3px 0 0; background: #b7d3f6; cursor: pointer; }
+  .histo .b.dans { background: #6da7ec; }
+  .histo .b.courant { background: #1c5cab; }
+  .histo .b:hover { background: #256abf; }
+  input[type=range].curseur { -webkit-appearance: none; appearance: none; width: 100%; height: 20px; margin: 2px 0 0; background: transparent; cursor: pointer; }
+  input[type=range].curseur::-webkit-slider-runnable-track { height: 4px; border-radius: 2px;
+    background: linear-gradient(to right, var(--mv-bleu) var(--p), #cfcfcf var(--p)); }
+  input[type=range].curseur::-moz-range-track { height: 4px; border-radius: 2px; background: #cfcfcf; }
+  input[type=range].curseur::-moz-range-progress { height: 4px; border-radius: 2px; background: var(--mv-bleu); }
+  input[type=range].curseur::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; margin-top: -6px; border-radius: 50%;
+    background: #fff; border: 2px solid var(--mv-bleu); box-shadow: 0 1px 3px rgba(0,0,0,.3); }
+  input[type=range].curseur::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: #fff; border: 2px solid var(--mv-bleu); }
+  input[type=range].curseur:focus-visible { outline: 2px solid var(--mv-bleu); outline-offset: 2px; }
+  .graduations { position: relative; height: 16px; font-size: 11px; color: #6a6a6a; }
+  .graduations span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+  .graduations span.courant { color: #151515; font-weight: 600; }
+
+  .bulle-carte { position: absolute; z-index: 3; top: 15px; right: 15px; background: rgba(255,255,255,.94); border-radius: 3px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.25); padding: 8px 12px; font-size: 12px; color: #4a4a4a; max-width: 260px; }
+  .bulle-carte strong { color: #151515; font-size: 13px; }
+
+  @media (max-width: 760px) {
+    .recherche { width: 175px; }
+    .temps { bottom: 34px; padding: 8px 10px 6px; }
+    .temps-haut calcite-segmented-control { display: none; }
+    .histo .b { width: 10px; }
+    .bulle-carte { display: none; }
+    .masque-mobile { display: none; }
+  }
+</style>
+</head>
+<body>
+<calcite-shell>
+  <calcite-navigation slot="header">
+    <calcite-navigation-logo slot="logo" icon="biking" heading="Aménagements cyclables de Montreuil"
+      description="Carte de suivi annuel"></calcite-navigation-logo>
+    <div slot="content-end" class="nav-fin">
+      <div class="recherche" role="search">
+        <calcite-input id="recherche" icon="search" placeholder="Rechercher une adresse à Montreuil" clearable scale="m" label="Rechercher une adresse"></calcite-input>
+        <div id="resultats" class="resultats" hidden></div>
+      </div>
+      <calcite-action id="vers-tdb" icon="dashboard" text="Tableau de bord" text-enabled class="masque-mobile"></calcite-action>
+      <calcite-action id="vers-portail" icon="apps" text="Portail" text-enabled class="masque-mobile"></calcite-action>
+    </div>
+  </calcite-navigation>
+
+  <calcite-shell-panel slot="panel-start" id="panneau" width-scale="m">
+    <calcite-action-bar slot="action-bar" id="barre">
+      <calcite-action data-panel="couches" icon="layers" text="Couches" active></calcite-action>
+      <calcite-action data-panel="legende" icon="legend" text="Légende"></calcite-action>
+      <calcite-action data-panel="filtres" icon="filter" text="Style et filtres"></calcite-action>
+      <calcite-action data-panel="fonds" icon="basemap" text="Fonds de carte"></calcite-action>
+      <calcite-action data-panel="infos" icon="information" text="À propos"></calcite-action>
+    </calcite-action-bar>
+
+    <calcite-panel data-panel="couches" heading="Couches" description="Couches publiées (version en ligne)" closable>
+      <calcite-list id="liste-couches" label="Couches"></calcite-list>
+    </calcite-panel>
+
+    <calcite-panel data-panel="legende" heading="Légende" closable hidden>
+      <div id="legende"></div>
+    </calcite-panel>
+
+    <calcite-panel data-panel="filtres" heading="Style et filtres" closable hidden>
+      <calcite-block heading="Représentation" description="Attribut utilisé pour la symbologie" open>
+        <calcite-segmented-control id="mode" width="full" scale="s">
+          <calcite-segmented-control-item value="type" checked>Type</calcite-segmented-control-item>
+          <calcite-segmented-control-item value="annee">Année</calcite-segmented-control-item>
+          <calcite-segmented-control-item value="nature">Nature</calcite-segmented-control-item>
+        </calcite-segmented-control>
+      </calcite-block>
+      <calcite-block heading="Types d'aménagement" open>
+        <div class="bloc-contenu" id="f-types"></div>
+      </calcite-block>
+      <calcite-block heading="Quartier" description="Zoome sur le quartier choisi" open>
+        <calcite-select id="f-quartier" label="Quartier"></calcite-select>
+      </calcite-block>
+      <calcite-block heading="Options" open>
+        <div class="bloc-contenu">
+          <calcite-label layout="inline"><calcite-switch id="f-sitepropre"></calcite-switch>Site propre uniquement</calcite-label>
+          <calcite-label layout="inline"><calcite-switch id="f-controle"></calcite-switch>Signalements du contrôle qualité</calcite-label>
+        </div>
+      </calcite-block>
+      <div style="padding:12px 15px"><calcite-button id="reinit" appearance="outline" width="full" icon-start="refresh">Réinitialiser les filtres</calcite-button></div>
+    </calcite-panel>
+
+    <calcite-panel data-panel="fonds" heading="Fonds de carte" closable hidden>
+      <div class="galerie" id="galerie"></div>
+    </calcite-panel>
+
+    <calcite-panel data-panel="infos" heading="À propos" closable hidden>
+      <div class="apropos" id="apropos"></div>
+    </calcite-panel>
+  </calcite-shell-panel>
+
+  <div id="vue">
+    <div id="carte" aria-label="Carte des aménagements cyclables"></div>
+    <div class="ctl-pile" role="group" aria-label="Navigation">
+      <button id="z-plus" title="Zoom avant" aria-label="Zoom avant"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5"/></svg></button>
+      <button id="z-moins" title="Zoom arrière" aria-label="Zoom arrière"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 8h10" stroke="currentColor" stroke-width="1.5"/></svg></button>
+      <button id="z-accueil" title="Vue par défaut" aria-label="Vue par défaut"><svg width="16" height="16" viewBox="0 0 16 16"><path d="M2.5 8L8 3l5.5 5M4.5 6.5V13h7V6.5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg></button>
+    </div>
+    <div class="bulle-carte" id="bulle"></div>
+
+    <section class="temps" aria-label="Curseur temporel">
+      <div class="temps-haut">
+        <calcite-button id="lecture" round icon-start="play" scale="m" label="Lancer l'animation"></calcite-button>
+        <div class="temps-texte">
+          <div class="temps-titre" id="t-titre"></div>
+          <div class="temps-sous" id="t-sous"></div>
+        </div>
+        <calcite-segmented-control id="t-mode" scale="s">
+          <calcite-segmented-control-item value="cumul" checked>Cumul</calcite-segmented-control-item>
+          <calcite-segmented-control-item value="instant">Année seule</calcite-segmented-control-item>
+        </calcite-segmented-control>
+      </div>
+      <div class="piste-temps">
+        <div class="histo" id="t-histo" aria-hidden="true"></div>
+        <input type="range" class="curseur" id="t-curseur" aria-label="Année">
+        <div class="graduations" id="t-grad" aria-hidden="true"></div>
+      </div>
+    </section>
+  </div>
+</calcite-shell>
+
+<script src="../data/donnees.js"></script>
+<script src="../assets/commun.js"></script>
+<script>
+(function () {
+  const { D, TYPES, NATURES, RAMPE, GRIS_AVANT, FONDS, A0, A1, fmt, expr, popupHTML, emprise, echapper, libelleAnnee, dateDonnees } = MV;
+  const C = D.couches;
+  const amen = C.amenagements_cyclables, stat = C.stationnement_velo, quart = C.quartiers, comm = C.commune;
+  const TIRETS = TYPES.filter((t) => t.tirets).map((t) => t.id);
+  const VMIN = A0 - 1; // position « Avant <A0> »
+
+  const etat = {
+    mode: "type", fond: "gris", types: new Set(TYPES.map((t) => t.id)), quartier: "", sitePropre: false, controle: false,
+    annee: A1, temps: "cumul",
+    visible: { amen: true, velo: true, velib: true, quart: true, comm: true },
+  };
+  const fondSombre = () => FONDS.find((f) => f.id === etat.fond).sombre;
+  // Paramètres d'URL (liens partageables) : ?fond=sombre&mode=annee&annee=2020&temps=instant
+  const P = new URLSearchParams(location.search);
+  if (FONDS.some((f) => f.id === P.get("fond"))) etat.fond = P.get("fond");
+  if (["type", "annee", "nature"].includes(P.get("mode"))) etat.mode = P.get("mode");
+  if (P.get("annee") && !isNaN(+P.get("annee"))) etat.annee = Math.max(VMIN, Math.min(A1, +P.get("annee")));
+  if (P.get("temps") === "instant") etat.temps = "instant";
+  document.querySelectorAll("#mode calcite-segmented-control-item").forEach((i) => (i.checked = i.getAttribute("value") === etat.mode));
+  document.querySelectorAll("#t-mode calcite-segmented-control-item").forEach((i) => (i.checked = i.getAttribute("value") === etat.temps));
+
+  // ---------- Carte ----------
+  const map = new maplibregl.Map({
+    container: "carte", style: { version: 8, sources: {}, layers: [] },
+    bounds: emprise(comm), fitBoundsOptions: { padding: { top: 40, bottom: 170, left: 40, right: 40 } },
+    attributionControl: false, maxZoom: 19, minZoom: 10, dragRotate: false, pitchWithRotate: false,
+  });
+  map.touchZoomRotate.disableRotation();
+  MV.carte = map; // accès console / tests
+  map.addControl(new maplibregl.AttributionControl({ compact: true,
+    customAttribution: "Aménagements, stationnement : © contributeurs OpenStreetMap (ODbL) · IRIS : © IGN" }), "bottom-right");
+  map.addControl(new maplibregl.ScaleControl({ unit: "metric", maxWidth: 110 }), "bottom-left");
+  const vueAccueil = () => map.fitBounds(emprise(comm), { padding: { top: 40, bottom: 170, left: 40, right: 40 } });
+  document.getElementById("z-plus").onclick = () => map.zoomIn();
+  document.getElementById("z-moins").onclick = () => map.zoomOut();
+  document.getElementById("z-accueil").onclick = vueAccueil;
+
+  map.on("load", () => {
+    FONDS.forEach((f) => {
+      map.addSource("fond-" + f.id, { type: "raster", tiles: f.tuiles, tileSize: 256, attribution: f.attribution, maxzoom: 19 });
+      map.addLayer({ id: "fond-" + f.id, type: "raster", source: "fond-" + f.id, paint: f.peinture,
+        layout: { visibility: f.id === etat.fond ? "visible" : "none" } });
+    });
+    map.addSource("amen", { type: "geojson", data: amen });
+    map.addSource("stat", { type: "geojson", data: stat });
+    map.addSource("quart", { type: "geojson", data: quart });
+    map.addSource("comm", { type: "geojson", data: comm });
+    const rond = { "line-cap": "round", "line-join": "round" };
+    map.addLayer({ id: "quart-fond", type: "fill", source: "quart", paint: { "fill-color": "#007ac2", "fill-opacity": 0 } });
+    map.addLayer({ id: "quart-ligne", type: "line", source: "quart", paint: { "line-color": "#4a4a4a", "line-width": 0.9, "line-opacity": 0.55 } });
+    map.addLayer({ id: "comm-halo", type: "line", source: "comm", paint: { "line-color": "#ffffff", "line-width": 5, "line-opacity": 0.75 } });
+    map.addLayer({ id: "comm-ligne", type: "line", source: "comm", paint: { "line-color": "#2b2b2b", "line-width": 1.8 } });
+    map.addLayer({ id: "amen-contexte", type: "line", source: "amen", layout: rond,
+      paint: { "line-color": "#9a9a9a", "line-width": expr.largeur(0.6), "line-opacity": 0.6 } });
+    map.addLayer({ id: "amen-annee", type: "line", source: "amen", layout: rond,
+      paint: { "line-color": "#ffb000", "line-width": expr.largeur(3.6), "line-opacity": 0.55, "line-blur": 2.5 } });
+    map.addLayer({ id: "amen-halo", type: "line", source: "amen", layout: rond,
+      paint: { "line-color": "#ffffff", "line-width": expr.largeur(1.9), "line-opacity": 0.85 } });
+    map.addLayer({ id: "amen-selection", type: "line", source: "amen", layout: rond, filter: ["==", ["get", "id_local"], ""],
+      paint: { "line-color": "#00ffff", "line-width": expr.largeur(3.2), "line-opacity": 0.95 } });
+    map.addLayer({ id: "amen-plein", type: "line", source: "amen", layout: rond, paint: { "line-width": expr.largeur() } });
+    map.addLayer({ id: "amen-tirets", type: "line", source: "amen", layout: { "line-join": "round" },
+      paint: { "line-width": expr.largeur(), "line-dasharray": [2, 1.3] } });
+    map.addLayer({ id: "stat-velo", type: "circle", source: "stat", minzoom: 14, filter: ["!=", ["get", "type"], "Station Vélib'"],
+      paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 14, 2.6, 17, 6], "circle-color": "#323232",
+        "circle-stroke-color": "#ffffff", "circle-stroke-width": 1 } });
+    map.addLayer({ id: "stat-velib", type: "circle", source: "stat", filter: ["==", ["get", "type"], "Station Vélib'"],
+      paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 11, 3.5, 17, 9], "circle-color": "#6250d6",
+        "circle-stroke-color": "#ffffff", "circle-stroke-width": 1.5 } });
+    pret = true;
+    appliquer();
+    construireCouches();
+  });
+  let pret = false;
+
+  // ---------- Filtres et symbologie ----------
+  function filtresCommuns(sansTemps) {
+    const f = ["all", ["in", ["get", "type_amenagement"], ["literal", [...etat.types]]]];
+    if (etat.quartier) f.push(["==", ["get", "quartier"], etat.quartier]);
+    if (etat.sitePropre) f.push(["==", ["get", "site_propre"], true]);
+    if (etat.controle) f.push(["!=", ["coalesce", ["get", "controle"], ""], ""]);
+    if (!sansTemps) {
+      const an = ["coalesce", ["get", "annee_realisation"], 0], v = etat.annee < A0 ? 0 : etat.annee;
+      f.push(etat.temps === "cumul" ? ["<=", an, v] : ["==", an, v]);
+    }
+    return f;
+  }
+  function couleurExpr() {
+    if (etat.mode === "annee") return expr.annee(fondSombre());
+    if (etat.mode === "nature") return expr.nature(fondSombre());
+    return expr.type(fondSombre());
+  }
+  function filtreJS(p, sansTemps, sansType) {
+    if (!sansType && !etat.types.has(p.type_amenagement)) return false;
+    if (etat.quartier && p.quartier !== etat.quartier) return false;
+    if (etat.sitePropre && !p.site_propre) return false;
+    if (etat.controle && !p.controle) return false;
+    if (sansTemps) return true;
+    const an = p.annee_realisation || 0, v = etat.annee < A0 ? 0 : etat.annee;
+    return etat.temps === "cumul" ? an <= v : an === v;
+  }
+
+  function appliquer() {
+    if (!pret) return;
+    const base = filtresCommuns(false);
+    map.setFilter("amen-plein", ["all", base, ["!", ["in", ["get", "type_amenagement"], ["literal", TIRETS]]]]);
+    map.setFilter("amen-tirets", ["all", base, ["in", ["get", "type_amenagement"], ["literal", TIRETS]]]);
+    map.setFilter("amen-halo", base);
+    map.setPaintProperty("amen-plein", "line-color", couleurExpr());
+    map.setPaintProperty("amen-tirets", "line-color", couleurExpr());
+    map.setPaintProperty("amen-halo", "line-color", fondSombre() ? "#000000" : "#ffffff");
+    map.setPaintProperty("amen-halo", "line-opacity", fondSombre() ? 0.55 : 0.85);
+    // Contexte : réseau des années précédentes en mode « année seule »
+    const v = etat.annee < A0 ? 0 : etat.annee, an = ["coalesce", ["get", "annee_realisation"], 0];
+    map.setFilter("amen-contexte", ["all", filtresCommuns(true), ["<", an, v]]);
+    map.setLayoutProperty("amen-contexte", "visibility", etat.visible.amen && etat.temps === "instant" ? "visible" : "none");
+    map.setFilter("amen-annee", ["all", filtresCommuns(true), ["==", an, v > 0 ? v : -1]]);
+    map.setLayoutProperty("amen-annee", "visibility", etat.visible.amen && etat.temps === "cumul" && v > 0 ? "visible" : "none");
+    ["amen-plein", "amen-tirets", "amen-halo", "amen-selection"].forEach((id) =>
+      map.setLayoutProperty(id, "visibility", etat.visible.amen ? "visible" : "none"));
+    map.setLayoutProperty("stat-velo", "visibility", etat.visible.velo ? "visible" : "none");
+    map.setLayoutProperty("stat-velib", "visibility", etat.visible.velib ? "visible" : "none");
+    ["quart-ligne", "quart-fond"].forEach((id) => map.setLayoutProperty(id, "visibility", etat.visible.quart ? "visible" : "none"));
+    ["comm-ligne", "comm-halo"].forEach((id) => map.setLayoutProperty(id, "visibility", etat.visible.comm ? "visible" : "none"));
+    map.setPaintProperty("quart-fond", "fill-opacity", ["case", ["==", ["get", "quartier"], etat.quartier || "§"], 0.08, 0]);
+    map.setPaintProperty("quart-ligne", "line-width", ["case", ["==", ["get", "quartier"], etat.quartier || "§"], 2.4, 0.9]);
+    map.setPaintProperty("quart-ligne", "line-color", fondSombre() ? "#d0d0d0" : "#4a4a4a");
+    map.setPaintProperty("comm-ligne", "line-color", fondSombre() ? "#f0f0f0" : "#2b2b2b");
+    map.setPaintProperty("comm-halo", "line-color", fondSombre() ? "#000000" : "#ffffff");
+    majTemps();
+    majLegende();
+    majTypes();
+    majBulle();
+  }
+
+  // ---------- Statistiques ----------
+  const km = (feats) => feats.reduce((s, f) => s + f.properties.longueur_m, 0) / 1000;
+  function bilanAnnee(v) {
+    const base = amen.features.filter((f) => filtreJS(f.properties, true));
+    const an = (f) => f.properties.annee_realisation || 0, cle = v < A0 ? 0 : v;
+    const annee = base.filter((f) => an(f) === cle);
+    return { reseau: km(base.filter((f) => an(f) <= cle)), annee: km(annee),
+      creation: km(annee.filter((f) => f.properties.nature === "Création")),
+      requal: km(annee.filter((f) => f.properties.nature === "Requalification")) };
+  }
+
+  // ---------- Curseur temporel ----------
+  const curseur = document.getElementById("t-curseur");
+  curseur.min = VMIN; curseur.max = A1; curseur.step = 1; curseur.value = etat.annee;
+  const n = A1 - VMIN;
+  const pos = (v) => `calc(8px + (100% - 16px) * ${(v - VMIN) / n})`;
+  function construireGraduations() {
+    const etroit = window.innerWidth < 760;
+    document.getElementById("t-grad").innerHTML = Array.from({ length: n + 1 }, (_, i) => {
+      const v = VMIN + i;
+      if (etroit && v !== VMIN && v !== A1 && (v - A0) % 3) return "";
+      const txt = v === VMIN ? "Avant" : (etroit ? "’" + String(v).slice(2) : v);
+      return `<span data-v="${v}" style="left:${pos(v)}">${txt}</span>`;
+    }).join("");
+  }
+  construireGraduations();
+  window.addEventListener("resize", construireGraduations);
+
+  function majTemps() {
+    const v = etat.annee, b = bilanAnnee(v), fin = v === A1 ? `au ${fmt.date(dateDonnees)}` : `au 31/12/${v}`;
+    curseur.value = v;
+    curseur.style.setProperty("--p", `${((v - VMIN) / n) * 100}%`);
+    curseur.setAttribute("aria-valuetext", v < A0 ? `Avant ${A0}` : String(v));
+    const titre = document.getElementById("t-titre"), sous = document.getElementById("t-sous");
+    if (v < A0) {
+      titre.textContent = `Réseau existant avant ${A0} : ${fmt.km(b.reseau)}`;
+      sous.textContent = "Point de départ de la série (premier instantané OpenStreetMap retenu)";
+    } else if (etat.temps === "cumul") {
+      titre.textContent = `Réseau ${fin} : ${fmt.km(b.reseau)}`;
+      sous.textContent = `+${fmt.km(b.annee)} réalisés en ${v}${v === A1 ? " (année en cours)" : ""} · ${fmt.km(b.creation)} créés, ${fmt.km(b.requal)} requalifiés`;
+    } else {
+      titre.textContent = `Réalisé en ${v} : ${fmt.km(b.annee)}`;
+      sous.textContent = `${fmt.km(b.creation)} créés · ${fmt.km(b.requal)} requalifiés · en gris : réseau antérieur`;
+    }
+    // Histogramme aligné sur les crans du curseur
+    const parAn = [];
+    for (let a = A0; a <= A1; a++) parAn.push([a, bilanAnnee(a).annee]);
+    const max = Math.max(...parAn.map((x) => x[1]), 0.1);
+    document.getElementById("t-histo").innerHTML = parAn.map(([a, k]) =>
+      `<div class="b ${a === v ? "courant" : a < v && etat.temps === "cumul" ? "dans" : ""}" data-v="${a}" title="${a} : ${fmt.km(k)}"
+        style="left:${pos(a)};height:${Math.max(k > 0 ? 2 : 0, (k / max) * 34)}px"></div>`).join("");
+    document.querySelectorAll("#t-grad span").forEach((s) => s.classList.toggle("courant", +s.dataset.v === v));
+  }
+  curseur.addEventListener("input", () => { etat.annee = +curseur.value; arreter(); appliquer(); });
+  document.getElementById("t-histo").addEventListener("click", (e) => {
+    const b = e.target.closest(".b"); if (!b) return; etat.annee = +b.dataset.v; arreter(); appliquer();
+  });
+  document.getElementById("t-mode").addEventListener("calciteSegmentedControlChange", (e) => {
+    etat.temps = e.target.value; appliquer();
+  });
+  let minuterie = null;
+  const btnLecture = document.getElementById("lecture");
+  function arreter() { clearInterval(minuterie); minuterie = null; btnLecture.iconStart = "play"; btnLecture.label = "Lancer l'animation"; }
+  btnLecture.addEventListener("click", () => {
+    if (minuterie) return arreter();
+    if (etat.annee >= A1) etat.annee = VMIN;
+    btnLecture.iconStart = "pause"; btnLecture.label = "Mettre en pause";
+    appliquer();
+    minuterie = setInterval(() => {
+      if (etat.annee >= A1) return arreter();
+      etat.annee++; appliquer();
+    }, 1100);
+  });
+
+  // ---------- Liste des couches ----------
+  const COUCHES = [
+    { cle: "amen", titre: "Aménagements cyclables", desc: `${amen.features.length} entités · lignes`, icone: "layer-line", src: amen },
+    { cle: "velo", titre: "Stationnement vélo", desc: `${stat.features.filter((f) => f.properties.type !== "Station Vélib'").length} entités · points (zoom ≥ 14)`, icone: "layer-points", src: stat },
+    { cle: "velib", titre: "Stations Vélib'", desc: `${stat.features.filter((f) => f.properties.type === "Station Vélib'").length} entités · points`, icone: "layer-points", src: stat },
+    { cle: "quart", titre: "Quartiers (regroupement IRIS)", desc: `${quart.features.length} entités · polygones`, icone: "layer-polygon", src: quart },
+    { cle: "comm", titre: "Limite communale", desc: "1 entité · polygone", icone: "layer-polygon", src: comm },
+  ];
+  function construireCouches() {
+    const liste = document.getElementById("liste-couches");
+    liste.innerHTML = COUCHES.map((c) => `
+      <calcite-list-item label="${c.titre}" description="${c.desc}" value="${c.cle}">
+        <calcite-icon slot="content-start" icon="${c.icone}" scale="s"></calcite-icon>
+        <calcite-action slot="actions-end" data-zoom="${c.cle}" icon="zoom-to-object" text="Zoomer sur la couche"></calcite-action>
+        <calcite-action slot="actions-end" data-vis="${c.cle}" icon="view-visible" text="Masquer la couche"></calcite-action>
+      </calcite-list-item>`).join("");
+    liste.addEventListener("click", (e) => {
+      const a = e.target.closest("calcite-action"); if (!a) return;
+      if (a.dataset.vis) {
+        const k = a.dataset.vis; etat.visible[k] = !etat.visible[k];
+        a.icon = etat.visible[k] ? "view-visible" : "view-hide";
+        a.text = etat.visible[k] ? "Masquer la couche" : "Afficher la couche";
+        appliquer();
+      } else if (a.dataset.zoom) {
+        map.fitBounds(emprise(COUCHES.find((c) => c.cle === a.dataset.zoom).src), { padding: 60 });
+      }
+    });
+  }
+
+  // ---------- Panneau filtres ----------
+  const zoneTypes = document.getElementById("f-types");
+  zoneTypes.innerHTML = TYPES.map((t) => `
+    <calcite-label layout="inline" class="case-type">
+      <calcite-checkbox checked data-type="${t.id}"></calcite-checkbox>
+      <svg class="trait" viewBox="0 0 28 10"><line x1="2" y1="5" x2="26" y2="5" stroke="${t.clair}" stroke-width="${t.sitePropre ? 4 : 3}"
+        stroke-linecap="${t.tirets ? "butt" : "round"}" ${t.tirets ? 'stroke-dasharray="5 3"' : ""}/></svg>
+      ${t.id}<span class="km" data-km="${t.id}"></span>
+    </calcite-label>`).join("");
+  zoneTypes.addEventListener("calciteCheckboxChange", (e) => {
+    const t = e.target.dataset.type;
+    e.target.checked ? etat.types.add(t) : etat.types.delete(t);
+    appliquer();
+  });
+  function majTypes() {
+    TYPES.forEach((t) => {
+      const el = zoneTypes.querySelector(`[data-km="${CSS.escape(t.id)}"]`);
+      const k = km(amen.features.filter((f) => f.properties.type_amenagement === t.id && filtreJS(f.properties, false, true)));
+      if (el) el.textContent = fmt.km(k);
+    });
+  }
+  const selQuartier = document.getElementById("f-quartier");
+  selQuartier.innerHTML = `<calcite-option value="">Tous les quartiers</calcite-option>` +
+    quart.features.map((f) => f.properties.quartier).sort((a, b) => a.localeCompare(b, "fr"))
+      .map((q) => `<calcite-option value="${echapper(q)}">${echapper(q)}</calcite-option>`).join("");
+  selQuartier.addEventListener("calciteSelectChange", () => {
+    etat.quartier = selQuartier.value;
+    const f = quart.features.find((x) => x.properties.quartier === etat.quartier);
+    f ? map.fitBounds(emprise(f), { padding: { top: 40, bottom: 170, left: 40, right: 40 } }) : vueAccueil();
+    appliquer();
+  });
+  document.getElementById("f-sitepropre").addEventListener("calciteSwitchChange", (e) => { etat.sitePropre = e.target.checked; appliquer(); });
+  document.getElementById("f-controle").addEventListener("calciteSwitchChange", (e) => { etat.controle = e.target.checked; appliquer(); });
+  document.getElementById("mode").addEventListener("calciteSegmentedControlChange", (e) => { etat.mode = e.target.value; appliquer(); });
+  document.getElementById("reinit").addEventListener("click", () => {
+    etat.types = new Set(TYPES.map((t) => t.id)); etat.quartier = ""; etat.sitePropre = false; etat.controle = false;
+    zoneTypes.querySelectorAll("calcite-checkbox").forEach((c) => (c.checked = true));
+    selQuartier.value = "";
+    document.getElementById("f-sitepropre").checked = false;
+    document.getElementById("f-controle").checked = false;
+    vueAccueil(); appliquer();
+  });
+
+  // ---------- Légende ----------
+  const ligneSVG = (c, tirets, epais) => `<svg class="trait" viewBox="0 0 28 10"><line x1="2" y1="5" x2="26" y2="5" stroke="${c}"
+    stroke-width="${epais ? 4 : 3}" stroke-linecap="${tirets ? "butt" : "round"}" ${tirets ? 'stroke-dasharray="5 3"' : ""}/></svg>`;
+  const pointSVG = (c, r) => `<svg class="trait" viewBox="0 0 28 10" style="height:14px"><circle cx="14" cy="5" r="${r}" fill="${c}" stroke="#fff" stroke-width="1.2"/></svg>`;
+  function majLegende() {
+    const s = fondSombre(), visibles = amen.features.filter((f) => filtreJS(f.properties, false));
+    let h = "";
+    if (etat.visible.amen) {
+      h += `<div class="legende-couche"><h3>Aménagements cyclables</h3>`;
+      if (etat.mode === "type") {
+        h += `<p>Type d'aménagement · trait épais = site propre, tirets = sans séparation physique</p>` + TYPES.filter((t) => etat.types.has(t.id)).map((t) =>
+          `<div class="legende-ligne">${ligneSVG(s ? t.sombre : t.clair, t.tirets, t.sitePropre)}${t.id}<span class="km">${fmt.km(km(visibles.filter((f) => f.properties.type_amenagement === t.id)))}</span></div>`).join("");
+      } else if (etat.mode === "annee") {
+        h += `<p>Année de réalisation de l'aménagement actuel</p>
+          <div class="degrade" style="background:linear-gradient(to right,${(s ? [...RAMPE].reverse() : RAMPE).join(",")})"></div>
+          <div class="degrade-labels"><span>${A0}</span><span>${Math.round((A0 + A1) / 2)}</span><span>${A1}</span></div>
+          <div class="legende-ligne" style="margin-top:8px">${ligneSVG(s ? "#6b6b6b" : GRIS_AVANT)}Avant ${A0}<span class="km">${fmt.km(km(visibles.filter((f) => f.properties.annee_realisation == null)))}</span></div>`;
+      } else {
+        h += `<p>Nature des travaux · une requalification transforme un aménagement existant (ex. bande → piste)</p>` + NATURES.map((n) =>
+          `<div class="legende-ligne">${ligneSVG(s ? n.sombre : n.clair)}${n.libelle || n.id}<span class="km">${fmt.km(km(visibles.filter((f) => f.properties.nature === n.id)))}</span></div>`).join("");
+      }
+      h += `</div>`;
+    }
+    if (etat.visible.velo) h += `<div class="legende-couche"><h3>Stationnement vélo</h3><div class="legende-ligne">${pointSVG("#323232", 3.5)}Arceaux, abris, consignes (zoom ≥ 14)</div></div>`;
+    if (etat.visible.velib) h += `<div class="legende-couche"><h3>Stations Vélib'</h3><div class="legende-ligne">${pointSVG("#6250d6", 4.5)}Station de vélos en libre-service</div></div>`;
+    if (etat.visible.quart) h += `<div class="legende-couche"><h3>Quartiers</h3><div class="legende-ligne"><svg class="trait" viewBox="0 0 28 10"><rect x="2" y="1" width="24" height="8" fill="none" stroke="#4a4a4a" stroke-width="1"/></svg>Limite de quartier (regroupement IRIS)</div></div>`;
+    if (etat.visible.comm) h += `<div class="legende-couche"><h3>Limite communale</h3><div class="legende-ligne">${ligneSVG("#2b2b2b")}Montreuil</div></div>`;
+    document.getElementById("legende").innerHTML = h || `<p style="padding:15px;color:#6a6a6a">Aucune couche visible.</p>`;
+  }
+  function majBulle() {
+    const v = amen.features.filter((f) => filtreJS(f.properties, false));
+    const filtres = [etat.quartier, etat.sitePropre && "site propre", etat.controle && "signalements QC",
+      etat.types.size < TYPES.length && `${etat.types.size} type(s)`].filter(Boolean);
+    document.getElementById("bulle").innerHTML = `<strong>${fmt.km(km(v))}</strong> affichés · ${v.length} tronçons` +
+      (filtres.length ? `<br>Filtres : ${echapper(filtres.join(" · "))}` : `<br>Données OSM au ${fmt.date(dateDonnees)}`);
+  }
+
+  // ---------- Fonds de carte ----------
+  const tuileApercu = (f) => f.tuiles[0].replace("{z}", 14).replace("{x}", 8303).replace("{y}", 5638);
+  const galerie = document.getElementById("galerie");
+  galerie.innerHTML = FONDS.map((f) => `<button class="fond" data-fond="${f.id}" aria-pressed="${f.id === etat.fond}">
+    <img alt="" src="${tuileApercu(f)}" loading="lazy" style="filter:${f.filtreCSS}"><span>${f.titre}</span></button>`).join("");
+  galerie.addEventListener("click", (e) => {
+    const b = e.target.closest(".fond"); if (!b) return;
+    etat.fond = b.dataset.fond;
+    FONDS.forEach((f) => map.setLayoutProperty("fond-" + f.id, "visibility", f.id === etat.fond ? "visible" : "none"));
+    galerie.querySelectorAll(".fond").forEach((x) => x.setAttribute("aria-pressed", x.dataset.fond === etat.fond));
+    appliquer();
+  });
+
+  // ---------- À propos ----------
+  const ind = D.indicateurs, qc = D.qc;
+  const nbAlertes = qc.controles.filter((c) => c.statut === "ALERTE").length;
+  document.getElementById("apropos").innerHTML = `
+    <p>Carte de suivi des aménagements cyclables réalisés chaque année à Montreuil (${ind.meta.departement}).
+    Le curseur temporel rejoue la constitution du réseau depuis ${A0}.</p>
+    <h3>Version publiée</h3>
+    <ul><li>Version <strong>${D.version}</strong>, données OpenStreetMap au ${fmt.date(dateDonnees)}</li>
+    <li>Contrôle qualité : <span class="puce-qc"><calcite-icon icon="${qc.statut_global === "OK" ? "check-circle" : "exclamation-mark-triangle"}" scale="s"></calcite-icon>
+      ${qc.statut_global}</span>${nbAlertes ? ` (${nbAlertes} alerte validée par le référent métier)` : ""}</li>
+    <li>${fmt.km(ind.totaux.km_total)} d'aménagements, ${fmt.pct(ind.totaux.part_site_propre)} en site propre</li></ul>
+    <h3>Méthode de datation</h3>
+    <p>Le réseau est découpé en tronçons de 25 m, puis comparé à l'historique OpenStreetMap au 1<sup>er</sup> janvier de chaque année.
+    L'année retenue est celle de l'apparition de l'aménagement <em>actuel</em> ; si un aménagement d'un autre type existait déjà,
+    il s'agit d'une <strong>requalification</strong>. Limite : la date de cartographie peut suivre de quelques mois la date de travaux.</p>
+    <h3>Sources</h3>
+    <ul><li>Aménagements, stationnement : © contributeurs OpenStreetMap, ODbL, historique via l'API ohsome (HeiGIT)</li>
+    <li>IRIS : © IGN, Géoplateforme · limite communale : API Découpage administratif</li>
+    <li>Fonds : © IGN (Plan IGN, BD ORTHO)</li>
+    <li>Recherche d'adresse : service de géocodage de la Géoplateforme</li></ul>
+    <p style="color:#6a6a6a;font-size:12px;margin-top:14px">Projet indépendant, non officiel. Réalisé avec Calcite Design System et MapLibre GL JS.</p>`;
+
+  // ---------- Barre d'actions / panneaux ----------
+  const shellPanel = document.getElementById("panneau");
+  function ouvrir(id) {
+    const actif = document.querySelector("calcite-action[data-panel][active]");
+    if (actif && actif.dataset.panel === id && !shellPanel.collapsed) { shellPanel.collapsed = true; actif.active = false; return; }
+    shellPanel.collapsed = false;
+    document.querySelectorAll("calcite-action[data-panel]").forEach((a) => (a.active = a.dataset.panel === id));
+    document.querySelectorAll("calcite-panel[data-panel]").forEach((p) => (p.hidden = p.dataset.panel !== id));
+  }
+  document.querySelectorAll("calcite-action[data-panel]").forEach((a) => a.addEventListener("click", () => ouvrir(a.dataset.panel)));
+  document.querySelectorAll("calcite-panel[data-panel]").forEach((p) => p.addEventListener("calcitePanelClose", () => {
+    shellPanel.collapsed = true; p.closed = false;
+    document.querySelectorAll("calcite-action[data-panel]").forEach((a) => (a.active = false));
+  }));
+  if (window.innerWidth < 760) {
+    shellPanel.collapsed = true; document.querySelector("calcite-action[data-panel]").active = false;
+    const logo = document.querySelector("calcite-navigation-logo");
+    logo.heading = "Vélo Montreuil"; logo.description = "";
+    map.once("idle", () => document.querySelector(".maplibregl-ctrl-attrib")?.classList.remove("maplibregl-compact-show"));
+  }
+  document.getElementById("vers-tdb").addEventListener("click", () => (location.href = "../tableau-de-bord/index.html"));
+  document.getElementById("vers-portail").addEventListener("click", () => (location.href = "../index.html"));
+
+  // ---------- Fenêtres contextuelles ----------
+  const popup = new maplibregl.Popup({ className: "popup-fiche", closeButton: false, maxWidth: "none", offset: 8 });
+  const COUCHES_CLIC = ["stat-velib", "stat-velo", "amen-plein", "amen-tirets"];
+  function zoneClic(pt) { return [[pt.x - 7, pt.y - 7], [pt.x + 7, pt.y + 7]]; }
+  map.on("mousemove", (e) => {
+    if (!pret) return;
+    const f = map.queryRenderedFeatures(zoneClic(e.point), { layers: COUCHES_CLIC.filter((l) => map.getLayer(l)) });
+    map.getCanvas().style.cursor = f.length ? "pointer" : "";
+  });
+  map.on("click", (e) => {
+    const res = map.queryRenderedFeatures(zoneClic(e.point), { layers: COUCHES_CLIC });
+    if (!res.length) { popup.remove(); map.setFilter("amen-selection", ["==", ["get", "id_local"], ""]); return; }
+    const f = res[0], p = f.properties;
+    const estLigne = f.layer.id.startsWith("amen");
+    const service = estLigne ? "amenagements_cyclables" : "stationnement_velo";
+    const titre = estLigne ? (p.nom_voie || p.type_amenagement) : (p.nom || p.type);
+    const source = estLigne ? amen.features.find((x) => x.properties.id_local === p.id_local)
+      : stat.features.find((x) => x.properties.osm_id === p.osm_id);
+    map.setFilter("amen-selection", ["==", ["get", "id_local"], estLigne ? p.id_local : ""]);
+    popup.setLngLat(e.lngLat).setHTML(popupHTML(service, source ? source.properties : p, titre)).addTo(map);
+    const el = popup.getElement();
+    el.querySelector('[data-pp="fermer"]').onclick = () => { popup.remove(); map.setFilter("amen-selection", ["==", ["get", "id_local"], ""]); };
+    el.querySelector('[data-pp="zoom"]').onclick = () => source && (estLigne
+      ? map.fitBounds(emprise(source), { padding: 120, maxZoom: 18 })
+      : map.flyTo({ center: source.geometry.coordinates, zoom: 18 }));
+  });
+
+  // ---------- Recherche d'adresse (géocodage Géoplateforme) ----------
+  const champ = document.getElementById("recherche"), zoneRes = document.getElementById("resultats");
+  let delai = null, marqueur = null;
+  champ.addEventListener("calciteInputInput", () => {
+    clearTimeout(delai);
+    const q = (champ.value || "").trim();
+    if (q.length < 3) { zoneRes.hidden = true; return; }
+    delai = setTimeout(async () => {
+      try {
+        const r = await fetch(`https://data.geopf.fr/geocodage/search?q=${encodeURIComponent(q)}&index=address&citycode=${D.indicateurs.meta.code_insee}&limit=6`);
+        const j = await r.json();
+        zoneRes.innerHTML = j.features.length ? j.features.map((f, i) =>
+          `<button data-i="${i}">${echapper(f.properties.label)}</button>`).join("") : `<div class="vide">Aucune adresse trouvée à Montreuil</div>`;
+        zoneRes.hidden = false;
+        zoneRes.onclick = (e) => {
+          const b = e.target.closest("button"); if (!b) return;
+          const f = j.features[+b.dataset.i];
+          marqueur?.remove();
+          marqueur = new maplibregl.Marker({ color: "#007ac2" }).setLngLat(f.geometry.coordinates).addTo(map);
+          map.flyTo({ center: f.geometry.coordinates, zoom: 17 });
+          zoneRes.hidden = true; champ.value = f.properties.label;
+        };
+      } catch (err) {
+        zoneRes.innerHTML = `<div class="vide">Service de géocodage indisponible</div>`; zoneRes.hidden = false;
+      }
+    }, 250);
+  });
+  champ.addEventListener("calciteInputChange", () => { if (!champ.value) { zoneRes.hidden = true; marqueur?.remove(); } });
+  document.addEventListener("click", (e) => { if (!e.target.closest(".recherche")) zoneRes.hidden = true; });
+
+  majTemps(); majLegende(); majTypes(); majBulle();
+})();
+</script>
+</body>
+</html>

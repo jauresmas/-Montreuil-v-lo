@@ -1,0 +1,44 @@
+/* Styles partagés par le portail, la carte et le tableau de bord (Calcite Design System) */
+:root {
+  --mv-police: "Avenir Next LT Pro", "Avenir Next", Avenir, "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mv-bleu: #007ac2;
+  --mv-bleu-fonce: #00619b;
+  --mv-texte: #323232;
+  --mv-texte-2: #6a6a6a;
+  --mv-bord: #dfdfdf;
+  --mv-fond: #f8f8f8;
+  --mv-carte-ombre: 0 1px 2px rgba(0, 0, 0, .16), 0 2px 8px rgba(0, 0, 0, .08);
+}
+html, body { margin: 0; height: 100%; }
+body { font-family: var(--mv-police); color: var(--mv-texte); background: var(--mv-fond); }
+* { box-sizing: border-box; }
+
+/* ---------- Fenêtre contextuelle ---------- */
+.maplibregl-popup.popup-fiche .maplibregl-popup-content {
+  padding: 0; border-radius: 4px; box-shadow: 0 1px 4px rgba(0, 0, 0, .3), 0 4px 16px rgba(0, 0, 0, .12);
+  font-family: var(--mv-police); color: #323232; background: #fff; width: min(340px, calc(100vw - 32px));
+}
+.maplibregl-popup.popup-fiche .maplibregl-popup-tip { border-top-color: #fff; border-bottom-color: #fff; }
+.pp-tete { display: flex; align-items: flex-start; gap: 8px; padding: 12px 8px 10px 15px; border-bottom: 1px solid #ececec; }
+.pp-tete h2 { margin: 0; flex: 1; font-size: 15px; font-weight: 600; line-height: 1.35; color: #151515; }
+.pp-btn { border: 0; background: none; width: 30px; height: 30px; display: grid; place-items: center; color: #6a6a6a; cursor: pointer; border-radius: 2px; }
+.pp-btn:hover { background: #f3f3f3; color: #151515; }
+.pp-corps { max-height: 260px; overflow: auto; padding: 4px 0; }
+.pp-champs { width: 100%; border-collapse: collapse; font-size: 13px; }
+.pp-champs tr:nth-child(odd) { background: rgba(0, 0, 0, .04); }
+.pp-champs th { text-align: left; font-weight: 400; color: #6a6a6a; padding: 6px 8px 6px 15px; width: 46%; vertical-align: top; }
+.pp-champs td { padding: 6px 15px 6px 8px; color: #151515; word-break: break-word; }
+.pp-champs tr.alerte td, .pp-champs tr.alerte th { color: #8c4a00; background: #fff4e0; }
+.pp-pied { display: flex; gap: 4px; padding: 6px 8px; border-top: 1px solid #ececec; }
+.pp-action { display: inline-flex; align-items: center; gap: 6px; border: 0; background: none; color: var(--mv-bleu);
+  font: 500 13px var(--mv-police); padding: 6px 8px; border-radius: 2px; cursor: pointer; text-decoration: none; }
+.pp-action:hover { background: #f0f6fb; color: var(--mv-bleu-fonce); }
+
+/* ---------- Contrôles de carte (zoom, accueil, boussole) ---------- */
+.ctl-pile { position: absolute; z-index: 2; display: flex; flex-direction: column; box-shadow: 0 1px 2px rgba(0,0,0,.3); border-radius: 2px; overflow: hidden; }
+.ctl-pile button { width: 32px; height: 32px; border: 0; background: #fff; color: #6e6e6e; display: grid; place-items: center; cursor: pointer; }
+.ctl-pile button + button { border-top: 1px solid #e3e3e3; }
+.ctl-pile button:hover { background: #f3f3f3; color: #151515; }
+.ctl-pile button:focus-visible { outline: 2px solid var(--mv-bleu); outline-offset: -2px; }
+.maplibregl-ctrl-scale { border-color: #6e6e6e; color: #323232; font: 11px var(--mv-police); background: rgba(255,255,255,.75); }
+.maplibregl-ctrl-attrib { font: 11px var(--mv-police); }

@@ -1,0 +1,30 @@
+{
+  "id": "commune",
+  "titre": "Limite communale",
+  "type": "Couche d'entités",
+  "geometrie": "Polygone",
+  "nb_entites": 1,
+  "emprise_wgs84": [
+    2.41529,
+    48.84875,
+    2.48282,
+    48.87875
+  ],
+  "systeme": "EPSG:4326",
+  "champs": [
+    {
+      "nom": "nom",
+      "alias": "Nom",
+      "type": "Texte"
+    },
+    {
+      "nom": "code",
+      "alias": "Code INSEE",
+      "type": "Texte"
+    }
+  ],
+  "version": "2026.11.13",
+  "modifie": "2026-11-13T21:24:07+00:00",
+  "url": "services/commune.geojson",
+  "description": "Contour communal (API Découpage administratif)."
+}

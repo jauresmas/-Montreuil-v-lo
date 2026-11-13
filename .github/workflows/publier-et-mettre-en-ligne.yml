@@ -1,0 +1,79 @@
+# Étapes 3 et 4 sur GitHub : publication puis mise en ligne sur GitHub Pages.
+#
+# - À chaque envoi sur main, le site est remis en ligne.
+# - Si l'envoi apporte une nouvelle campagne (sorties du traitement modifiées sans republication),
+#   c'est qu'une pull request de campagne vient d'être fusionnée : la fusion vaut validation métier.
+#   Les services sont alors republiés avec le nom de la personne qui a fusionné, puis mis en ligne.
+
+name: Publier et mettre en ligne
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publier:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Nouvelle campagne à publier ?
+        id: diff
+        run: |
+          avant="${{ github.event.before }}"
+          if [ -z "$avant" ] || ! git cat-file -e "$avant" 2>/dev/null; then
+            echo "Premier envoi ou lancement manuel : rien à republier."
+            exit 0
+          fi
+          fichiers=$(git diff --name-only "$avant" "${{ github.sha }}")
+          if echo "$fichiers" | grep -q '^02_traitement/sorties/' && ! echo "$fichiers" | grep -q '^03_publication/services/indicateurs.json'; then
+            echo "nouvelle=1" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-python@v5
+        if: steps.diff.outputs.nouvelle == '1'
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Publication (validée par la fusion)
+        if: steps.diff.outputs.nouvelle == '1'
+        env:
+          PYTHONIOENCODING: utf-8
+        run: |
+          pip install -r requirements.txt
+          python 03_publication/publication.py --valide-par "${{ github.actor }} (fusion GitHub)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 03_publication/services 04_applications/data
+          git commit -m "Publication de la campagne, validée par ${{ github.actor }}" || echo "Rien à publier"
+          git push
+
+  mettre-en-ligne:
+    needs: publier
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deploiement
+        uses: actions/deploy-pages@v4

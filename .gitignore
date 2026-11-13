@@ -1,0 +1,20 @@
+# Environnement Python
+.venv/
+__pycache__/
+*.pyc
+
+# Données brutes : retéléchargées à chaque campagne (seul le manifeste des sources est suivi)
+01_donnees/brutes/*
+!01_donnees/brutes/manifest.json
+
+# Copies locales des versions publiées : sur GitHub, l'historique Git en tient lieu
+archives/
+
+# Fichiers de travail de la validation (sur GitHub, le rapport est dans la pull request)
+05_mise_a_jour/a_valider/
+
+# Outils et système
+.claude/
+.vscode/
+Thumbs.db
+desktop.ini

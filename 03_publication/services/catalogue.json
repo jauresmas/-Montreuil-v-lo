@@ -1,0 +1,151 @@
+[
+  {
+    "id": "carte",
+    "titre": "Carte des aménagements cyclables",
+    "type": "Application web",
+    "icone": "map",
+    "description": "Carte interactive : réseau par type, par année de réalisation ou par nature de travaux, curseur temporel, filtres par quartier, recherche d'adresse.",
+    "url": "carte/index.html",
+    "vignette": "../03_publication/services/vignettes/carte_web.svg",
+    "partage": "Public",
+    "tags": [
+      "vélo",
+      "mobilité",
+      "carte"
+    ],
+    "proprietaire": "Service SIG",
+    "modifie": "2026-11-13T21:24:07+00:00",
+    "version": "2026.11.13"
+  },
+  {
+    "id": "tableau",
+    "titre": "Tableau de bord des élus",
+    "type": "Tableau de bord",
+    "icone": "dashboard",
+    "description": "Indicateurs clés, réalisations annuelles, bilans par mandat et par quartier.",
+    "url": "tableau-de-bord/index.html",
+    "vignette": "../03_publication/services/vignettes/tableau_de_bord.svg",
+    "partage": "Organisation",
+    "tags": [
+      "élus",
+      "indicateurs",
+      "pilotage"
+    ],
+    "proprietaire": "Service SIG",
+    "modifie": "2026-11-13T21:24:07+00:00",
+    "version": "2026.11.13"
+  },
+  {
+    "id": "amenagements_cyclables",
+    "titre": "Aménagements cyclables",
+    "type": "Couche d'entités",
+    "icone": "layer-line",
+    "description": "Réseau cyclable de Montreuil au format du schéma national des aménagements cyclables (Etalab), enrichi de l'année de réalisation, de la nature des travaux (création / requalification) et du quartier.",
+    "url": "../03_publication/services/amenagements_cyclables.geojson",
+    "vignette": "../03_publication/services/vignettes/amenagements_cyclables.svg",
+    "partage": "Public",
+    "nb_entites": 588,
+    "geometrie": "Ligne",
+    "service": "amenagements_cyclables",
+    "tags": [
+      "données ouvertes",
+      "OSM"
+    ],
+    "proprietaire": "Service SIG",
+    "modifie": "2026-11-13T21:24:07+00:00",
+    "version": "2026.11.13"
+  },
+  {
+    "id": "stationnement_velo",
+    "titre": "Stationnement vélo et stations Vélib'",
+    "type": "Couche d'entités",
+    "icone": "layer-points",
+    "description": "Arceaux, abris, consignes et stations Vélib' ouverts au public, avec capacité et année d'apparition.",
+    "url": "../03_publication/services/stationnement_velo.geojson",
+    "vignette": "../03_publication/services/vignettes/stationnement_velo.svg",
+    "partage": "Public",
+    "nb_entites": 386,
+    "geometrie": "Point",
+    "service": "stationnement_velo",
+    "tags": [
+      "données ouvertes",
+      "OSM"
+    ],
+    "proprietaire": "Service SIG",
+    "modifie": "2026-11-13T21:24:07+00:00",
+    "version": "2026.11.13"
+  },
+  {
+    "id": "quartiers",
+    "titre": "Quartiers (regroupement IRIS)",
+    "type": "Couche d'entités",
+    "icone": "layer-polygon",
+    "description": "Onze quartiers reconstitués par regroupement des 41 IRIS INSEE/IGN, avec linéaire de voirie et densité d'aménagements.",
+    "url": "../03_publication/services/quartiers.geojson",
+    "vignette": "../03_publication/services/vignettes/quartiers.svg",
+    "partage": "Public",
+    "nb_entites": 11,
+    "geometrie": "Polygone",
+    "service": "quartiers",
+    "tags": [
+      "données ouvertes",
+      "OSM"
+    ],
+    "proprietaire": "Service SIG",
+    "modifie": "2026-11-13T21:24:07+00:00",
+    "version": "2026.11.13"
+  },
+  {
+    "id": "commune",
+    "titre": "Limite communale",
+    "type": "Couche d'entités",
+    "icone": "layer-polygon",
+    "description": "Contour communal (API Découpage administratif).",
+    "url": "../03_publication/services/commune.geojson",
+    "vignette": "../03_publication/services/vignettes/commune.svg",
+    "partage": "Public",
+    "nb_entites": 1,
+    "geometrie": "Polygone",
+    "service": "commune",
+    "tags": [
+      "données ouvertes",
+      "OSM"
+    ],
+    "proprietaire": "Service SIG",
+    "modifie": "2026-11-13T21:24:07+00:00",
+    "version": "2026.11.13"
+  },
+  {
+    "id": "etalab",
+    "titre": "Export au schéma national (transport.data.gouv.fr)",
+    "type": "Fichier GeoJSON",
+    "icone": "file",
+    "description": "Fichier conforme au schéma Etalab des aménagements cyclables, prêt à être déposé sur transport.data.gouv.fr / data.gouv.fr.",
+    "url": "../03_publication/services/amenagements_cyclables_93048_schema_etalab.geojson",
+    "vignette": "../03_publication/services/vignettes/amenagements_cyclables.svg",
+    "partage": "Public",
+    "tags": [
+      "schéma national",
+      "interopérabilité"
+    ],
+    "proprietaire": "Service SIG",
+    "modifie": "2026-11-13T21:24:07+00:00",
+    "version": "2026.11.13"
+  },
+  {
+    "id": "qc",
+    "titre": "Rapport de contrôle qualité",
+    "type": "Document",
+    "icone": "file-report",
+    "description": "Résultat des 15 contrôles automatiques de la version 2026.11.13.",
+    "url": "../03_publication/services/rapport_controle_qualite.md",
+    "vignette": null,
+    "partage": "Organisation",
+    "tags": [
+      "qualité"
+    ],
+    "proprietaire": "Service SIG",
+    "modifie": "2026-11-13T21:24:07+00:00",
+    "version": "2026.11.13"
+  }
+]

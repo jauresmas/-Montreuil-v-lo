@@ -1,0 +1,618 @@
+{
+  "meta": {
+    "commune": "Montreuil",
+    "code_insee": "93048",
+    "departement": "Seine-Saint-Denis (93)",
+    "version": "2026.11.13",
+    "date_traitement": "2026-11-13T21:23:13+00:00",
+    "date_donnees_osm": "2026-07-27",
+    "annee_reference": 2014,
+    "annee_partielle": 2026,
+    "statut_qc": "OK",
+    "population": 111934,
+    "sources": [
+      {
+        "fichier": "commune.geojson",
+        "source": "API Découpage administratif",
+        "extrait_le": "2026-11-13T20:53:05+00:00"
+      },
+      {
+        "fichier": "iris.geojson",
+        "source": "IGN - Contours IRIS",
+        "extrait_le": "2026-11-13T20:53:21+00:00"
+      },
+      {
+        "fichier": "osm_amenagements_historique.geojson",
+        "source": "OpenStreetMap via ohsome (elementsFullHistory)",
+        "extrait_le": "2026-11-13T20:53:34+00:00"
+      },
+      {
+        "fichier": "osm_stationnement_historique.geojson",
+        "source": "OpenStreetMap via ohsome (elementsFullHistory)",
+        "extrait_le": "2026-11-13T20:54:31+00:00"
+      },
+      {
+        "fichier": "voirie_longueur_annuelle.json",
+        "source": "OpenStreetMap via ohsome",
+        "extrait_le": "2026-11-13T20:54:32+00:00"
+      },
+      {
+        "fichier": "voirie_longueur_iris.json",
+        "source": "OpenStreetMap via ohsome",
+        "extrait_le": "2026-11-13T20:54:33+00:00"
+      }
+    ]
+  },
+  "totaux": {
+    "km_total": 75.31,
+    "nb_objets": 588,
+    "km_site_propre": 17.05,
+    "part_site_propre": 0.226,
+    "km_voirie": 123.18,
+    "km_pour_100km_voirie": 61.1,
+    "sous_reseaux": 42,
+    "part_reseau_principal": 0.789,
+    "stationnements": 358,
+    "places_declarees": 3295,
+    "stationnements_sans_capacite": 13,
+    "stations_velib": 28
+  },
+  "par_annee": [
+    {
+      "annee": null,
+      "libelle": "Avant 2014",
+      "km": 21.01,
+      "km_creation": 0.0,
+      "km_requalification": 0.0,
+      "km_site_propre": 5.35,
+      "km_cumule": 21.01,
+      "par_type": {
+        "Piste cyclable": 5.35,
+        "Voie verte / mixte": 0.0,
+        "Bande cyclable": 2.98,
+        "Couloir bus-vélo": 2.54,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 10.13,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2014,
+      "libelle": "2014",
+      "km": 0.91,
+      "km_creation": 0.77,
+      "km_requalification": 0.14,
+      "km_site_propre": 0.2,
+      "km_cumule": 21.92,
+      "par_type": {
+        "Piste cyclable": 0.2,
+        "Voie verte / mixte": 0.0,
+        "Bande cyclable": 0.28,
+        "Couloir bus-vélo": 0.16,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 0.28,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2015,
+      "libelle": "2015",
+      "km": 0.39,
+      "km_creation": 0.39,
+      "km_requalification": 0.0,
+      "km_site_propre": 0.03,
+      "km_cumule": 22.31,
+      "par_type": {
+        "Piste cyclable": 0.03,
+        "Voie verte / mixte": 0.0,
+        "Bande cyclable": 0.15,
+        "Couloir bus-vélo": 0.0,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 0.21,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2016,
+      "libelle": "2016",
+      "km": 0.67,
+      "km_creation": 0.5,
+      "km_requalification": 0.18,
+      "km_site_propre": 0.04,
+      "km_cumule": 22.98,
+      "par_type": {
+        "Piste cyclable": 0.04,
+        "Voie verte / mixte": 0.0,
+        "Bande cyclable": 0.63,
+        "Couloir bus-vélo": 0.0,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 0.0,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2017,
+      "libelle": "2017",
+      "km": 3.8,
+      "km_creation": 3.8,
+      "km_requalification": 0.0,
+      "km_site_propre": 0.0,
+      "km_cumule": 26.78,
+      "par_type": {
+        "Piste cyclable": 0.0,
+        "Voie verte / mixte": 0.0,
+        "Bande cyclable": 0.29,
+        "Couloir bus-vélo": 0.0,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 3.51,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2018,
+      "libelle": "2018",
+      "km": 3.12,
+      "km_creation": 3.0,
+      "km_requalification": 0.12,
+      "km_site_propre": 0.43,
+      "km_cumule": 29.9,
+      "par_type": {
+        "Piste cyclable": 0.43,
+        "Voie verte / mixte": 0.0,
+        "Bande cyclable": 0.03,
+        "Couloir bus-vélo": 0.0,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 2.66,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2019,
+      "libelle": "2019",
+      "km": 8.3,
+      "km_creation": 7.64,
+      "km_requalification": 0.67,
+      "km_site_propre": 0.4,
+      "km_cumule": 38.2,
+      "par_type": {
+        "Piste cyclable": 0.4,
+        "Voie verte / mixte": 0.0,
+        "Bande cyclable": 0.74,
+        "Couloir bus-vélo": 0.18,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 6.98,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2020,
+      "libelle": "2020",
+      "km": 14.74,
+      "km_creation": 13.43,
+      "km_requalification": 1.31,
+      "km_site_propre": 4.79,
+      "km_cumule": 52.94,
+      "par_type": {
+        "Piste cyclable": 4.79,
+        "Voie verte / mixte": 0.0,
+        "Bande cyclable": 0.47,
+        "Couloir bus-vélo": 0.0,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 9.47,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2021,
+      "libelle": "2021",
+      "km": 1.47,
+      "km_creation": 0.27,
+      "km_requalification": 1.19,
+      "km_site_propre": 1.4,
+      "km_cumule": 54.4,
+      "par_type": {
+        "Piste cyclable": 1.4,
+        "Voie verte / mixte": 0.0,
+        "Bande cyclable": 0.0,
+        "Couloir bus-vélo": 0.0,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 0.07,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2022,
+      "libelle": "2022",
+      "km": 3.47,
+      "km_creation": 2.68,
+      "km_requalification": 0.79,
+      "km_site_propre": 0.68,
+      "km_cumule": 57.88,
+      "par_type": {
+        "Piste cyclable": 0.68,
+        "Voie verte / mixte": 0.0,
+        "Bande cyclable": 0.08,
+        "Couloir bus-vélo": 0.15,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 2.56,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2023,
+      "libelle": "2023",
+      "km": 4.54,
+      "km_creation": 3.12,
+      "km_requalification": 1.42,
+      "km_site_propre": 0.92,
+      "km_cumule": 62.42,
+      "par_type": {
+        "Piste cyclable": 0.82,
+        "Voie verte / mixte": 0.1,
+        "Bande cyclable": 0.76,
+        "Couloir bus-vélo": 0.0,
+        "Vélorue": 0.04,
+        "Double-sens cyclable": 2.82,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2024,
+      "libelle": "2024",
+      "km": 1.37,
+      "km_creation": 0.56,
+      "km_requalification": 0.82,
+      "km_site_propre": 0.02,
+      "km_cumule": 63.79,
+      "par_type": {
+        "Piste cyclable": 0.02,
+        "Voie verte / mixte": 0.0,
+        "Bande cyclable": 0.24,
+        "Couloir bus-vélo": 0.0,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 0.32,
+        "Autre (marquage partagé)": 0.79
+      }
+    },
+    {
+      "annee": 2025,
+      "libelle": "2025",
+      "km": 5.49,
+      "km_creation": 0.98,
+      "km_requalification": 4.5,
+      "km_site_propre": 1.45,
+      "km_cumule": 69.28,
+      "par_type": {
+        "Piste cyclable": 1.28,
+        "Voie verte / mixte": 0.17,
+        "Bande cyclable": 3.66,
+        "Couloir bus-vélo": 0.14,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 0.24,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2026,
+      "libelle": "2026 (au 27/07)",
+      "km": 6.03,
+      "km_creation": 3.62,
+      "km_requalification": 2.41,
+      "km_site_propre": 1.33,
+      "km_cumule": 75.31,
+      "par_type": {
+        "Piste cyclable": 1.33,
+        "Voie verte / mixte": 0.0,
+        "Bande cyclable": 0.84,
+        "Couloir bus-vélo": 0.1,
+        "Vélorue": 0.09,
+        "Double-sens cyclable": 2.92,
+        "Autre (marquage partagé)": 0.74
+      }
+    }
+  ],
+  "par_type": [
+    {
+      "type": "Piste cyclable",
+      "km": 16.78
+    },
+    {
+      "type": "Voie verte / mixte",
+      "km": 0.27
+    },
+    {
+      "type": "Bande cyclable",
+      "km": 11.16
+    },
+    {
+      "type": "Couloir bus-vélo",
+      "km": 3.27
+    },
+    {
+      "type": "Vélorue",
+      "km": 0.13
+    },
+    {
+      "type": "Double-sens cyclable",
+      "km": 42.16
+    },
+    {
+      "type": "Autre (marquage partagé)",
+      "km": 1.53
+    }
+  ],
+  "par_quartier": [
+    {
+      "quartier": "Bas-Montreuil Est",
+      "km": 11.67,
+      "km_voirie": 13.06,
+      "km_pour_100km_voirie": 89.3,
+      "part_site_propre": 0.165,
+      "km_depuis_2020": 4.82,
+      "surface_ha": 78.9
+    },
+    {
+      "quartier": "Bas-Montreuil Ouest",
+      "km": 11.83,
+      "km_voirie": 13.01,
+      "km_pour_100km_voirie": 91.0,
+      "part_site_propre": 0.335,
+      "km_depuis_2020": 5.25,
+      "surface_ha": 87.5
+    },
+    {
+      "quartier": "Bel-Air / Grands-Pêchers",
+      "km": 2.5,
+      "km_voirie": 7.32,
+      "km_pour_100km_voirie": 34.1,
+      "part_site_propre": 0.259,
+      "km_depuis_2020": 0.83,
+      "surface_ha": 54.1
+    },
+    {
+      "quartier": "Branly / Boissière",
+      "km": 4.84,
+      "km_voirie": 13.73,
+      "km_pour_100km_voirie": 35.2,
+      "part_site_propre": 0.159,
+      "km_depuis_2020": 3.96,
+      "surface_ha": 90.1
+    },
+    {
+      "quartier": "Centre-ville / Jean-Moulin / Espoir",
+      "km": 8.8,
+      "km_voirie": 13.3,
+      "km_pour_100km_voirie": 66.2,
+      "part_site_propre": 0.188,
+      "km_depuis_2020": 3.6,
+      "surface_ha": 113.2
+    },
+    {
+      "quartier": "La Noue / Clos-Français / Guilands",
+      "km": 4.85,
+      "km_voirie": 7.94,
+      "km_pour_100km_voirie": 61.0,
+      "part_site_propre": 0.276,
+      "km_depuis_2020": 1.93,
+      "surface_ha": 70.0
+    },
+    {
+      "quartier": "Montreau / Ruffins / Clos-Arachis",
+      "km": 3.98,
+      "km_voirie": 12.74,
+      "km_pour_100km_voirie": 31.2,
+      "part_site_propre": 0.0,
+      "km_depuis_2020": 0.01,
+      "surface_ha": 108.0
+    },
+    {
+      "quartier": "Paul-Signac / Murs-à-Pêches",
+      "km": 7.66,
+      "km_voirie": 14.1,
+      "km_pour_100km_voirie": 54.3,
+      "part_site_propre": 0.367,
+      "km_depuis_2020": 5.9,
+      "surface_ha": 127.3
+    },
+    {
+      "quartier": "Ramenas / Fabien / Lagrange",
+      "km": 5.63,
+      "km_voirie": 9.24,
+      "km_pour_100km_voirie": 60.9,
+      "part_site_propre": 0.314,
+      "km_depuis_2020": 5.63,
+      "surface_ha": 55.4
+    },
+    {
+      "quartier": "Solidarité / Carnot",
+      "km": 5.7,
+      "km_voirie": 7.33,
+      "km_pour_100km_voirie": 77.7,
+      "part_site_propre": 0.112,
+      "km_depuis_2020": 2.21,
+      "surface_ha": 38.5
+    },
+    {
+      "quartier": "Villiers / Barbusse",
+      "km": 7.86,
+      "km_voirie": 11.78,
+      "km_pour_100km_voirie": 66.7,
+      "part_site_propre": 0.195,
+      "km_depuis_2020": 2.97,
+      "surface_ha": 68.3
+    }
+  ],
+  "par_mandat": [
+    {
+      "id": "m2014",
+      "libelle": "Mandat 2014-2020",
+      "debut": 2014,
+      "fin": 2019,
+      "km": 17.19,
+      "km_creation": 16.09,
+      "km_requalification": 1.1,
+      "km_site_propre": 1.09
+    },
+    {
+      "id": "m2020",
+      "libelle": "Mandat 2020-2026",
+      "debut": 2020,
+      "fin": 2026,
+      "km": 37.11,
+      "km_creation": 24.67,
+      "km_requalification": 12.44,
+      "km_site_propre": 10.61
+    }
+  ],
+  "voirie_serie": [
+    {
+      "date": "2014-01-01",
+      "km": 124.68
+    },
+    {
+      "date": "2015-01-01",
+      "km": 124.97
+    },
+    {
+      "date": "2016-01-01",
+      "km": 125.25
+    },
+    {
+      "date": "2017-01-01",
+      "km": 125.51
+    },
+    {
+      "date": "2018-01-01",
+      "km": 125.78
+    },
+    {
+      "date": "2019-01-01",
+      "km": 125.44
+    },
+    {
+      "date": "2020-01-01",
+      "km": 127.08
+    },
+    {
+      "date": "2021-01-01",
+      "km": 127.23
+    },
+    {
+      "date": "2022-01-01",
+      "km": 126.1
+    },
+    {
+      "date": "2023-01-01",
+      "km": 125.87
+    },
+    {
+      "date": "2024-01-01",
+      "km": 126.02
+    },
+    {
+      "date": "2025-01-01",
+      "km": 125.15
+    },
+    {
+      "date": "2026-01-01",
+      "km": 124.34
+    },
+    {
+      "date": "2026-07-27",
+      "km": 123.18
+    }
+  ],
+  "stationnement_serie": [
+    {
+      "date": "2014-01-01",
+      "sites": 10,
+      "places": 193,
+      "stations_velib": 15
+    },
+    {
+      "date": "2015-01-01",
+      "sites": 12,
+      "places": 193,
+      "stations_velib": 16
+    },
+    {
+      "date": "2016-01-01",
+      "sites": 14,
+      "places": 193,
+      "stations_velib": 16
+    },
+    {
+      "date": "2017-01-01",
+      "sites": 18,
+      "places": 209,
+      "stations_velib": 16
+    },
+    {
+      "date": "2018-01-01",
+      "sites": 27,
+      "places": 327,
+      "stations_velib": 15
+    },
+    {
+      "date": "2019-01-01",
+      "sites": 37,
+      "places": 381,
+      "stations_velib": 2
+    },
+    {
+      "date": "2020-01-01",
+      "sites": 45,
+      "places": 507,
+      "stations_velib": 21
+    },
+    {
+      "date": "2021-01-01",
+      "sites": 269,
+      "places": 2255,
+      "stations_velib": 25
+    },
+    {
+      "date": "2022-01-01",
+      "sites": 280,
+      "places": 2351,
+      "stations_velib": 25
+    },
+    {
+      "date": "2023-01-01",
+      "sites": 283,
+      "places": 2378,
+      "stations_velib": 25
+    },
+    {
+      "date": "2024-01-01",
+      "sites": 286,
+      "places": 2439,
+      "stations_velib": 25
+    },
+    {
+      "date": "2025-01-01",
+      "sites": 324,
+      "places": 2927,
+      "stations_velib": 25
+    },
+    {
+      "date": "2026-01-01",
+      "sites": 349,
+      "places": 3163,
+      "stations_velib": 27
+    },
+    {
+      "date": "2026-07-27",
+      "sites": 358,
+      "places": 3295,
+      "stations_velib": 28
+    }
+  ],
+  "completude": {
+    "nom de voie": 0.873,
+    "revêtement": 0.843,
+    "vitesse (trafic_vit)": 0.591,
+    "éclairage": 0.582,
+    "largeur": 0.042
+  }
+}
