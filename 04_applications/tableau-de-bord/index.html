@@ -45,7 +45,7 @@
     grid-template-areas:
       "carte carte carte carte carte annees annees annees annees liste liste liste"
       "carte carte carte carte carte cumul cumul cumul cumul liste liste liste"
-      "types types types types quart quart quart quart quart qual qual qual"; }
+      "types types types types types types quart quart quart quart quart quart"; }
   .widget { background: var(--d-widget); border-radius: 2px; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
   .w-tete { display: flex; align-items: center; gap: 8px; padding: 10px 12px 4px 14px; }
   .w-tete h2 { margin: 0; flex: 1; font-size: 14px; font-weight: 600; color: var(--d-texte); }
@@ -62,7 +62,7 @@
   .legende-graph { display: flex; gap: 14px; font-size: 12px; color: var(--d-texte-2); padding: 0 14px; }
   .legende-graph i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
   .w-carte { grid-area: carte; } .w-annees { grid-area: annees; } .w-cumul { grid-area: cumul; } .w-liste { grid-area: liste; }
-  .w-types { grid-area: types; } .w-quart { grid-area: quart; } .w-qual { grid-area: qual; }
+  .w-types { grid-area: types; } .w-quart { grid-area: quart; }
   #carte { position: absolute; inset: 0 0 0 0; border-radius: 0 0 2px 2px; }
   .w-carte .w-corps { padding: 0; }
   .legende-carte { position: absolute; left: 10px; bottom: 26px; z-index: 2; background: rgba(17,17,17,.88); border-radius: 2px;
@@ -86,27 +86,37 @@
   .liste .det { grid-column: 2 / 4; font-size: 11.5px; color: var(--d-muet); }
   .vide { color: var(--d-muet); font-size: 13px; padding: 16px; }
 
-  .qualite { position: absolute; inset: 0 14px 10px; overflow: auto; font-size: 12.5px; color: var(--d-texte-2); line-height: 1.5; }
-  .qualite .statut { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--d-texte); margin: 4px 0 8px; }
-  .qualite .compteurs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 6px 0 10px; }
-  .qualite .compteurs div { background: #2c2c2c; border-radius: 2px; padding: 6px 8px; }
-  .qualite .compteurs b { display: block; font-size: 18px; color: var(--d-texte); }
-  .qualite a { color: #6da7ec; }
-  .qualite p { margin: 6px 0; }
+  /* Fiabilité des données : une ligne sous les indicateurs, le détail dans une fenêtre */
+  .fiabilite { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 8px 8px 0; padding: 8px 14px;
+    background: var(--d-widget); border-radius: 2px; font-size: 12.5px; color: var(--d-texte-2); }
+  .fiabilite b { color: var(--d-texte); font-weight: 600; }
+  .fiabilite .pt::before { content: "·"; margin-right: 10px; color: var(--d-muet); }
+  .fiabilite .lien { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; border: 0; background: none;
+    color: #6da7ec; font: inherit; cursor: pointer; padding: 2px 4px; border-radius: 2px; }
+  .fiabilite .lien:hover { text-decoration: underline; }
+  .methode { width: min(560px, calc(100% - 32px)); padding: 0; border: 1px solid var(--d-bord); border-radius: 3px;
+    background: var(--d-widget); color: var(--d-texte-2); font-size: 13px; line-height: 1.55; }
+  .methode::backdrop { background: rgba(0, 0, 0, .6); }
+  .methode header { display: flex; align-items: center; padding: 12px 12px 4px 18px; }
+  .methode h2 { flex: 1; margin: 0; font-size: 16px; font-weight: 600; color: var(--d-texte); }
+  .methode .corps { padding: 4px 18px 16px; }
+  .methode p { margin: 8px 0; }
+  .methode b { color: var(--d-texte); }
+  .methode a { color: #6da7ec; }
 
   .w-tete calcite-segmented-control { flex: none; }
 
   @media (max-width: 1280px) {
     .tuiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .grille { grid-template-columns: 1fr 1fr; grid-template-rows: 460px 290px 330px 360px;
-      grid-template-areas: "carte carte" "annees cumul" "types quart" "liste qual"; }
+      grid-template-areas: "carte carte" "annees cumul" "types quart" "liste liste"; }
   }
   @media (max-width: 760px) {
     .tuiles { grid-template-columns: 1fr 1fr; }
     .i-valeur { font-size: 28px; }
-    .grille { grid-template-columns: 1fr; grid-template-rows: 380px 280px 280px 340px 340px 380px auto;
-      grid-template-areas: "carte" "annees" "cumul" "types" "quart" "liste" "qual"; }
-    .w-qual { min-height: 360px; }
+    .grille { grid-template-columns: 1fr; grid-template-rows: 380px 280px 280px 340px 340px 380px;
+      grid-template-areas: "carte" "annees" "cumul" "types" "quart" "liste"; }
+    .fiabilite .lien { margin-left: 0; }
     .selecteur calcite-select { width: calc(50vw - 30px); }
     .entete { position: static; }
   }
@@ -131,6 +141,12 @@
 </header>
 
 <section class="tuiles" id="tuiles" aria-label="Indicateurs clés"></section>
+<section class="fiabilite" id="fiabilite" aria-label="Fiabilité des données"></section>
+<dialog class="methode" id="methode" aria-labelledby="methode-titre">
+  <header><h2 id="methode-titre">Méthode et sources</h2>
+    <button class="w-btn" id="fermer-methode" aria-label="Fermer" title="Fermer"><calcite-icon icon="x" scale="s"></calcite-icon></button></header>
+  <div class="corps" id="methode-corps"></div>
+</dialog>
 
 <main class="grille">
   <section class="widget w-carte" aria-label="Carte">
@@ -184,10 +200,6 @@
     <div class="w-corps"><div class="graph"><canvas id="g-quart"></canvas></div><div class="tableau" hidden></div></div>
   </section>
 
-  <section class="widget w-qual" aria-label="Qualité et méthode">
-    <header class="w-tete"><h2>Qualité des données et méthode</h2></header>
-    <div class="w-corps"><div class="qualite" id="qualite"></div></div>
-  </section>
 </main>
 
 <script src="../data/donnees.js"></script>
@@ -452,23 +464,36 @@
     }
   });
 
-  // ---------- Qualité ----------
+  // ---------- Fiabilité des données ----------
+  // Une ligne visible (ce qui change la lecture des chiffres), le détail de la méthode dans une fenêtre.
   const qc = D.qc, hist = D.historique[D.historique.length - 1] || {};
-  const n = (s) => qc.controles.filter((c) => c.statut === s).length;
   const alertes = qc.controles.filter((c) => c.statut === "ALERTE");
-  document.getElementById("qualite").innerHTML = `
-    <div class="statut"><calcite-icon icon="${qc.statut_global === "OK" ? "check-circle" : "exclamation-mark-triangle"}" scale="m"
+  const qcOk = qc.statut_global !== "BLOQUANT";
+  const verdictQc = { OK: "contrôle qualité conforme", ALERTE: "contrôle qualité conforme, avec alerte acceptée", BLOQUANT: "contrôle qualité bloquant" }[qc.statut_global];
+  document.getElementById("fiabilite").innerHTML = `
+    <calcite-icon icon="${qc.statut_global === "OK" ? "check-circle" : "exclamation-mark-triangle"}" scale="s"
       style="color:${qc.statut_global === "OK" ? "#0ca30c" : "#fab219"}"></calcite-icon>
-      Contrôle qualité : ${qc.statut_global === "ALERTE" ? "conforme avec alerte" : qc.statut_global === "OK" ? "conforme" : "bloquant"}</div>
-    <div class="compteurs"><div><b>${n("OK")}</b>conformes</div><div><b>${n("INFO")}</b>informatifs</div><div><b>${n("ALERTE")}</b>alertes</div><div><b>${n("BLOQUANT")}</b>bloquants</div></div>
+    <span><b>Fiabilité des données</b> : ${verdictQc}</span>
+    <span class="pt">l'année retenue est celle de l'apparition dans OpenStreetMap, qui peut suivre les travaux de quelques mois</span>
+    <span class="pt">${A1} est partiel (données au ${fmt.date(dateDonnees)})</span>
+    <button class="lien" id="ouvrir-methode" type="button"><calcite-icon icon="information" scale="s"></calcite-icon>Méthode et sources</button>`;
+  document.getElementById("methode-corps").innerHTML = `
     ${alertes.map((a) => `<p>⚠ ${echapper(a.controle)} : ${echapper(a.valeur)}${hist.valide_par ? `, accepté par ${echapper(hist.valide_par)}` : ""}.</p>`).join("")}
-    <p><b style="color:var(--d-texte)">Méthode.</b> Réseau OpenStreetMap découpé en tronçons de 25 m et comparé à l'historique au 1<sup>er</sup> janvier
-    de chaque année (API ohsome). Une <i>requalification</i> remplace un aménagement existant par un autre type. La date de
-    cartographie peut suivre de quelques mois la date des travaux ; ${A1} est partiel (données au ${fmt.date(dateDonnees)}).</p>
-    <p><b style="color:var(--d-texte)">Densité.</b> km d'aménagements rapportés à 100 km de rues (voies primaires à résidentielles).</p>
-    <p><b style="color:var(--d-texte)">Stationnement.</b> Inventaire OSM : la progression reflète aussi l'effort de recensement. ${ind.totaux.stationnements_sans_capacite} sites sans capacité renseignée.</p>
-    <p><a href="../../03_publication/services/rapport_controle_qualite.md" target="_blank">Rapport de contrôle complet</a> ·
-    <a href="../index.html">Portail des données</a></p>`;
+    <p><b>Datation.</b> Le réseau OpenStreetMap actuel est découpé en tronçons de 25 m, comparés à l'historique au 1<sup>er</sup> janvier
+    de chaque année (API ohsome). L'année de réalisation est celle où l'aménagement apparaît dans OpenStreetMap ; elle peut suivre
+    de quelques mois la fin des travaux. ${A1} est partiel : données au ${fmt.date(dateDonnees)}.</p>
+    <p><b>Création ou requalification.</b> Une requalification remplace un aménagement existant par un autre type (par exemple une bande devenue piste).</p>
+    <p><b>Densité.</b> Kilomètres d'aménagements pour 100 km de rues (voies primaires à résidentielles).</p>
+    <p><b>Stationnement.</b> Inventaire OpenStreetMap : sa progression reflète aussi l'effort de recensement.
+    ${ind.totaux.stationnements_sans_capacite} sites n'ont pas de capacité renseignée.</p>
+    <p><b>Contrôle qualité.</b> ${qc.controles.length} contrôles automatiques à chaque campagne, ${qcOk ? "aucun bloquant sur cette version" : "au moins un bloquant sur cette version"}.
+    Version ${D.version}${hist.valide_par ? `, validée par ${echapper(hist.valide_par)}` : ""}.</p>
+    <p><b>Sources.</b> Aménagements et stationnement © contributeurs OpenStreetMap (ODbL) ; quartiers : IRIS © IGN ; fonds de carte © IGN.</p>
+    <p><a href="../index.html#qualite">Détail des contrôles et des versions sur le portail</a></p>`;
+  const dlgMethode = document.getElementById("methode");
+  document.getElementById("ouvrir-methode").addEventListener("click", () => dlgMethode.showModal());
+  document.getElementById("fermer-methode").addEventListener("click", () => dlgMethode.close());
+  dlgMethode.addEventListener("click", (e) => { if (e.target === dlgMethode) dlgMethode.close(); });
 
   // ---------- Carte ----------
   const fondSombre = FONDS.find((f) => f.id === "sombre");

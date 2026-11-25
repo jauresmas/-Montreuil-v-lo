@@ -62,6 +62,7 @@
   .cycle { margin-top: 10px; font-size: 13px; color: #6a6a6a; display: flex; align-items: center; gap: 6px; }
 
   .deux { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; align-items: start; }
+  .deux > * { min-width: 0; }
   .tableau { background: #fff; box-shadow: var(--mv-carte-ombre); border-radius: 3px; overflow: auto; }
   .tableau table { width: 100%; border-collapse: collapse; font-size: 13px; }
   .tableau th { text-align: left; font-weight: 600; color: #4a4a4a; padding: 9px 12px; border-bottom: 1px solid #e3e3e3; background: #fafafa; }
@@ -69,6 +70,14 @@
   .tableau td.n { text-align: right; font-variant-numeric: tabular-nums; }
   .statut { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; white-space: nowrap; }
   .statut.OK { color: #006300; } .statut.INFO { color: #4a4a4a; } .statut.ALERTE { color: #8c4a00; } .statut.BLOQUANT { color: #b02a2a; }
+  .qc-resume { background: #fff; box-shadow: var(--mv-carte-ombre); border-radius: 3px; padding: 16px 18px; }
+  .qc-resume .qc-titre { display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 600; }
+  .qc-resume .qc-comptes { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 10px; font-size: 13.5px; color: #4a4a4a; }
+  .qc-resume .qc-comptes b { font-variant-numeric: tabular-nums; color: #151515; }
+  .qc-resume .qc-date { margin-top: 6px; font-size: 12.5px; color: #6a6a6a; }
+  .qc-detail { margin-top: 10px; }
+  .qc-detail summary { cursor: pointer; color: #00619b; font-size: 14px; padding: 6px 0; }
+  .qc-detail .tableau { margin-top: 6px; }
 
   footer.pied { margin-top: 44px; background: #fff; border-top: 1px solid #e3e3e3; padding: 22px 0 30px; font-size: 12.5px; color: #6a6a6a; line-height: 1.6; }
 
@@ -145,9 +154,16 @@
 
   <section class="bloc" id="qualite">
     <h2>Qualité et versions</h2>
-    <p class="chapo" id="qc-chapo"></p>
+    <p class="chapo">Chaque campagne passe des contrôles automatiques avant d'être publiée : un contrôle bloquant empêche la publication,
+      une alerte doit être acceptée par la personne qui valide.</p>
     <div class="deux">
-      <div class="tableau"><table><thead><tr><th>Code</th><th>Contrôle</th><th>Statut</th><th>Résultat</th></tr></thead><tbody id="qc"></tbody></table></div>
+      <div>
+        <div class="qc-resume" id="qc-resume"></div>
+        <details class="qc-detail">
+          <summary>Voir le détail des contrôles</summary>
+          <div class="tableau"><table><thead><tr><th>Code</th><th>Contrôle</th><th>Statut</th><th>Résultat</th></tr></thead><tbody id="qc"></tbody></table></div>
+        </details>
+      </div>
       <div class="tableau"><table><thead><tr><th>Version</th><th>Données OSM</th><th class="n">Réseau</th><th>Validée par</th></tr></thead><tbody id="versions"></tbody></table></div>
     </div>
   </section>
@@ -305,9 +321,16 @@
 
   // ---------- Qualité et versions ----------
   const ICO = { OK: "check-circle", INFO: "information", ALERTE: "exclamation-mark-triangle", BLOQUANT: "x-circle" };
-  document.getElementById("qc-chapo").textContent = `Statut de la version ${qc.version} : ${qc.statut_global}. Tout contrôle bloquant interdit la republication ; les alertes doivent être validées par le référent métier.`;
+  const LIB = { OK: "Conforme", INFO: "Information", ALERTE: "Alerte", BLOQUANT: "Bloquant" };
+  const pluriel = (n, mot) => `<b>${n}</b> ${mot}${n > 1 ? "s" : ""}`;
+  const verdict = { OK: "Contrôle qualité conforme", ALERTE: "Contrôle qualité conforme, avec alerte acceptée", BLOQUANT: "Contrôle qualité bloquant" }[qc.statut_global];
+  document.getElementById("qc-resume").innerHTML = `
+    <div class="qc-titre"><span class="statut ${qc.statut_global}"><calcite-icon icon="${ICO[qc.statut_global]}" scale="m"></calcite-icon></span>${verdict}</div>
+    <div class="qc-comptes"><span>${pluriel(qc.controles.length, "contrôle")}</span><span>${pluriel(nb("OK"), "conforme")}</span>
+      <span>${pluriel(nb("INFO"), "information")}</span><span>${pluriel(nb("ALERTE"), "alerte")}</span><span>${pluriel(nb("BLOQUANT"), "bloquant")}</span></div>
+    <div class="qc-date">Version ${qc.version}, traitée le ${fmt.date(ind.meta.date_traitement)} sur les données OpenStreetMap du ${fmt.date(dateDonnees)}.</div>`;
   document.getElementById("qc").innerHTML = qc.controles.map((c) => `<tr><td>${c.code}</td><td>${echapper(c.controle)}</td>
-    <td><span class="statut ${c.statut}"><calcite-icon icon="${ICO[c.statut]}" scale="s"></calcite-icon>${c.statut}</span></td><td>${echapper(c.valeur)}</td></tr>`).join("");
+    <td><span class="statut ${c.statut}"><calcite-icon icon="${ICO[c.statut]}" scale="s"></calcite-icon>${LIB[c.statut]}</span></td><td>${echapper(c.valeur)}</td></tr>`).join("");
   document.getElementById("versions").innerHTML = [...D.historique].reverse().map((h) => `<tr><td>${h.version}</td><td>${fmt.date(h.donnees_osm)}</td>
     <td class="n">${fmt.km(h.km_total)}</td><td>${echapper(h.valide_par || "non renseigné")}</td></tr>`).join("");
 })();
