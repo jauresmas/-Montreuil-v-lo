@@ -19,7 +19,7 @@
   },
   {
     "id": "tableau",
-    "titre": "Tableau de bord des élus",
+    "titre": "Tableau de bord",
     "type": "Tableau de bord",
     "icone": "dashboard",
     "description": "Indicateurs clés, réalisations annuelles, bilans par mandat et par quartier.",
@@ -27,9 +27,9 @@
     "vignette": "../03_publication/services/vignettes/tableau_de_bord.svg",
     "partage": "Organisation",
     "tags": [
-      "élus",
       "indicateurs",
-      "pilotage"
+      "pilotage",
+      "mandat"
     ],
     "proprietaire": "Service SIG",
     "modifie": "2026-11-13T21:24:07+00:00",

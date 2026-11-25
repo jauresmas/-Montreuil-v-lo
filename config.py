@@ -17,7 +17,7 @@ DEPARTEMENT = "Seine-Saint-Denis (93)"
 # Le réseau présent dans OSM au 1er janvier de ANNEE_REFERENCE est classé
 # « Avant <ANNEE_REFERENCE> ». Chaque tronçon apparu ensuite reçoit son année.
 ANNEE_REFERENCE = 2014
-# Mandats municipaux (pour les vues « élus » du tableau de bord)
+# Mandats municipaux (pour les vues par mandat du tableau de bord)
 MANDATS = [
     {"id": "m2014", "libelle": "Mandat 2014-2020", "debut": 2014, "fin": 2019},
     {"id": "m2020", "libelle": "Mandat 2020-2026", "debut": 2020, "fin": 2026},

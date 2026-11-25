@@ -1,7 +1,7 @@
 # Montreuil à vélo : suivi annuel des aménagements cyclables
 
-Une **carte interactive** des aménagements cyclables réalisés chaque année à Montreuil (93) et un **tableau de bord
-pour les élus**, produits par une chaîne SIG complète et automatisée : données → traitement → publication →
+Une **carte interactive** des aménagements cyclables réalisés chaque année à Montreuil (93) et un **tableau de bord**
+de synthèse, produits par une chaîne SIG complète et automatisée : données → traitement → publication →
 carte web et tableau de bord → mise à jour annuelle. Tout est construit sur des **données réelles** et des
 briques ouvertes, sans logiciel sous licence.
 
@@ -13,7 +13,7 @@ briques ouvertes, sans logiciel sous licence.
 
 - **Portail** : présentation, catalogue des données, état de la chaîne, contrôle qualité et versions
 - **Carte web** : couches, légende, filtres, fonds de carte, recherche d'adresse, fiches au clic, curseur temporel
-- **Tableau de bord des élus** : indicateurs, graphiques liés entre eux, liste des réalisations, carte, sélecteurs
+- **Tableau de bord** : indicateurs, graphiques liés entre eux, liste des réalisations, carte, sélecteurs
 
 Les applications acceptent des paramètres d'URL pour partager une vue précise :
 `carte/index.html?fond=sombre&mode=annee&annee=2020` · `tableau-de-bord/index.html?periode=m2020`.
@@ -21,7 +21,7 @@ Les applications acceptent des paramètres d'URL pour partager une vue précise 
 Pour ouvrir le projet en local, double-cliquer `ouvrir_portail.bat` (ou `04_applications/index.html`).
 Une connexion Internet est nécessaire pour les fonds IGN et les bibliothèques (Calcite, MapLibre, Chart.js).
 
-| Carte web (couleur par année, fond sombre, 2020) | Tableau de bord des élus (mandat 2020-2026) |
+| Carte web (couleur par année, fond sombre, 2020) | Tableau de bord (mandat 2020-2026) |
 |---|---|
 | ![Carte web](docs/captures/04_carte_annee_2020_fond_sombre.png) | ![Tableau de bord](docs/captures/06_tableau_de_bord_mandat_2020.png) |
 

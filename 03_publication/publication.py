@@ -256,10 +256,10 @@ def main() -> int:
                         "curseur temporel, filtres par quartier, recherche d'adresse.",
          "url": "carte/index.html", "vignette": "../03_publication/services/vignettes/carte_web.svg",
          "partage": "Public", "tags": ["vélo", "mobilité", "carte"]},
-        {"id": "tableau", "titre": "Tableau de bord des élus", "type": "Tableau de bord", "icone": "dashboard",
+        {"id": "tableau", "titre": "Tableau de bord", "type": "Tableau de bord", "icone": "dashboard",
          "description": "Indicateurs clés, réalisations annuelles, bilans par mandat et par quartier.",
          "url": "tableau-de-bord/index.html", "vignette": "../03_publication/services/vignettes/tableau_de_bord.svg",
-         "partage": "Organisation", "tags": ["élus", "indicateurs", "pilotage"]},
+         "partage": "Organisation", "tags": ["indicateurs", "pilotage", "mandat"]},
     ] + [
         {"id": s["id"], "titre": s["titre"], "type": "Couche d'entités", "icone": next(c["icone"] for c in COUCHES if c["id"] == s["id"]),
          "description": s["description"], "url": f"../03_publication/services/{s['id']}.geojson",

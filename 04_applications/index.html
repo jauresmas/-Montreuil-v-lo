@@ -124,7 +124,7 @@
   <div class="conteneur">
     <div class="surtitre">Montreuil · Mobilités actives</div>
     <h1>Suivre chaque année les aménagements cyclables</h1>
-    <p class="intro">Carte interactive, tableau de bord des élus et données ouvertes, produits par une chaîne SIG automatisée
+    <p class="intro">Carte interactive, tableau de bord et données ouvertes, produits par une chaîne SIG automatisée
       et republiés à chaque campagne annuelle après contrôle qualité et validation métier.</p>
     <calcite-input id="q" icon="search" scale="l" placeholder="Rechercher une application ou un jeu de données" clearable label="Rechercher"></calcite-input>
     <div class="chiffres" id="chiffres"></div>
@@ -134,7 +134,7 @@
 <main class="conteneur">
   <section class="bloc" id="applications">
     <h2>Applications</h2>
-    <p class="chapo">Une carte pour explorer le réseau année par année, et un tableau de bord de synthèse pour les élus.</p>
+    <p class="chapo">Une carte pour explorer le réseau année par année, et un tableau de bord de synthèse.</p>
     <div class="applis" id="applis"></div>
   </section>
 
@@ -311,7 +311,7 @@
       etat: `${qc.statut_global === "OK" ? ok : alerte} ${nb("OK")} contrôles conformes, ${nb("ALERTE")} alerte, ${nb("BLOQUANT")} bloquant · ${fmt.n0(t.nb_objets)} tronçons` },
     { n: 3, c: "#5b3fa0", titre: "Publication", quoi: "Couches GeoJSON, descripteurs de service, export au schéma national, archivage.",
       etat: `${ok} Version ${D.version}${derniere.valide_par ? ` validée par ${echapper(derniere.valide_par)}` : ""}` },
-    { n: 4, c: "#13817f", titre: "Carte web + tableau de bord", quoi: "Application cartographique avec curseur temporel et tableau de bord des élus.",
+    { n: 4, c: "#13817f", titre: "Carte web + tableau de bord", quoi: "Application cartographique avec curseur temporel et tableau de bord de synthèse.",
       etat: `${ok} <a href="carte/index.html">Carte</a> · <a href="tableau-de-bord/index.html">Tableau de bord</a>` },
     { n: 5, c: "#c46a00", titre: "Mise à jour annuelle", quoi: "Reprise des données, validation métier, republication, archivage de la version N-1.",
       etat: `${ok} ${D.historique.length} version(s) publiée(s) · prochaine campagne : janvier ${new Date(D.historique[0]?.publie_le || Date.now()).getFullYear() + 1}` },
