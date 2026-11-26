@@ -141,7 +141,7 @@
       <calcite-block heading="Options" open>
         <div class="bloc-contenu">
           <calcite-label layout="inline"><calcite-switch id="f-sitepropre"></calcite-switch>Site propre uniquement</calcite-label>
-          <calcite-label layout="inline"><calcite-switch id="f-controle"></calcite-switch>Signalements du contrôle qualité</calcite-label>
+          <calcite-label layout="inline" id="opt-controle"><calcite-switch id="f-controle"></calcite-switch><span>Tronçons à vérifier (<span id="nb-controle">0</span>)</span></calcite-label>
         </div>
       </calcite-block>
       <div style="padding:12px 15px"><calcite-button id="reinit" appearance="outline" width="full" icon-start="refresh">Réinitialiser les filtres</calcite-button></div>
@@ -461,6 +461,10 @@
   });
   document.getElementById("f-sitepropre").addEventListener("calciteSwitchChange", (e) => { etat.sitePropre = e.target.checked; appliquer(); });
   document.getElementById("f-controle").addEventListener("calciteSwitchChange", (e) => { etat.controle = e.target.checked; appliquer(); });
+  // L'option n'apparaît que si le contrôle qualité a signalé des tronçons dans cette version
+  const nbSignales = amen.features.filter((f) => f.properties.controle).length;
+  document.getElementById("nb-controle").textContent = nbSignales;
+  if (!nbSignales) document.getElementById("opt-controle").style.display = "none";
   document.getElementById("mode").addEventListener("calciteSegmentedControlChange", (e) => { etat.mode = e.target.value; appliquer(); });
   document.getElementById("reinit").addEventListener("click", () => {
     etat.types = new Set(TYPES.map((t) => t.id)); etat.quartier = ""; etat.sitePropre = false; etat.controle = false;
@@ -502,7 +506,7 @@
   }
   function majBulle() {
     const v = amen.features.filter((f) => filtreJS(f.properties, false));
-    const filtres = [etat.quartier, etat.sitePropre && "site propre", etat.controle && "signalements QC",
+    const filtres = [etat.quartier, etat.sitePropre && "site propre", etat.controle && "tronçons à vérifier",
       etat.types.size < TYPES.length && `${etat.types.size} type(s)`].filter(Boolean);
     document.getElementById("bulle").innerHTML = `<strong>${fmt.km(km(v))}</strong> affichés · ${v.length} tronçons` +
       (filtres.length ? `<br>Filtres : ${echapper(filtres.join(" · "))}` : `<br>Données OSM au ${fmt.date(dateDonnees)}`);
