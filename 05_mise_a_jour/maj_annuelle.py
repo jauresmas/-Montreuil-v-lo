@@ -92,11 +92,12 @@ def rapport_ecarts() -> Path:
     for e in ecarts:
         nb[e["properties"]["ecart"]] += 1
     chantiers = []
-    if SAISIE.exists():
+    # La saisie des chantiers livrés est celle de la Ville de Montreuil : elle ne vaut que pour la commune par défaut
+    if SAISIE.exists() and C.EST_PAR_DEFAUT:
         with SAISIE.open(encoding="utf-8-sig") as f:
             chantiers = [r for r in csv.DictReader(f, delimiter=";") if (r.get("id_chantier") or "").strip()]
 
-    md = [f"# Rapport d'écarts, version {version} (en ligne : {v_old})", "",
+    md = [f"# Rapport d'écarts {C.de(C.NOM_COMMUNE)}, version {version} (en ligne : {v_old})", "",
           f"- Données OSM au {ind['meta']['date_donnees_osm']} · statut QC **{qc['statut_global']}**",
           f"- Linéaire : {tot_o:.2f} km → **{tot_n:.2f} km** ({tot_n - tot_o:+.2f} km)",
           f"- Objets OSM : {nb['ajout']} ajout(s), {nb['modification']} modification(s), {nb['suppression']} suppression(s)",
@@ -109,9 +110,10 @@ def rapport_ecarts() -> Path:
     md += ["", "## Plus gros ajouts (contrôle terrain conseillé)", ""]
     ajouts = sorted((e for e in ecarts if e["properties"]["ecart"] == "ajout"), key=lambda e: -e["properties"]["longueur_m"])[:10]
     md += [f"- {e['properties']['nom_voie'] or 'sans nom'} : {e['properties']['type_amenagement']}, {e['properties']['longueur_m']:.0f} m ({e['properties']['osm_url']})" for e in ajouts] or ["- Aucun ajout"]
-    md += ["", "## Rapprochement avec les chantiers livrés (saisie Ville)", "",
-           f"- {len(chantiers)} chantier(s) déclaré(s) dans `05_mise_a_jour/modele_saisie_chantiers.csv`"
-           + (" : vérifier que chacun apparaît dans la couche des écarts." if chantiers else " (fichier vide : à compléter par la voirie).")]
+    md += ["", "## Rapprochement avec les chantiers livrés (saisie Ville)", ""]
+    md += [f"- {len(chantiers)} chantier(s) déclaré(s) dans `05_mise_a_jour/modele_saisie_chantiers.csv`"
+           + (" : vérifier que chacun apparaît dans la couche des écarts." if chantiers else " (fichier vide : à compléter par la voirie).")
+           ] if C.EST_PAR_DEFAUT else [f"- Pas de saisie des chantiers livrés pour {C.NOM_COMMUNE}."]
     if os.environ.get("GITHUB_ACTIONS"):
         md += ["", "## Décision", "", "Relire ce rapport et la checklist `05_mise_a_jour/checklist_validation_metier.md`.",
                "Fusionner cette pull request vaut validation métier : la version est alors publiée et mise en ligne,",

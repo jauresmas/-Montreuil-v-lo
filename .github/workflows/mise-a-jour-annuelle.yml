@@ -1,9 +1,10 @@
-# Étape 5 sur GitHub : campagne annuelle automatique.
+# Étape 5 sur GitHub : campagne annuelle automatique, pour chaque commune publiée.
 #
-# Le 15 janvier (ou à la demande), GitHub collecte les données de Montreuil, les traite et lance le contrôle qualité.
-# Si aucun contrôle ne bloque, il ouvre une pull request avec le rapport d'écarts.
-# Fusionner la pull request vaut validation métier et déclenche la publication (voir publier-et-mettre-en-ligne.yml).
-# Si un contrôle bloque, le workflow échoue et rien n'est proposé.
+# Le 15 janvier (ou à la demande), GitHub lit la liste des communes publiées (04_applications/data/communes.js)
+# puis, commune par commune, collecte les données, les traite et lance le contrôle qualité.
+# Si aucun contrôle ne bloque, il ouvre une pull request par commune avec son rapport d'écarts.
+# Fusionner une pull request vaut validation métier et déclenche la publication de cette commune
+# (voir publier-et-mettre-en-ligne.yml). Si un contrôle bloque, seule la commune concernée échoue.
 
 name: Mise à jour annuelle
 
@@ -11,14 +12,51 @@ on:
   schedule:
     - cron: "0 7 15 1 *"
   workflow_dispatch:
+    inputs:
+      commune:
+        description: "Code INSEE d'une commune publiée (laisser vide pour toutes les communes)"
+        required: false
+        default: ""
 
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-  campagne:
+  communes:
     runs-on: ubuntu-latest
+    outputs:
+      liste: ${{ steps.liste.outputs.liste }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Communes publiées
+        id: liste
+        env:
+          CHOIX: ${{ inputs.commune }}
+        run: |
+          python3 - >> "$GITHUB_OUTPUT" <<'EOF'
+          import json, os, pathlib
+          texte = pathlib.Path("04_applications/data/communes.js").read_text(encoding="utf-8")
+          prefixe = "window.MV_COMMUNES = "
+          communes = json.loads(texte[texte.index(prefixe) + len(prefixe):].strip().rstrip(";"))["communes"]
+          choix = (os.environ.get("CHOIX") or "").strip()
+          liste = [{"code": c["code_insee"], "dossier": c["dossier"], "nom": c["nom"]}
+                   for c in communes if not choix or c["code_insee"] == choix]
+          if not liste:
+              raise SystemExit(f"La commune {choix} ne fait pas partie des communes publiées.")
+          print("liste=" + json.dumps(liste, ensure_ascii=False))
+          EOF
+
+  campagne:
+    needs: communes
+    name: Campagne ${{ matrix.commune.nom }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        commune: ${{ fromJSON(needs.communes.outputs.liste) }}
     steps:
       - uses: actions/checkout@v4
 
@@ -33,29 +71,29 @@ jobs:
       - name: Collecte, traitement, contrôle qualité et rapport d'écarts
         env:
           PYTHONIOENCODING: utf-8
-        run: python 05_mise_a_jour/maj_annuelle.py
+        run: python 05_mise_a_jour/maj_annuelle.py --commune ${{ matrix.commune.code }}
 
       - name: Rapport de la campagne
         id: rapport
         run: |
-          f=$(ls -t 05_mise_a_jour/a_valider/montreuil/rapport_ecarts_*.md | head -1)
+          f=$(ls -t 05_mise_a_jour/a_valider/${{ matrix.commune.dossier }}/rapport_ecarts_*.md | head -1)
           echo "fichier=$f" >> "$GITHUB_OUTPUT"
           echo "version=$(basename "$f" .md | sed 's/^rapport_ecarts_//')" >> "$GITHUB_OUTPUT"
 
       - name: Couche des écarts (à ouvrir dans QGIS)
         uses: actions/upload-artifact@v4
         with:
-          name: ecarts-${{ steps.rapport.outputs.version }}
-          path: 05_mise_a_jour/a_valider/montreuil/
+          name: ecarts-${{ matrix.commune.dossier }}-${{ steps.rapport.outputs.version }}
+          path: 05_mise_a_jour/a_valider/${{ matrix.commune.dossier }}/
 
       - name: Pull request à valider
         uses: peter-evans/create-pull-request@v7
         with:
-          branch: campagne/${{ steps.rapport.outputs.version }}
-          title: "Campagne ${{ steps.rapport.outputs.version }} à valider"
+          branch: campagne/${{ matrix.commune.dossier }}-${{ steps.rapport.outputs.version }}
+          title: "Campagne ${{ matrix.commune.nom }} ${{ steps.rapport.outputs.version }} à valider"
           body-path: ${{ steps.rapport.outputs.fichier }}
-          commit-message: "Campagne ${{ steps.rapport.outputs.version }} : traitement et contrôle qualité"
+          commit-message: "Campagne ${{ matrix.commune.nom }} ${{ steps.rapport.outputs.version }} : traitement et contrôle qualité"
           add-paths: |
-            02_traitement/sorties
-            01_donnees/brutes/montreuil/manifest.json
-            05_mise_a_jour/journaux/montreuil.md
+            02_traitement/sorties/${{ matrix.commune.dossier }}
+            01_donnees/brutes/${{ matrix.commune.dossier }}/manifest.json
+            05_mise_a_jour/journaux/${{ matrix.commune.dossier }}.md

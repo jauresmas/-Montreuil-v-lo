@@ -80,12 +80,15 @@ au 1er janvier de chaque année (tampon de 7 m, 80 % de recouvrement) :
 
 Deux workflows GitHub Actions font tourner la chaîne sans poste de travail :
 
-1. **`mise-a-jour-annuelle.yml`**, le 15 janvier (ou à la demande depuis l'onglet Actions) : collecte, traitement
-   et contrôle qualité. Si rien ne bloque, il ouvre une **pull request** dont la description est le rapport
-   d'écarts ; la couche des écarts est jointe au workflow pour être ouverte dans QGIS.
-2. **`publier-et-mettre-en-ligne.yml`**, à chaque envoi sur `main` : quand une pull request de campagne est
-   fusionnée, il republie les services avec le nom de la personne qui a fusionné (la fusion vaut validation
-   métier), puis met le site en ligne sur GitHub Pages.
+1. **`mise-a-jour-annuelle.yml`**, le 15 janvier (ou à la demande depuis l'onglet Actions) : pour **chaque commune
+   publiée**, l'une après l'autre, collecte, traitement et contrôle qualité. Si rien ne bloque, il ouvre une
+   **pull request par commune** dont la description est le rapport d'écarts ; la couche des écarts est jointe au
+   workflow pour être ouverte dans QGIS. Un contrôle bloquant n'arrête que la commune concernée. Lancé à la main,
+   il accepte le code INSEE d'une seule commune.
+2. **`publier-et-mettre-en-ligne.yml`**, à chaque envoi sur `main` : il repère les communes dont le traitement est
+   plus récent que la version en ligne, c'est-à-dire celles dont la pull request de campagne vient d'être fusionnée.
+   Il les republie avec le nom de la personne qui a fusionné (la fusion vaut validation métier), puis met le site
+   en ligne sur GitHub Pages.
 
 Réglages à faire une fois dans le dépôt (**Settings**) :
 
@@ -119,7 +122,8 @@ Il suffit de donner son code INSEE au lancement (ici Villeurbanne) :
 - Les applications affichent la commune par défaut (Montreuil). Une autre commune publiée s'ouvre avec
   `?commune=<commune>`, par exemple `tableau-de-bord/index.html?commune=villeurbanne`, ou depuis le choix de
   la commune du portail.
-- La campagne automatique du 15 janvier sur GitHub ne concerne que Montreuil.
+- Une fois publiée, la commune entre dans la campagne automatique du 15 janvier sur GitHub, avec sa propre
+  pull request à valider.
 
 ### Comparer les communes
 

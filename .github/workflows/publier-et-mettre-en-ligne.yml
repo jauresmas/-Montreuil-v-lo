@@ -1,9 +1,11 @@
 # Étapes 3 et 4 sur GitHub : publication puis mise en ligne sur GitHub Pages.
 #
 # - À chaque envoi sur main, le site est remis en ligne.
-# - Si l'envoi apporte une nouvelle campagne (sorties du traitement modifiées sans republication),
-#   c'est qu'une pull request de campagne vient d'être fusionnée : la fusion vaut validation métier.
-#   Les services sont alors republiés avec le nom de la personne qui a fusionné, puis mis en ligne.
+# - Si une commune a un traitement plus récent que sa version en ligne (02_traitement/sorties/<commune>
+#   différent de 03_publication/services/<commune>), c'est qu'une pull request de campagne vient d'être
+#   fusionnée : la fusion vaut validation métier. Cette commune est alors republiée avec le nom de la personne
+#   qui a fusionné, puis mise en ligne. La comparaison se fait sur l'état du dépôt, pas sur le dernier envoi :
+#   une campagne fusionnée pendant qu'une autre publication tourne n'est jamais oubliée.
 
 name: Publier et mettre en ligne
 
@@ -22,40 +24,46 @@ jobs:
     permissions:
       contents: write
     steps:
+      # Dernier état de main (et non le commit de l'envoi) : une publication précédente a pu y ajouter un commit
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          ref: main
 
-      - name: Nouvelle campagne à publier ?
+      - name: Campagnes à publier ?
         id: diff
         run: |
-          avant="${{ github.event.before }}"
-          if [ -z "$avant" ] || ! git cat-file -e "$avant" 2>/dev/null; then
-            echo "Premier envoi ou lancement manuel : rien à republier."
-            exit 0
-          fi
-          fichiers=$(git diff --name-only "$avant" "${{ github.sha }}")
-          if echo "$fichiers" | grep -q '^02_traitement/sorties/' && ! echo "$fichiers" | grep -q '^03_publication/services/[^/]*/indicateurs.json'; then
-            echo "nouvelle=1" >> "$GITHUB_OUTPUT"
-          fi
+          python3 - >> "$GITHUB_OUTPUT" <<'EOF'
+          import json, pathlib
+          a_publier = []
+          for s in sorted(pathlib.Path("02_traitement/sorties").glob("*/indicateurs.json")):
+              traite = json.loads(s.read_text(encoding="utf-8"))["meta"]
+              p = pathlib.Path("03_publication/services") / s.parent.name / "indicateurs.json"
+              en_ligne = json.loads(p.read_text(encoding="utf-8"))["meta"] if p.exists() else {}
+              if traite.get("date_traitement") != en_ligne.get("date_traitement"):
+                  a_publier.append(traite["code_insee"])
+          print("communes=" + " ".join(a_publier))
+          EOF
+          cat "$GITHUB_OUTPUT"
 
       - uses: actions/setup-python@v5
-        if: steps.diff.outputs.nouvelle == '1'
+        if: steps.diff.outputs.communes != ''
         with:
           python-version: "3.12"
           cache: pip
 
       - name: Publication (validée par la fusion)
-        if: steps.diff.outputs.nouvelle == '1'
+        if: steps.diff.outputs.communes != ''
         env:
           PYTHONIOENCODING: utf-8
         run: |
           pip install -r requirements.txt
-          python 03_publication/publication.py --valide-par "${{ github.actor }} (fusion GitHub)"
+          for code in ${{ steps.diff.outputs.communes }}; do
+            python 03_publication/publication.py --commune "$code" --valide-par "${{ github.actor }} (fusion GitHub)"
+          done
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add 03_publication/services 04_applications/data
-          git commit -m "Publication de la campagne, validée par ${{ github.actor }}" || echo "Rien à publier"
+          git commit -m "Publication de la campagne (${{ steps.diff.outputs.communes }}), validée par ${{ github.actor }}" || echo "Rien à publier"
           git push
 
   mettre-en-ligne:
