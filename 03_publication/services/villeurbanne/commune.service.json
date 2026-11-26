@@ -1,0 +1,30 @@
+{
+  "id": "commune",
+  "titre": "Limite communale",
+  "type": "Couche d'entités",
+  "geometrie": "Polygone",
+  "nb_entites": 1,
+  "emprise_wgs84": [
+    4.85843,
+    45.74844,
+    4.92123,
+    45.79532
+  ],
+  "systeme": "EPSG:4326",
+  "champs": [
+    {
+      "nom": "nom",
+      "alias": "Nom",
+      "type": "Texte"
+    },
+    {
+      "nom": "code",
+      "alias": "Code INSEE",
+      "type": "Texte"
+    }
+  ],
+  "version": "2026.11.26",
+  "modifie": "2026-11-26T22:16:06+00:00",
+  "url": "services/villeurbanne/commune.geojson",
+  "description": "Contour communal (API Découpage administratif)."
+}

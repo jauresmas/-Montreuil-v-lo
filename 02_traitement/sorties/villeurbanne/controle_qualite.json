@@ -1,0 +1,112 @@
+{
+  "version": "2026.11.26",
+  "date": "2026-11-26T22:14:16+00:00",
+  "statut_global": "ALERTE",
+  "controles": [
+    {
+      "code": "C01",
+      "controle": "Complétude des sources brutes",
+      "statut": "OK",
+      "valeur": "7/7 fichiers",
+      "detail": ""
+    },
+    {
+      "code": "C02",
+      "controle": "Géométries invalides corrigées (make_valid)",
+      "statut": "OK",
+      "valeur": 0,
+      "detail": ""
+    },
+    {
+      "code": "C03",
+      "controle": "Micro-segments < 2 m et géométries vides supprimés",
+      "statut": "INFO",
+      "valeur": 8,
+      "detail": ""
+    },
+    {
+      "code": "C04",
+      "controle": "Doublons géométriques exacts supprimés",
+      "statut": "OK",
+      "valeur": 0,
+      "detail": ""
+    },
+    {
+      "code": "C10",
+      "controle": "Doublons piste sur la route et piste dessinée à part",
+      "statut": "INFO",
+      "valeur": "2 voie(s) corrigée(s) (0.15 km) ; 0 tronçon(s) restant(s) à vérifier",
+      "detail": "Corrigées : Rue Charlie Chaplin, Rue Francis de Pressensé. "
+    },
+    {
+      "code": "C05",
+      "controle": "Valeurs conformes aux listes du schéma national",
+      "statut": "OK",
+      "valeur": "0 écart(s)",
+      "detail": ""
+    },
+    {
+      "code": "C06",
+      "controle": "Champs obligatoires renseignés",
+      "statut": "OK",
+      "valeur": "0 valeur(s) manquante(s)",
+      "detail": ""
+    },
+    {
+      "code": "C07",
+      "controle": "Unicité de l'identifiant id_local",
+      "statut": "OK",
+      "valeur": "0 doublon(s)",
+      "detail": ""
+    },
+    {
+      "code": "C08",
+      "controle": "Emprise : objets dans la commune (+ tampon de limite)",
+      "statut": "OK",
+      "valeur": "0 hors emprise",
+      "detail": ""
+    },
+    {
+      "code": "C09",
+      "controle": "Cohérence : somme des bilans annuels = linéaire total",
+      "statut": "OK",
+      "valeur": "112.41 km / 112.41 km",
+      "detail": ""
+    },
+    {
+      "code": "C14",
+      "controle": "Continuité : sous-réseaux disjoints (tolérance 3 m)",
+      "statut": "INFO",
+      "valeur": "50 sous-réseaux ; le principal porte 86% du linéaire",
+      "detail": ""
+    },
+    {
+      "code": "C11",
+      "controle": "Complétude attributaire (part du linéaire renseigné)",
+      "statut": "INFO",
+      "valeur": "nom de voie 77% ; revêtement 95% ; vitesse (trafic_vit) 65% ; éclairage 68% ; largeur 7%",
+      "detail": ""
+    },
+    {
+      "code": "C15",
+      "controle": "Datation",
+      "statut": "INFO",
+      "valeur": "78% du linéaire daté (dont 0.2% par start_date) ; 22% antérieur à 2014",
+      "detail": ""
+    },
+    {
+      "code": "C12",
+      "controle": "Variation du linéaire vs version publiée",
+      "statut": "INFO",
+      "valeur": "première publication",
+      "detail": ""
+    },
+    {
+      "code": "C13",
+      "controle": "Fraîcheur des données OSM",
+      "statut": "ALERTE",
+      "valeur": "122 jours",
+      "detail": "données au 27/07/2026 (décalage de mise à jour de l'API ohsome)"
+    }
+  ]
+}

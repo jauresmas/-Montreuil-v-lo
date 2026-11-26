@@ -1,0 +1,65 @@
+{
+  "commune": "Villeurbanne",
+  "code_insee": "69266",
+  "osm_date_donnees": "2026-07-27T09:00Z",
+  "periode_historique": [
+    "2014-01-01",
+    "2026-07-27T09:00Z"
+  ],
+  "fichiers": [
+    {
+      "fichier": "commune.geojson",
+      "source": "API Découpage administratif",
+      "url": "https://geo.api.gouv.fr/communes/69266?format=geojson&geometry=contour&fields=nom,code,population,surface,codeDepartement",
+      "extrait_le": "2026-11-26T13:33:15+00:00",
+      "nb_objets": 1,
+      "octets": 4588,
+      "sha256": "75c3cb323e0f37ff9a05bcef8a64aa5e4b09e6abfe716ac45e66cb7d129a5675"
+    },
+    {
+      "fichier": "iris.geojson",
+      "source": "IGN, contours IRIS",
+      "url": "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=STATISTICALUNITS.IRISGE%3Airis_ge&outputFormat=application%2Fjson&CQL_FILTER=code_insee%3D%2769266%27",
+      "extrait_le": "2026-11-26T13:33:20+00:00",
+      "nb_objets": 48,
+      "octets": 104477,
+      "sha256": "7237114cae8b23a02c64f8e61fb9663cf468e09a3404d0e8bb1ce8867c55c931"
+    },
+    {
+      "fichier": "osm_amenagements_historique.geojson",
+      "source": "OpenStreetMap via ohsome (elementsFullHistory)",
+      "url": "https://api.ohsome.org/v1/elementsFullHistory/geometry",
+      "extrait_le": "2026-11-26T13:33:56+00:00",
+      "nb_objets": 19244,
+      "octets": 22058202,
+      "sha256": "c4b3a53e8b55bb0299640f2ac71ab82e99aa7748efca4398eeecb81b6abe2303"
+    },
+    {
+      "fichier": "osm_stationnement_historique.geojson",
+      "source": "OpenStreetMap via ohsome (elementsFullHistory)",
+      "url": "https://api.ohsome.org/v1/elementsFullHistory/geometry",
+      "extrait_le": "2026-11-26T13:37:49+00:00",
+      "nb_objets": 4376,
+      "octets": 2726564,
+      "sha256": "2f06a05cbc9700b778adb3e3c532723be9ab422dd645c38c32bf72ec5f92ee8a"
+    },
+    {
+      "fichier": "voirie_longueur_annuelle.json",
+      "source": "OpenStreetMap via ohsome",
+      "url": "https://api.ohsome.org/v1/elements/length",
+      "extrait_le": "2026-11-26T13:37:51+00:00",
+      "nb_objets": 14,
+      "octets": 1181,
+      "sha256": "b3f41dfa6b4ad04bbafb39d7436c0ed958ae6b2f69ce06868fc12626804d502a"
+    },
+    {
+      "fichier": "voirie_longueur_iris.json",
+      "source": "OpenStreetMap via ohsome",
+      "url": "https://api.ohsome.org/v1/elements/length/groupBy/boundary",
+      "extrait_le": "2026-11-26T13:37:52+00:00",
+      "nb_objets": 48,
+      "octets": 6742,
+      "sha256": "a3718f7d85a9c7d9582707551a6d60401de1b0a7b5ca6e0bf30fbff0052a32f0"
+    }
+  ]
+}

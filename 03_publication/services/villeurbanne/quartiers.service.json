@@ -1,0 +1,50 @@
+{
+  "id": "quartiers",
+  "titre": "Quartiers (regroupement IRIS)",
+  "type": "Couche d'entités",
+  "geometrie": "Polygone",
+  "nb_entites": 48,
+  "emprise_wgs84": [
+    4.85843,
+    45.74844,
+    4.92123,
+    45.79532
+  ],
+  "systeme": "EPSG:4326",
+  "champs": [
+    {
+      "nom": "quartier",
+      "alias": "Quartier",
+      "type": "Texte"
+    },
+    {
+      "nom": "surface_ha",
+      "alias": "Surface (ha)",
+      "type": "Réel"
+    },
+    {
+      "nom": "km_voirie",
+      "alias": "Voirie (km)",
+      "type": "Réel"
+    },
+    {
+      "nom": "km",
+      "alias": "Aménagements (km)",
+      "type": "Réel"
+    },
+    {
+      "nom": "km_pour_100km_voirie",
+      "alias": "km d'aménagement / 100 km de voirie",
+      "type": "Réel"
+    },
+    {
+      "nom": "km_depuis_2020",
+      "alias": "Réalisé depuis 2020 (km)",
+      "type": "Réel"
+    }
+  ],
+  "version": "2026.11.26",
+  "modifie": "2026-11-26T22:16:06+00:00",
+  "url": "services/villeurbanne/quartiers.geojson",
+  "description": "48 quartiers (IRIS INSEE/IGN), avec linéaire de voirie et densité d'aménagements."
+}

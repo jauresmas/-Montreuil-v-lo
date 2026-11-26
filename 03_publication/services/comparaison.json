@@ -1,5 +1,5 @@
 {
- "genere_le": "2026-11-26T21:56:45+00:00",
+ "genere_le": "2026-11-26T22:16:06+00:00",
  "source": "Aménagements et stationnement : OpenStreetMap (ODbL) ; population légale : INSEE via geo.api.gouv.fr",
  "communes": [
   {
@@ -96,6 +96,103 @@
      "annee": 2026,
      "km": 6.03,
      "km_cumule": 75.31
+    }
+   ]
+  },
+  {
+   "dossier": "villeurbanne",
+   "nom": "Villeurbanne",
+   "de_commune": "de Villeurbanne",
+   "code_insee": "69266",
+   "departement": "Rhône (69)",
+   "population": 163684,
+   "surface_ha": 1487.7,
+   "date_donnees_osm": "2026-07-27",
+   "annee_reference": 2014,
+   "annee_partielle": 2026,
+   "reseau_libre_service": "Vélo'v",
+   "version": "2026.11.26",
+   "statut_qc": "ALERTE",
+   "totaux": {
+    "km_total": 112.41,
+    "km_site_propre": 41.63,
+    "part_site_propre": 0.37,
+    "km_voirie": 179.42,
+    "km_pour_100km_voirie": 62.7,
+    "stationnements": 1074,
+    "places_declarees": 12363,
+    "stations_libre_service": 88
+   },
+   "par_annee": [
+    {
+     "annee": null,
+     "km": 24.2,
+     "km_cumule": 24.2
+    },
+    {
+     "annee": 2014,
+     "km": 3.67,
+     "km_cumule": 27.87
+    },
+    {
+     "annee": 2015,
+     "km": 4.9,
+     "km_cumule": 32.77
+    },
+    {
+     "annee": 2016,
+     "km": 5.35,
+     "km_cumule": 38.12
+    },
+    {
+     "annee": 2017,
+     "km": 4.33,
+     "km_cumule": 42.44
+    },
+    {
+     "annee": 2018,
+     "km": 4.02,
+     "km_cumule": 46.47
+    },
+    {
+     "annee": 2019,
+     "km": 2.98,
+     "km_cumule": 49.44
+    },
+    {
+     "annee": 2020,
+     "km": 4.74,
+     "km_cumule": 54.18
+    },
+    {
+     "annee": 2021,
+     "km": 8.27,
+     "km_cumule": 62.45
+    },
+    {
+     "annee": 2022,
+     "km": 9.3,
+     "km_cumule": 71.75
+    },
+    {
+     "annee": 2023,
+     "km": 10.06,
+     "km_cumule": 81.81
+    },
+    {
+     "annee": 2024,
+     "km": 9.0,
+     "km_cumule": 90.81
+    },
+    {
+     "annee": 2025,
+     "km": 11.51,
+     "km_cumule": 102.32
+    },
+    {
+     "annee": 2026,
+     "km": 10.09,
+     "km_cumule": 112.41
     }
    ]
   }
