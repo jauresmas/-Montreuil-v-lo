@@ -1,7 +1,12 @@
 /* Ressources partagées par le portail, la carte web et le tableau de bord.
    Symbologie : palette catégorielle validée (contrôle daltonisme), mêmes valeurs que publication.py. */
 (function () {
+  // Crédit du projet d'origine, affiché par toutes les pages (à conserver dans les forks)
+  const credit = 'Outil open source « Montreuil à vélo » créé par Jaurès DAA-HINGBANON · ' +
+    '<a href="https://github.com/jauresmas/-Montreuil-v-lo" target="_blank" rel="noopener">code source</a> sous licence MIT.';
   const D = window.MV_DATA;
+  // Page qui ne dépend d'aucune commune (comparaison) : seul le crédit est partagé
+  if (!D && window.MV_SANS_DONNEES) { window.MV = { credit }; return; }
   if (!D) {
     document.body.innerHTML = '<p style="font:16px sans-serif;padding:24px">Données absentes : lancez la chaîne ' +
       '(<code>05_mise_a_jour/maj_annuelle.bat</code>) pour générer <code>data/&lt;commune&gt;/donnees.js</code>.</p>';
@@ -46,9 +51,6 @@
     const [base, ancre] = url.split("#");
     return `${base}${base.includes("?") ? "&" : "?"}commune=${encodeURIComponent(commune.dossier)}${ancre ? "#" + ancre : ""}`;
   }
-  // Crédit du projet d'origine, affiché par le portail, la carte et le tableau de bord (à conserver dans les forks)
-  const credit = 'Outil open source « Montreuil à vélo » créé par Jaurès DAA-HINGBANON · ' +
-    '<a href="https://github.com/jauresmas/-Montreuil-v-lo" target="_blank" rel="noopener">code source</a> sous licence MIT.';
   // Stations de vélos en libre-service : même valeur que traitement.py ; nom du réseau (Vélib', Vélo'v…) s'il est connu
   const LIBRE_SERVICE = "Station en libre-service";
   const reseau = meta.reseau_libre_service;

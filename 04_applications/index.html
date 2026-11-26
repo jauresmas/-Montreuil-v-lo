@@ -39,6 +39,14 @@
   .appli h3 { margin: 0; font-size: 18px; color: #151515; }
   .appli p { margin: 0; font-size: 13.5px; color: #4a4a4a; line-height: 1.5; flex: 1; }
 
+  .comparer { display: flex; align-items: center; gap: 16px; margin-top: 16px; padding: 16px 18px; background: #fff;
+    box-shadow: var(--mv-carte-ombre); border-radius: 3px; }
+  .comparer > calcite-icon { color: #2a78d6; flex: none; }
+  .comparer > div { flex: 1; min-width: 0; }
+  .comparer h3 { margin: 0 0 4px; font-size: 18px; color: #151515; }
+  .comparer p { margin: 0; font-size: 13.5px; color: #4a4a4a; line-height: 1.5; }
+  @media (max-width: 560px) { .comparer { flex-wrap: wrap; } .comparer > calcite-icon { display: none; } }
+
   .filtres { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
   .grille-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
   .item { background: #fff; border-radius: 3px; box-shadow: var(--mv-carte-ombre); display: flex; flex-direction: column; overflow: hidden; }
@@ -137,6 +145,12 @@
     <h2>Applications</h2>
     <p class="chapo">Une carte pour explorer le réseau année par année, et un tableau de bord de synthèse.</p>
     <div class="applis" id="applis"></div>
+    <div class="comparer" id="comparer" hidden>
+      <calcite-icon icon="graph-bar" scale="l"></calcite-icon>
+      <div><h3>Comparer les communes</h3>
+        <p id="comparer-texte">Réseau cyclable ramené à la population et à la voirie, croissance depuis 2020 et stationnement, commune par commune.</p></div>
+      <calcite-button id="comparer-lien" icon-end="launch">Comparer</calcite-button>
+    </div>
   </section>
 
   <section class="bloc" id="donnees">
@@ -200,6 +214,12 @@
     choix.innerHTML = MV_COMMUNES.communes.map((c) => `<calcite-option value="${echapper(c.dossier)}" ${c.dossier === commune.dossier ? "selected" : ""}>${echapper(c.nom)}</calcite-option>`).join("");
     choix.hidden = false;
     choix.addEventListener("calciteSelectChange", () => { location.href = `index.html?commune=${encodeURIComponent(choix.value)}`; });
+    // Comparaison des communes, mise en avant de la commune affichée
+    const n = MV_COMMUNES.communes.length;
+    document.getElementById("comparer-texte").textContent = `${commune.nom} face ${n > 2 ? `aux ${n - 1} autres communes publiées` : "à l'autre commune publiée"} : ` +
+      "réseau cyclable ramené à la population et à la voirie, croissance depuis 2020, stationnement.";
+    document.getElementById("comparer-lien").href = lien("comparaison/index.html");
+    document.getElementById("comparer").hidden = false;
   }
   if (window.innerWidth < 560) document.querySelector("calcite-navigation-logo").description = "Portail des données cyclables";
 

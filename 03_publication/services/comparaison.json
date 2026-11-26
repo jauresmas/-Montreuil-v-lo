@@ -1,0 +1,103 @@
+{
+ "genere_le": "2026-11-26T21:56:45+00:00",
+ "source": "Aménagements et stationnement : OpenStreetMap (ODbL) ; population légale : INSEE via geo.api.gouv.fr",
+ "communes": [
+  {
+   "dossier": "montreuil",
+   "nom": "Montreuil",
+   "de_commune": "de Montreuil",
+   "code_insee": "93048",
+   "departement": "Seine-Saint-Denis (93)",
+   "population": 111934,
+   "surface_ha": 891.3,
+   "date_donnees_osm": "2026-07-27",
+   "annee_reference": 2014,
+   "annee_partielle": 2026,
+   "reseau_libre_service": "Vélib'",
+   "version": "2026.11.13",
+   "statut_qc": "OK",
+   "totaux": {
+    "km_total": 75.31,
+    "km_site_propre": 17.05,
+    "part_site_propre": 0.226,
+    "km_voirie": 123.18,
+    "km_pour_100km_voirie": 61.1,
+    "stationnements": 358,
+    "places_declarees": 3295,
+    "stations_libre_service": 28
+   },
+   "par_annee": [
+    {
+     "annee": null,
+     "km": 21.01,
+     "km_cumule": 21.01
+    },
+    {
+     "annee": 2014,
+     "km": 0.91,
+     "km_cumule": 21.92
+    },
+    {
+     "annee": 2015,
+     "km": 0.39,
+     "km_cumule": 22.31
+    },
+    {
+     "annee": 2016,
+     "km": 0.67,
+     "km_cumule": 22.98
+    },
+    {
+     "annee": 2017,
+     "km": 3.8,
+     "km_cumule": 26.78
+    },
+    {
+     "annee": 2018,
+     "km": 3.12,
+     "km_cumule": 29.9
+    },
+    {
+     "annee": 2019,
+     "km": 8.3,
+     "km_cumule": 38.2
+    },
+    {
+     "annee": 2020,
+     "km": 14.74,
+     "km_cumule": 52.94
+    },
+    {
+     "annee": 2021,
+     "km": 1.47,
+     "km_cumule": 54.4
+    },
+    {
+     "annee": 2022,
+     "km": 3.47,
+     "km_cumule": 57.88
+    },
+    {
+     "annee": 2023,
+     "km": 4.54,
+     "km_cumule": 62.42
+    },
+    {
+     "annee": 2024,
+     "km": 1.37,
+     "km_cumule": 63.79
+    },
+    {
+     "annee": 2025,
+     "km": 5.49,
+     "km_cumule": 69.28
+    },
+    {
+     "annee": 2026,
+     "km": 6.03,
+     "km_cumule": 75.31
+    }
+   ]
+  }
+ ]
+}

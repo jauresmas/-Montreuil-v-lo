@@ -121,6 +121,22 @@ Il suffit de donner son code INSEE au lancement (ici Villeurbanne) :
   la commune du portail.
 - La campagne automatique du 15 janvier sur GitHub ne concerne que Montreuil.
 
+### Comparer les communes
+
+Dès que deux communes sont publiées, la page `comparaison/index.html` les met côte à côte. On y accède depuis
+le portail (bloc « Comparer les communes ») ou le bouton « Comparer » du tableau de bord.
+
+- Les chiffres sont ramenés à la population légale (INSEE, via geo.api.gouv.fr) et à la longueur de voirie :
+  réseau pour 10 000 habitants, km pour 100 km de voirie, part en site propre, croissance du réseau depuis 2020,
+  places de stationnement pour 1 000 habitants.
+- Un classement par indicateur, l'évolution du réseau depuis 2014 et un tableau triable de tous les indicateurs.
+- `?commune=<commune>` met une commune en avant, `?indicateur=densite` choisit l'indicateur du classement.
+- Les données viennent de `03_publication/comparaison.py`, lancé à chaque publication. Il rassemble les
+  indicateurs de toutes les communes publiées dans `services/comparaison.json` (téléchargeable) et
+  `data/comparaison.js`.
+- Limite : OpenStreetMap est collaboratif, un écart entre deux villes peut aussi venir d'un recensement plus ou
+  moins complet.
+
 ## Arborescence
 
 ```
@@ -128,8 +144,10 @@ index.html                   redirection vers le portail (page d'accueil du site
 config.py                    paramètres communs (commune, année de référence, tolérances)
 01_donnees/                  collecte.py, brutes/<commune>/ (seul manifest.json est versionné)
 02_traitement/               traitement.py, osm_vers_schema.py, sorties/<commune>/ (GPKG Lambert-93, GeoJSON, QC, indicateurs)
-03_publication/              publication.py, services/<commune>/ (couches, descripteurs, vignettes, catalogue)
-04_applications/             index.html (portail), carte/, tableau-de-bord/, assets/, data/<commune>/donnees.js, data/communes.js
+03_publication/              publication.py, comparaison.py, services/<commune>/ (couches, descripteurs, vignettes, catalogue),
+                             services/comparaison.json
+04_applications/             index.html (portail), carte/, tableau-de-bord/, comparaison/, assets/,
+                             data/<commune>/donnees.js, data/communes.js, data/comparaison.js
 05_mise_a_jour/              maj_annuelle.py, checklist, modèle de saisie, journaux/<commune>.md
 .github/workflows/           campagne annuelle et mise en ligne
 docs/captures/               captures d'écran des applications
@@ -157,7 +175,7 @@ GitHub Actions et GitHub Pages.
 
 Le code est publié sous licence MIT (voir [LICENSE](LICENSE)) : vous pouvez le réutiliser, le modifier et le
 déployer pour votre commune. En retour, merci de conserver le crédit affiché en pied de page du portail, dans
-« À propos » de la carte et dans « Méthode et sources » du tableau de bord. Il est défini à un seul endroit,
+« À propos » de la carte, dans « Méthode et sources » du tableau de bord et sur la page de comparaison. Il est défini à un seul endroit,
 la constante `credit` de [04_applications/assets/commun.js](04_applications/assets/commun.js).
 
 Les données gardent leurs propres licences : OpenStreetMap (ODbL, © contributeurs OpenStreetMap),

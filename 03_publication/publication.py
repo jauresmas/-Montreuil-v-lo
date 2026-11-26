@@ -5,8 +5,8 @@
   * archive la version actuellement publiée dans archives/<commune>/<version>/ avant de la remplacer ;
   * produit pour chaque couche un descripteur de service (champs, alias, emprise, nb d'entités),
     une vignette SVG et une fiche dans le catalogue du portail ;
-  * alimente les applications (04_applications/data/<commune>/donnees.js) et la liste des communes
-    publiées (04_applications/data/communes.js).
+  * alimente les applications (04_applications/data/<commune>/donnees.js), la liste des communes
+    publiées (04_applications/data/communes.js) et la comparaison des communes (comparaison.py).
 
 Usage : python 03_publication/publication.py [--commune <code INSEE>] [--valide-par "Nom Prénom, service"]
 """
@@ -22,6 +22,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import config as C  # noqa: E402
+from comparaison import ecrire_comparaison  # noqa: E402
 
 # Couleurs par type : mêmes valeurs que 04_applications/assets/commun.js (palette validée daltonisme)
 COULEURS = {"Piste cyclable": "#2a78d6", "Bande cyclable": "#eb6834", "Double-sens cyclable": "#1baf7a",
@@ -328,8 +329,9 @@ def main() -> int:
         "/* Généré par 03_publication/publication.py, ne pas modifier à la main */\n"
         "window.MV_DATA = " + json.dumps(paquet, ensure_ascii=False, separators=(",", ":")) + ";\n", encoding="utf-8")
     inscrire_commune()
+    nb = ecrire_comparaison()
     log(f"Version {version} publiée pour {C.NOM_COMMUNE} ({t['km_total']} km), applications à jour : "
-        f"{C.DIR_APPLIS_DATA.relative_to(C.ROOT).as_posix()}/")
+        f"{C.DIR_APPLIS_DATA.relative_to(C.ROOT).as_posix()}/ ; comparaison : {nb} commune(s)")
     return 0
 
 

@@ -138,6 +138,7 @@
     <calcite-button id="reinit" appearance="transparent" kind="neutral" icon-start="refresh" scale="s">Réinitialiser</calcite-button>
   </div>
   <div class="liens">
+    <calcite-action id="vers-comparaison" icon="graph-bar" text="Comparer" text-enabled scale="s" hidden></calcite-action>
     <calcite-action id="vers-carte" icon="map" text="Carte" text-enabled scale="s"></calcite-action>
     <calcite-action id="vers-portail" icon="apps" text="Portail" text-enabled scale="s"></calcite-action>
   </div>
@@ -262,6 +263,10 @@
   });
   document.getElementById("vers-carte").addEventListener("click", () => (location.href = MV.lien("../carte/index.html")));
   document.getElementById("vers-portail").addEventListener("click", () => (location.href = MV.lien("../index.html")));
+  // Comparaison des communes : proposée dès que plusieurs communes sont publiées
+  const versComparaison = document.getElementById("vers-comparaison");
+  versComparaison.hidden = !MV.commune.autres;
+  versComparaison.addEventListener("click", () => (location.href = MV.lien("../comparaison/index.html")));
   document.getElementById("m-types").addEventListener("calciteSegmentedControlChange", (e) => { etat.mTypes = e.target.value; majTypes(); });
   document.getElementById("m-quart").addEventListener("calciteSegmentedControlChange", (e) => { etat.mQuart = e.target.value; majQuartiers(); });
   document.getElementById("sous-titre").textContent =
