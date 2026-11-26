@@ -1,8 +1,9 @@
 """Paramètres communs de la chaîne « Montreuil à vélo ».
 
-Tous les scripts des étapes 01 à 05 importent ce module : c'est le seul
-endroit à modifier pour changer de commune, de millésime de référence ou
-de chemins de sortie.
+La chaîne est pensée pour Montreuil et ses campagnes de mise à jour annuelles.
+Tous les scripts des étapes 01 à 05 importent ce module : c'est ici que se
+règlent l'année de référence, les mandats, les tolérances de traitement et
+les chemins, pour relancer chaque année la même chaîne sans toucher au code.
 """
 from pathlib import Path
 
