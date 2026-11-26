@@ -1,10 +1,10 @@
 """Étape 2 : traitement : nettoyage, normalisation, datation, contrôle qualité.
 
-Entrées  : 01_donnees/brutes/*
-Sorties  : 02_traitement/sorties/
-  montreuil_velo.gpkg ............................ couches Lambert-93 (travail SIG)
+Entrées  : 01_donnees/brutes/<commune>/*
+Sorties  : 02_traitement/sorties/<commune>/
+  <commune>_velo.gpkg ............................ couches Lambert-93 (travail SIG)
   amenagements_cyclables.geojson ................. couche enrichie (WGS84, publication)
-  amenagements_cyclables_93048_schema_etalab.geojson  export conforme au schéma national
+  amenagements_cyclables_<code INSEE>_schema_etalab.geojson  export conforme au schéma national
   stationnement_velo.geojson, quartiers.geojson, commune.geojson
   indicateurs.json ............................... chiffres clés pour le tableau de bord
   controle_qualite.json / rapport_controle_qualite.md
@@ -45,19 +45,8 @@ ETALAB = ["id_local", "id_osm", "num_iti", "code_com_d", "ame_d", "regime_d", "s
 ENRICHIS = ["nom_voie", "type_amenagement", "site_propre", "annee_realisation", "periode", "nature",
             "methode_datation", "quartier", "longueur_m", "controle", "osm_url"]
 
-NOMS_QUARTIERS = {
-    "Bas Montreuil Est": "Bas-Montreuil Est",
-    "Bas Montreuil Ouest": "Bas-Montreuil Ouest",
-    "Bel-Air Grands Pêchers": "Bel-Air / Grands-Pêchers",
-    "Branly Boissière": "Branly / Boissière",
-    "Centre Ville Jean Moulin Espoir": "Centre-ville / Jean-Moulin / Espoir",
-    "La Noue-Clos Français-Guilands": "La Noue / Clos-Français / Guilands",
-    "Montreau Ruffins Clos Arachis": "Montreau / Ruffins / Clos-Arachis",
-    "Paul Signac Murs à Pêches": "Paul-Signac / Murs-à-Pêches",
-    "Ramenas Fabien Lagrange": "Ramenas / Fabien / Lagrange",
-    "Solidarité Carnot": "Solidarité / Carnot",
-    "Villiers Barbusse": "Villiers / Barbusse",
-}
+# Type des stations de vélos en libre-service (Vélib', Vélo'v, Vélomagg…), nom du réseau dans le champ « reseau »
+LIBRE_SERVICE = "Station en libre-service"
 
 
 def log(msg: str) -> None:
@@ -181,7 +170,7 @@ def main() -> int:
     limite = commune.geometry.iloc[0]
     zone = limite.buffer(C.TAMPON_COMMUNE_M)
     iris = gpd.read_file(C.DIR_BRUTES / "iris.geojson").to_crs(C.CRS_METRIQUE)
-    iris["quartier"] = iris["nom_iris"].str.replace(r"\s+\d+$", "", regex=True).map(lambda n: NOMS_QUARTIERS.get(n, n))
+    iris["quartier"] = iris["nom_iris"].str.replace(r"\s+\d+$", "", regex=True).map(lambda n: C.NOMS_QUARTIERS.get(n, n))
     quartiers = iris.dissolve("quartier", as_index=False)[["quartier", "geometry"]]
     quartiers["surface_ha"] = (quartiers.area / 1e4).round(1)
     log(f"{len(iris)} IRIS regroupés en {len(quartiers)} quartiers")
@@ -455,18 +444,29 @@ def main() -> int:
     controle("C15", "Datation", "INFO",
              f"{1 - part_av:.0%} du linéaire daté (dont {part_sd:.1%} par start_date) ; {part_av:.0%} antérieur à {C.ANNEE_REFERENCE}")
 
-    # -- Stationnement vélo et Vélib' -------------------------------------------------
+    # -- Stationnement vélo et vélos en libre-service -----------------------------------
     hs = charger_historique("osm_stationnement_historique.geojson").to_crs(C.CRS_METRIQUE)
     hs = hs[hs.geometry.notna() & ~hs.geometry.is_empty].copy()
     hs["amenity"] = hs["tags"].map(lambda t: t.get("amenity"))
     hs = hs[~hs["tags"].map(lambda t: t.get("access") in ("private", "no"))]
     hs["capacite"] = hs["tags"].map(lambda t: int(t["capacity"]) if str(t.get("capacity", "")).isdigit() else None)
 
+    def est_velib(t):
+        txt = " ".join(str(t.get(k, "")) for k in ("network", "brand", "operator", "name")).lower()
+        return "vélib" in txt or "velib" in txt or "smovengo" in txt
+
     def type_stat(t):
         if t.get("amenity") == "bicycle_rental":
-            txt = " ".join(str(t.get(k, "")) for k in ("network", "brand", "operator", "name")).lower()
-            return "Station Vélib'" if ("vélib" in txt or "velib" in txt or "smovengo" in txt) else "Location de vélos"
+            # Station d'un réseau (borne, réseau nommé) ou simple loueur de vélos
+            if est_velib(t) or t.get("bicycle_rental") in ("docking_station", "dropoff_point") or t.get("network"):
+                return LIBRE_SERVICE
+            return "Location de vélos"
         return "Stationnement vélo"
+
+    def reseau(t):
+        if type_stat(t) != LIBRE_SERVICE:
+            return None
+        return "Vélib'" if est_velib(t) else (t.get("network") or t.get("brand") or t.get("operator"))
     SUPPORTS = {"stands": "Arceaux", "wall_loops": "Pince-roues", "rack": "Râtelier", "shed": "Abri / consigne",
                 "building": "Consigne collective", "lockers": "Box individuels", "bollard": "Potelets",
                 "two-tier": "Double étage", "ground_slots": "Rainures au sol", "floor": "Stationnement libre"}
@@ -480,6 +480,7 @@ def main() -> int:
     st["couvert"] = st["tags"].map(lambda t: {"yes": True, "no": False}.get(t.get("covered")))
     st["nom"] = st["tags"].map(lambda t: t.get("name"))
     st["operateur"] = st["tags"].map(lambda t: t.get("operator") or t.get("network"))
+    st["reseau"] = st["tags"].map(reseau)
     st["osm_url"] = "https://www.openstreetmap.org/" + st["osm_id"]
     j = gpd.sjoin(st[["geometry"]], quartiers[["quartier", "geometry"]], how="left", predicate="within")
     st["quartier"] = j.groupby(level=0)["quartier"].first()
@@ -491,7 +492,7 @@ def main() -> int:
         p = snap[snap["type"] == "Stationnement vélo"]
         serie_stat.append({"date": t.strftime("%Y-%m-%d"), "sites": int(len(p)),
                            "places": int(p["capacite"].fillna(0).sum()),
-                           "stations_velib": int((snap["type"] == "Station Vélib'").sum())})
+                           "stations_libre_service": int((snap["type"] == LIBRE_SERVICE).sum())})
     parkings = st[st["type"] == "Stationnement vélo"]
 
     # -- C12 Variation par rapport à la dernière version publiée -------------------------
@@ -522,7 +523,10 @@ def main() -> int:
                 "km_site_propre": round(float(km[sel & seg["site_propre"]].sum()), 2)}
 
     indicateurs = {
-        "meta": {"commune": C.NOM_COMMUNE, "code_insee": C.CODE_INSEE, "departement": C.DEPARTEMENT,
+        "meta": {"commune": C.NOM_COMMUNE, "de_commune": C.de(C.NOM_COMMUNE), "code_insee": C.CODE_INSEE,
+                 "dossier": C.DOSSIER_COMMUNE, "departement": C.DEPARTEMENT,
+                 "nb_iris": int(len(iris)), "nb_quartiers": int(len(quartiers)),
+                 "reseau_libre_service": (st["reseau"].dropna().mode().iloc[0] if st["reseau"].notna().any() else None),
                  "version": version, "date_traitement": debut_traitement.isoformat(timespec="seconds"),
                  "date_donnees_osm": vt_max.strftime("%Y-%m-%d"), "annee_reference": C.ANNEE_REFERENCE,
                  "annee_partielle": annee_fin, "statut_qc": statut_global,
@@ -536,7 +540,7 @@ def main() -> int:
             "sous_reseaux": len(blocs), "part_reseau_principal": round(part_principal, 3),
             "stationnements": int(len(parkings)), "places_declarees": int(parkings["capacite"].fillna(0).sum()),
             "stationnements_sans_capacite": int(parkings["capacite"].isna().sum()),
-            "stations_velib": int((st["type"] == "Station Vélib'").sum()),
+            "stations_libre_service": int((st["type"] == LIBRE_SERVICE).sum()),
         },
         "par_annee": par_annee,
         "par_type": [{"type": t, "km": round(float(km[seg["type_amenagement"] == t].sum()), 2)} for t in PRIORITE],
@@ -550,7 +554,7 @@ def main() -> int:
     # -- Écriture ----------------------------------------------------------------
     out = C.DIR_SORTIES
     seg_out = seg[ETALAB + ENRICHIS + ["geometry"]].copy()
-    gpkg = out / "montreuil_velo.gpkg"
+    gpkg = out / f"{C.DOSSIER_COMMUNE}_velo.gpkg"
     if gpkg.exists():
         gpkg.unlink()
     g2154 = seg_out.copy()
@@ -558,7 +562,7 @@ def main() -> int:
     for c in ("lumiere", "site_propre"):
         g2154[c] = g2154[c].astype("object")
     g2154.to_file(gpkg, layer="amenagements_cyclables", driver="GPKG")
-    st_cols = ["osm_id", "type", "capacite", "support", "couvert", "nom", "operateur", "annee_apparition", "quartier", "osm_url"]
+    st_cols = ["osm_id", "type", "capacite", "support", "couvert", "nom", "operateur", "reseau", "annee_apparition", "quartier", "osm_url"]
     st[st_cols + ["geometry"]].assign(couvert=st["couvert"].astype("object")).to_file(gpkg, layer="stationnement_velo", driver="GPKG")
     quartiers.to_file(gpkg, layer="quartiers", driver="GPKG")
     commune[["nom", "code", "geometry"]].to_file(gpkg, layer="commune", driver="GPKG")

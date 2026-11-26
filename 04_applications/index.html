@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Montreuil à vélo · Portail</title>
-<meta name="description" content="Portail des données et applications de suivi des aménagements cyclables de Montreuil">
+<title>Portail vélo</title>
+<meta name="description" content="Portail des données et applications de suivi annuel des aménagements cyclables">
 <link rel="stylesheet" href="https://js.arcgis.com/calcite-components/2.13.2/calcite.css">
 <script type="module" src="https://js.arcgis.com/calcite-components/2.13.2/calcite.esm.js"></script>
 <link rel="stylesheet" href="assets/commun.css">
@@ -113,7 +113,8 @@
 </head>
 <body>
 <calcite-navigation>
-  <calcite-navigation-logo slot="logo" icon="biking" heading="Montreuil à vélo" description="Portail des données cyclables"></calcite-navigation-logo>
+  <calcite-navigation-logo slot="logo" icon="biking" heading="Portail vélo" description="Portail des données cyclables"></calcite-navigation-logo>
+  <calcite-select slot="content-end" id="choix-commune" label="Commune" scale="s" hidden></calcite-select>
   <nav slot="content-end" class="nav-liens" aria-label="Sections">
     <a href="#applications">Applications</a><a href="#donnees">Données</a><a href="#chaine">Chaîne de production</a><a href="#qualite">Qualité</a>
   </nav>
@@ -122,7 +123,7 @@
 <header class="heros">
   <svg class="reseau" id="reseau" aria-hidden="true"></svg>
   <div class="conteneur">
-    <div class="surtitre">Montreuil · Mobilités actives</div>
+    <div class="surtitre" id="surtitre">Mobilités actives</div>
     <h1>Suivre chaque année les aménagements cyclables</h1>
     <p class="intro">Carte interactive, tableau de bord et données ouvertes, produits par une chaîne SIG automatisée
       et republiés à chaque campagne annuelle après contrôle qualité et validation métier.</p>
@@ -174,19 +175,32 @@
     Sources : aménagements et stationnement © contributeurs OpenStreetMap (licence ODbL), historique via l'API ohsome (HeiGIT) ·
     IRIS © IGN, Géoplateforme · limite communale : API Découpage administratif (geo.api.gouv.fr) · fonds de carte © IGN.<br>
     Projet indépendant, non officiel. Réalisé avec des briques ouvertes : Calcite Design System (Apache-2.0),
-    MapLibre GL JS (BSD-3), Chart.js (MIT).
+    MapLibre GL JS (BSD-3), Chart.js (MIT).<br>
+    <span id="credit"></span>
   </div>
 </footer>
 
 <dialog class="fiche" id="fiche" aria-labelledby="fiche-titre"></dialog>
 
-<script src="data/donnees.js"></script>
+<script src="data/communes.js"></script>
+<script src="assets/charger.js"></script>
 <script src="assets/commun.js"></script>
 <script>
 (function () {
-  const { D, fmt, echapper, A0, A1, dateDonnees, couleurType } = MV;
+  const { D, fmt, echapper, A0, A1, dateDonnees, couleurType, commune, lien } = MV;
   const ind = D.indicateurs, t = ind.totaux, qc = D.qc;
   const depuis2020 = ind.par_annee.filter((p) => p.annee >= 2020).reduce((s, p) => s + p.km, 0);
+  // Nom de la commune (lu dans les données) et choix de la commune quand plusieurs sont publiées
+  document.title = `${commune.nom} à vélo · Portail`;
+  document.querySelector("calcite-navigation-logo").heading = `${commune.nom} à vélo`;
+  document.getElementById("surtitre").textContent = `${commune.nom} · Mobilités actives`;
+  document.getElementById("credit").innerHTML = MV.credit;
+  if (commune.autres) {
+    const choix = document.getElementById("choix-commune");
+    choix.innerHTML = MV_COMMUNES.communes.map((c) => `<calcite-option value="${echapper(c.dossier)}" ${c.dossier === commune.dossier ? "selected" : ""}>${echapper(c.nom)}</calcite-option>`).join("");
+    choix.hidden = false;
+    choix.addEventListener("calciteSelectChange", () => { location.href = `index.html?commune=${encodeURIComponent(choix.value)}`; });
+  }
   if (window.innerWidth < 560) document.querySelector("calcite-navigation-logo").description = "Portail des données cyclables";
 
   // ---------- Bandeau : le réseau réel en filigrane ----------
@@ -219,7 +233,7 @@
       <div class="txt">
         <div class="meta" style="font-size:12px;color:#6a6a6a;display:flex;gap:6px;align-items:center"><calcite-icon icon="${a.icone}" scale="s"></calcite-icon>${a.type} · ${partage(a.partage)}</div>
         <h3>${echapper(a.titre)}</h3><p>${echapper(a.description)}</p>
-        <div><calcite-button href="${a.url}" icon-end="launch">Ouvrir</calcite-button></div>
+        <div><calcite-button href="${lien(a.url)}" icon-end="launch">Ouvrir</calcite-button></div>
       </div>
     </article>`).join("");
 
@@ -312,7 +326,7 @@
     { n: 3, c: "#5b3fa0", titre: "Publication", quoi: "Couches GeoJSON, descripteurs de service, export au schéma national, archivage.",
       etat: `${ok} Version ${D.version}${derniere.valide_par ? ` validée par ${echapper(derniere.valide_par)}` : ""}` },
     { n: 4, c: "#13817f", titre: "Carte web + tableau de bord", quoi: "Application cartographique avec curseur temporel et tableau de bord de synthèse.",
-      etat: `${ok} <a href="carte/index.html">Carte</a> · <a href="tableau-de-bord/index.html">Tableau de bord</a>` },
+      etat: `${ok} <a href="${lien("carte/index.html")}">Carte</a> · <a href="${lien("tableau-de-bord/index.html")}">Tableau de bord</a>` },
     { n: 5, c: "#c46a00", titre: "Mise à jour annuelle", quoi: "Reprise des données, validation métier, republication, archivage de la version N-1.",
       etat: `${ok} ${D.historique.length} version(s) publiée(s) · prochaine campagne : janvier ${new Date(D.historique[0]?.publie_le || Date.now()).getFullYear() + 1}` },
   ];

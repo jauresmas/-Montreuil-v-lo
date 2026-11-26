@@ -45,6 +45,6 @@
   ],
   "version": "2026.11.13",
   "modifie": "2026-11-13T21:24:07+00:00",
-  "url": "services/quartiers.geojson",
+  "url": "services/montreuil/quartiers.geojson",
   "description": "Onze quartiers reconstitués par regroupement des 41 IRIS INSEE/IGN, avec linéaire de voirie et densité d'aménagements."
 }

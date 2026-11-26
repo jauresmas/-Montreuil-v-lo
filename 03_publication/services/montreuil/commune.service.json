@@ -25,6 +25,6 @@
   ],
   "version": "2026.11.13",
   "modifie": "2026-11-13T21:24:07+00:00",
-  "url": "services/commune.geojson",
+  "url": "services/montreuil/commune.geojson",
   "description": "Contour communal (API Découpage administratif)."
 }

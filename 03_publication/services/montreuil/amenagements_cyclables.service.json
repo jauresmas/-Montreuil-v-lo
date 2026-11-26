@@ -210,6 +210,6 @@
   ],
   "version": "2026.11.13",
   "modifie": "2026-11-13T21:24:07+00:00",
-  "url": "services/amenagements_cyclables.geojson",
+  "url": "services/montreuil/amenagements_cyclables.geojson",
   "description": "Réseau cyclable de Montreuil au format du schéma national des aménagements cyclables (Etalab), enrichi de l'année de réalisation, de la nature des travaux (création / requalification) et du quartier."
 }

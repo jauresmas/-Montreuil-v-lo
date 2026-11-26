@@ -71,7 +71,7 @@ au 1er janvier de chaque année (tampon de 7 m, 80 % de recouvrement) :
 5. **Des indicateurs définis avec les élus et stables** : définitions écrites (km de voie, site propre,
    densité, création ou requalification) et inchangées d'une année sur l'autre, pour que les séries restent comparables.
 6. **L'automatisation et un calendrier** : une campagne automatique le 15 janvier. Le paramétrage est
-   concentré dans `config.py`, ce qui facilite la transmission.
+   concentré dans `config.py`, ce qui facilite la transmission et permet de lancer la chaîne sur une autre commune.
 7. **L'accessibilité** : palette testée pour le daltonisme, vue tableau de chaque graphique, affichage mobile.
 8. **L'ouverture et le retour à la source** : données sous ODbL ; les erreurs repérées sont corrigées dans OSM,
    ce qui améliore la campagne suivante.
@@ -101,16 +101,36 @@ python -m venv .venv
 05_mise_a_jour\publier.bat          :: après relecture de la checklist : archive la version précédente et republie
 ```
 
+## Faire tourner la chaîne sur une autre commune
+
+Le projet est pensé pour Montreuil, mais la chaîne fonctionne aussi pour une autre commune française.
+Il suffit de donner son code INSEE au lancement (ici Villeurbanne) :
+
+```bat
+05_mise_a_jour\maj_annuelle.bat --commune 69266
+05_mise_a_jour\publier.bat --commune 69266
+```
+
+- Chaque commune a ses propres dossiers (`brutes/<commune>/`, `sorties/<commune>/`, `services/<commune>/`,
+  `data/<commune>/`, `archives/<commune>/`) et son propre journal : son contrôle qualité ne se compare qu'à elle-même.
+- Le nom et le département sont lus sur geo.api.gouv.fr. Les quartiers sont les IRIS de la commune, sauf si un
+  regroupement est défini pour elle dans `config.py` (comme pour Montreuil).
+- Les stations de vélos en libre-service sont reconnues quel que soit le réseau (Vélib', Vélo'v…).
+- Les applications affichent la commune par défaut (Montreuil). Une autre commune publiée s'ouvre avec
+  `?commune=<commune>`, par exemple `tableau-de-bord/index.html?commune=villeurbanne`, ou depuis le choix de
+  la commune du portail.
+- La campagne automatique du 15 janvier sur GitHub ne concerne que Montreuil.
+
 ## Arborescence
 
 ```
 index.html                   redirection vers le portail (page d'accueil du site)
 config.py                    paramètres communs (commune, année de référence, tolérances)
-01_donnees/                  collecte.py, brutes/ (seul manifest.json est versionné)
-02_traitement/               traitement.py, osm_vers_schema.py, sorties/ (GPKG Lambert-93, GeoJSON, QC, indicateurs)
-03_publication/              publication.py, services/ (couches, descripteurs, vignettes, catalogue)
-04_applications/             index.html (portail), carte/, tableau-de-bord/, assets/, data/donnees.js
-05_mise_a_jour/              maj_annuelle.py, checklist, modèle de saisie, journal
+01_donnees/                  collecte.py, brutes/<commune>/ (seul manifest.json est versionné)
+02_traitement/               traitement.py, osm_vers_schema.py, sorties/<commune>/ (GPKG Lambert-93, GeoJSON, QC, indicateurs)
+03_publication/              publication.py, services/<commune>/ (couches, descripteurs, vignettes, catalogue)
+04_applications/             index.html (portail), carte/, tableau-de-bord/, assets/, data/<commune>/donnees.js, data/communes.js
+05_mise_a_jour/              maj_annuelle.py, checklist, modèle de saisie, journaux/<commune>.md
 .github/workflows/           campagne annuelle et mise en ligne
 docs/captures/               captures d'écran des applications
 ```
@@ -132,3 +152,13 @@ docs/captures/               captures d'écran des applications
 Python (geopandas, shapely, pyproj) · API ohsome (HeiGIT) · Géoplateforme IGN (WFS, WMTS, géocodage) ·
 API Découpage administratif · Calcite Design System (Apache-2.0) · MapLibre GL JS (BSD-3) · Chart.js (MIT) ·
 GitHub Actions et GitHub Pages.
+
+## Licence et crédit
+
+Le code est publié sous licence MIT (voir [LICENSE](LICENSE)) : vous pouvez le réutiliser, le modifier et le
+déployer pour votre commune. En retour, merci de conserver le crédit affiché en pied de page du portail, dans
+« À propos » de la carte et dans « Méthode et sources » du tableau de bord. Il est défini à un seul endroit,
+la constante `credit` de [04_applications/assets/commun.js](04_applications/assets/commun.js).
+
+Les données gardent leurs propres licences : OpenStreetMap (ODbL, © contributeurs OpenStreetMap),
+IRIS et fonds de carte © IGN.

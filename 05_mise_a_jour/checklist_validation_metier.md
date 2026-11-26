@@ -4,11 +4,11 @@
 Version examinée : `__________`  Date : `__________`  Référent : `__________`
 
 ## 1. Contrôle qualité automatique
-- [ ] Aucun contrôle **BLOQUANT** dans `02_traitement/sorties/rapport_controle_qualite.md`
+- [ ] Aucun contrôle **BLOQUANT** dans `02_traitement/sorties/<commune>/rapport_controle_qualite.md`
 - [ ] Chaque **ALERTE** est comprise et acceptée, ou corrigée à la source (OSM ou saisie Ville)
 - [ ] Variation du linéaire par rapport à la version en ligne (contrôle C12) cohérente avec les travaux de l'année
 
-## 2. Rapport d'écarts (`05_mise_a_jour/a_valider/rapport_ecarts_<version>.md`)
+## 2. Rapport d'écarts (`05_mise_a_jour/a_valider/<commune>/rapport_ecarts_<version>.md`)
 - [ ] Les ajouts correspondent à des chantiers effectivement livrés (rapprochement avec `modele_saisie_chantiers.csv`)
 - [ ] Les suppressions sont justifiées (aménagement supprimé, ou erreur de cartographie corrigée)
 - [ ] Les requalifications (ex. bande → piste) sont confirmées

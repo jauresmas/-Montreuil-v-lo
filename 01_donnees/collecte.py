@@ -4,13 +4,13 @@ Sources (toutes ouvertes, sans compte) :
   * limite communale ............ API Découpage administratif (geo.api.gouv.fr)
   * IRIS -> quartiers ........... Géoplateforme IGN, WFS STATISTICALUNITS.IRISGE
   * aménagements cyclables ...... OpenStreetMap, historique complet via l'API ohsome
-  * stationnement vélo / Vélib' . OpenStreetMap, historique complet via ohsome
+  * stationnement et vélos en libre-service . OpenStreetMap, historique complet via ohsome
   * linéaire de voirie .......... OpenStreetMap, agrégats annuels via ohsome
 
-Chaque fichier brut est tracé dans 01_donnees/brutes/manifest.json
+Chaque fichier brut est tracé dans 01_donnees/brutes/<commune>/manifest.json
 (URL, date d'extraction, nombre d'objets, empreinte SHA-256).
 
-Usage : python 01_donnees/collecte.py
+Usage : python 01_donnees/collecte.py [--commune <code INSEE>]
 """
 from __future__ import annotations
 
@@ -99,6 +99,7 @@ def bpolys(gdf: gpd.GeoDataFrame, champ_id: str | None = None, tampon=0, simpl=3
 
 def main() -> None:
     manifest: list[dict] = []
+    log(f"Commune : {C.NOM_COMMUNE} ({C.CODE_INSEE}), dossier {C.DIR_BRUTES.relative_to(C.ROOT)}")
 
     # 1. Limite communale -----------------------------------------------------
     log("Limite communale (geo.api.gouv.fr)")
@@ -132,8 +133,8 @@ def main() -> None:
     ecrire("osm_amenagements_historique.geojson", r.content, manifest,
            "OpenStreetMap via ohsome (elementsFullHistory)", url, len(r.json()["features"]))
 
-    # 5. Stationnement vélo et stations Vélib' --------------------------------------
-    log("Stationnement vélo / Vélib' : historique complet OSM")
+    # 5. Stationnement vélo et stations de vélos en libre-service ----------------------
+    log("Stationnement vélo et vélos en libre-service : historique complet OSM")
     r = requete("POST", url, data={"bpolys": zone, "time": f"{debut},{fin}",
                                    "filter": FILTRE_STATIONNEMENT, "properties": "tags,metadata"})
     ecrire("osm_stationnement_historique.geojson", r.content, manifest,

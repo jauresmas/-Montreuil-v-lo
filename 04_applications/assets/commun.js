@@ -4,7 +4,7 @@
   const D = window.MV_DATA;
   if (!D) {
     document.body.innerHTML = '<p style="font:16px sans-serif;padding:24px">Données absentes : lancez la chaîne ' +
-      '(<code>05_mise_a_jour/maj_annuelle.bat</code>) pour générer <code>data/donnees.js</code>.</p>';
+      '(<code>05_mise_a_jour/maj_annuelle.bat</code>) pour générer <code>data/&lt;commune&gt;/donnees.js</code>.</p>';
     throw new Error("MV_DATA manquant");
   }
 
@@ -28,6 +28,32 @@
 
   const meta = D.indicateurs.meta;
   const A0 = meta.annee_reference, A1 = meta.annee_partielle;
+
+  // Commune affichée : son nom vient des données, jamais du code des pages
+  const nom = meta.commune;
+  const commune = {
+    nom,
+    de: meta.de_commune || (/^Le /.test(nom) ? "du " + nom.slice(3) : /^Les /.test(nom) ? "des " + nom.slice(4)
+      : /^[aeiouyàâéèêîïôûœ]/i.test(nom) && !/^La |^L'/.test(nom) ? "d'" + nom : "de " + nom),
+    a: /^Le /.test(nom) ? "au " + nom.slice(3) : /^Les /.test(nom) ? "aux " + nom.slice(4) : "à " + nom,
+    dossier: window.MV_COMMUNE || meta.dossier,
+    autres: ((window.MV_COMMUNES || {}).communes || []).length > 1,
+  };
+  // Lien vers une autre page en gardant la commune choisie (?commune=…), sauf pour la commune par défaut
+  function lien(url) {
+    const defaut = (window.MV_COMMUNES || {}).defaut;
+    if (!commune.dossier || commune.dossier === defaut) return url;
+    const [base, ancre] = url.split("#");
+    return `${base}${base.includes("?") ? "&" : "?"}commune=${encodeURIComponent(commune.dossier)}${ancre ? "#" + ancre : ""}`;
+  }
+  // Crédit du projet d'origine, affiché par le portail, la carte et le tableau de bord (à conserver dans les forks)
+  const credit = 'Outil open source « Montreuil à vélo » créé par Jaurès DAA-HINGBANON · ' +
+    '<a href="https://github.com/jauresmas/-Montreuil-v-lo" target="_blank" rel="noopener">code source</a> sous licence MIT.';
+  // Stations de vélos en libre-service : même valeur que traitement.py ; nom du réseau (Vélib', Vélo'v…) s'il est connu
+  const LIBRE_SERVICE = "Station en libre-service";
+  const reseau = meta.reseau_libre_service;
+  const stations = { titre: reseau ? `Stations ${reseau}` : "Vélos en libre-service",
+    nb: (n) => `${n} station${n > 1 ? "s" : ""} ${reseau || "en libre-service"}` };
   const dateDonnees = new Date(meta.date_donnees_osm + "T00:00:00");
 
   const nf1 = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1, minimumFractionDigits: 1 });
@@ -104,7 +130,7 @@
   const CHAMPS_POPUP = {
     amenagements_cyclables: ["type_amenagement", "ame_d", "ame_g", "annee_realisation", "nature", "quartier",
       "longueur_m", "regime_d", "trafic_vit", "revet_d", "lumiere", "date_maj", "methode_datation", "id_local", "controle"],
-    stationnement_velo: ["type", "capacite", "support", "couvert", "operateur", "annee_apparition", "quartier", "osm_id"],
+    stationnement_velo: ["type", "reseau", "capacite", "support", "couvert", "operateur", "annee_apparition", "quartier", "osm_id"],
   };
   function valeurChamp(k, v) {
     if (v === null || v === undefined || v === "" || v === "AUCUN") return null;
@@ -136,5 +162,5 @@
   }
 
   window.MV = { D, TYPES, NATURES, RAMPE, GRIS_AVANT, FONDS, A0, A1, dateDonnees, fmt, expr,
-    couleurType, couleurAnnee, libelleAnnee, emprise, echapper, popupHTML };
+    couleurType, couleurAnnee, libelleAnnee, emprise, echapper, popupHTML, commune, lien, LIBRE_SERVICE, stations, credit };
 })();

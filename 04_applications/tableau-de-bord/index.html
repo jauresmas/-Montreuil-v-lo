@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tableau de bord vélo Montreuil</title>
-<meta name="description" content="Tableau de bord : suivi annuel des aménagements cyclables de Montreuil">
+<title>Tableau de bord vélo</title>
+<meta name="description" content="Tableau de bord : suivi annuel des aménagements cyclables">
 <link rel="stylesheet" href="https://js.arcgis.com/calcite-components/2.13.2/calcite.css">
 <script type="module" src="https://js.arcgis.com/calcite-components/2.13.2/calcite.esm.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
@@ -54,6 +54,9 @@
   .w-btn:hover, .w-btn[aria-pressed="true"] { background: #333; color: var(--d-texte); }
   .w-corps { flex: 1; min-height: 0; position: relative; padding: 4px 12px 10px; }
   .graph { position: absolute; inset: 4px 12px 10px; }
+  /* Beaucoup de quartiers : le graphique garde une hauteur lisible par barre et défile */
+  .graph.defile { overflow-y: auto; }
+  .graph-hauteur { position: relative; height: 100%; }
   .tableau { position: absolute; inset: 4px 12px 10px; overflow: auto; }
   .tableau table { width: 100%; border-collapse: collapse; font-size: 12.5px; font-variant-numeric: tabular-nums; }
   .tableau th { text-align: left; color: var(--d-muet); font-weight: 500; border-bottom: 1px solid var(--d-bord); padding: 5px 6px; position: sticky; top: 0; background: var(--d-widget); }
@@ -125,7 +128,7 @@
 <body class="calcite-mode-dark">
 <header class="entete">
   <div class="entete-titre">
-    <h1>Aménagements cyclables de Montreuil · Tableau de bord</h1>
+    <h1 id="titre">Aménagements cyclables · Tableau de bord</h1>
     <p id="sous-titre"></p>
   </div>
   <div class="selecteurs" role="group" aria-label="Filtres du tableau de bord">
@@ -197,16 +200,20 @@
         <calcite-segmented-control-item value="periode">Réalisé</calcite-segmented-control-item>
       </calcite-segmented-control>
       <button class="w-btn" data-table="quart" title="Afficher les données" aria-pressed="false"><calcite-icon icon="table" scale="s"></calcite-icon></button></header>
-    <div class="w-corps"><div class="graph"><canvas id="g-quart"></canvas></div><div class="tableau" hidden></div></div>
+    <div class="w-corps"><div class="graph defile"><div class="graph-hauteur" id="h-quart"><canvas id="g-quart"></canvas></div></div><div class="tableau" hidden></div></div>
   </section>
 
 </main>
 
-<script src="../data/donnees.js"></script>
+<script src="../data/communes.js"></script>
+<script src="../assets/charger.js"></script>
 <script src="../assets/commun.js"></script>
 <script>
 (function () {
   const { D, TYPES, FONDS, A0, A1, fmt, expr, popupHTML, emprise, echapper, dateDonnees } = MV;
+  // Nom de la commune : lu dans les données
+  document.title = `Tableau de bord vélo ${MV.commune.nom}`;
+  document.getElementById("titre").textContent = `Aménagements cyclables ${MV.commune.de} · Tableau de bord`;
   const ind = D.indicateurs, amen = D.couches.amenagements_cyclables, stat = D.couches.stationnement_velo;
   const quart = D.couches.quartiers, comm = D.couches.commune;
   const F = amen.features.map((f) => f.properties);
@@ -253,8 +260,8 @@
   document.getElementById("reinit").addEventListener("click", () => {
     etat.periode = "tout"; etat.quartier = ""; etat.type = ""; sP.value = "tout"; sQ.value = ""; sT.value = ""; majTout(true);
   });
-  document.getElementById("vers-carte").addEventListener("click", () => (location.href = "../carte/index.html"));
-  document.getElementById("vers-portail").addEventListener("click", () => (location.href = "../index.html"));
+  document.getElementById("vers-carte").addEventListener("click", () => (location.href = MV.lien("../carte/index.html")));
+  document.getElementById("vers-portail").addEventListener("click", () => (location.href = MV.lien("../index.html")));
   document.getElementById("m-types").addEventListener("calciteSegmentedControlChange", (e) => { etat.mTypes = e.target.value; majTypes(); });
   document.getElementById("m-quart").addEventListener("calciteSegmentedControlChange", (e) => { etat.mQuart = e.target.value; majQuartiers(); });
   document.getElementById("sous-titre").textContent =
@@ -282,14 +289,14 @@
     }
     const parkings = stat.features.map((f) => f.properties).filter((s) => (!etat.quartier || s.quartier === etat.quartier) && (s.annee_apparition || 0) <= p.a1);
     const places = parkings.filter((s) => s.type === "Stationnement vélo").reduce((x, s) => x + (s.capacite || 0), 0);
-    const nbVelib = parkings.filter((s) => s.type === "Station Vélib'").length;
+    const nbVelib = parkings.filter((s) => s.type === MV.LIBRE_SERVICE).length;
     const tuiles = [
       { t: "Réseau cyclable", v: fmt.n1(res), u: "km", s: finPeriode(p.a1), i: "biking" },
       { t: `Réalisé sur la période`, v: fmt.n1(kReal), u: "km", s: delta(kReal, refReal, "km") + (refLib && refReal != null ? refLib + " · " : "") + `${fmt.n1(kCrea)} créés · ${fmt.n1(kReq)} requalifiés`, i: "calendar" },
-      { t: "Rythme annuel moyen", v: fmt.n1(rythme), u: "km/an", s: delta(rythme, refRythme, "km/an") + (refRythme != null ? refLib : `sur ${p.a0 === p.a1 ? p.a0 : p.a0 + "-" + p.a1}${p.a1 === A1 ? " (2026 au prorata)" : ""}`), i: "graph-time-series" },
+      { t: "Rythme annuel moyen", v: fmt.n1(rythme), u: "km/an", s: delta(rythme, refRythme, "km/an") + (refRythme != null ? refLib : `sur ${p.a0 === p.a1 ? p.a0 : p.a0 + "-" + p.a1}${p.a1 === A1 ? ` (${A1} au prorata)` : ""}`), i: "graph-time-series" },
       { t: "Part en site propre", v: res ? fmt.n0((100 * sp) / res) : "0", u: "%", s: `${fmt.n1(sp)} km de pistes et voies vertes`, i: "pie-chart" },
       { t: "Densité du réseau", v: fmt.n1((100 * res) / voirie()), u: "km / 100 km", s: `de voirie (${fmt.n0(voirie())} km de rues${etat.quartier ? " dans le quartier" : ""})`, i: "measure" },
-      { t: "Stationnement vélo", v: fmt.n0(places), u: "places", s: `${parkings.length - nbVelib} sites recensés · ${nbVelib} stations Vélib'`, i: "map-pin" },
+      { t: "Stationnement vélo", v: fmt.n0(places), u: "places", s: `${parkings.length - nbVelib} sites recensés · ${MV.stations.nb(nbVelib)}`, i: "map-pin" },
     ];
     document.getElementById("tuiles").innerHTML = tuiles.map((x) => `<div class="indicateur">${icone(x.i)}
       <div class="i-titre">${x.t}</div><div class="i-valeur">${x.v}<span class="i-unite">${x.u}</span></div><div class="i-sous">${x.s}</div></div>`).join("");
@@ -408,6 +415,8 @@
       return { q: q.quartier, densite: (100 * kmRes) / q.km_voirie, real: kmReal, kmRes, voirie: q.km_voirie };
     }).sort((a, b) => (etat.mQuart === "densite" ? b.densite - a.densite : b.real - a.real));
     const v = (x) => (etat.mQuart === "densite" ? x.densite : x.real);
+    // Au-delà de 12 quartiers, 22 px par barre et défilement plutôt que des noms qui se chevauchent
+    document.getElementById("h-quart").style.height = lignes.length > 12 ? `${lignes.length * 22}px` : "100%";
     gQuart.data.labels = lignes.map((x) => x.q);
     gQuart.data.datasets[0].data = lignes.map((x) => +v(x).toFixed(2));
     gQuart.data.datasets[0].backgroundColor = lignes.map((x) => (!etat.quartier || etat.quartier === x.q ? "#3987e5" : "rgba(57,135,229,.28)"));
@@ -489,7 +498,8 @@
     <p><b>Contrôle qualité.</b> ${qc.controles.length} contrôles automatiques à chaque campagne, ${qcOk ? "aucun bloquant sur cette version" : "au moins un bloquant sur cette version"}.
     Version ${D.version}${hist.valide_par ? `, validée par ${echapper(hist.valide_par)}` : ""}.</p>
     <p><b>Sources.</b> Aménagements et stationnement © contributeurs OpenStreetMap (ODbL) ; quartiers : IRIS © IGN ; fonds de carte © IGN.</p>
-    <p><a href="../index.html#qualite">Détail des contrôles et des versions sur le portail</a></p>`;
+    <p><a href="${MV.lien("../index.html#qualite")}">Détail des contrôles et des versions sur le portail</a></p>
+    <p><b>Crédits.</b> ${MV.credit}</p>`;
   const dlgMethode = document.getElementById("methode");
   document.getElementById("ouvrir-methode").addEventListener("click", () => dlgMethode.showModal());
   document.getElementById("fermer-methode").addEventListener("click", () => dlgMethode.close());

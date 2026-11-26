@@ -1,6 +1,6 @@
 # Étape 5 sur GitHub : campagne annuelle automatique.
 #
-# Le 15 janvier (ou à la demande), GitHub collecte les données, les traite et lance le contrôle qualité.
+# Le 15 janvier (ou à la demande), GitHub collecte les données de Montreuil, les traite et lance le contrôle qualité.
 # Si aucun contrôle ne bloque, il ouvre une pull request avec le rapport d'écarts.
 # Fusionner la pull request vaut validation métier et déclenche la publication (voir publier-et-mettre-en-ligne.yml).
 # Si un contrôle bloque, le workflow échoue et rien n'est proposé.
@@ -38,7 +38,7 @@ jobs:
       - name: Rapport de la campagne
         id: rapport
         run: |
-          f=$(ls -t 05_mise_a_jour/a_valider/rapport_ecarts_*.md | head -1)
+          f=$(ls -t 05_mise_a_jour/a_valider/montreuil/rapport_ecarts_*.md | head -1)
           echo "fichier=$f" >> "$GITHUB_OUTPUT"
           echo "version=$(basename "$f" .md | sed 's/^rapport_ecarts_//')" >> "$GITHUB_OUTPUT"
 
@@ -46,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ecarts-${{ steps.rapport.outputs.version }}
-          path: 05_mise_a_jour/a_valider/
+          path: 05_mise_a_jour/a_valider/montreuil/
 
       - name: Pull request à valider
         uses: peter-evans/create-pull-request@v7
@@ -57,5 +57,5 @@ jobs:
           commit-message: "Campagne ${{ steps.rapport.outputs.version }} : traitement et contrôle qualité"
           add-paths: |
             02_traitement/sorties
-            01_donnees/brutes/manifest.json
-            05_mise_a_jour/journal_maj.md
+            01_donnees/brutes/montreuil/manifest.json
+            05_mise_a_jour/journaux/montreuil.md

@@ -35,7 +35,7 @@ jobs:
             exit 0
           fi
           fichiers=$(git diff --name-only "$avant" "${{ github.sha }}")
-          if echo "$fichiers" | grep -q '^02_traitement/sorties/' && ! echo "$fichiers" | grep -q '^03_publication/services/indicateurs.json'; then
+          if echo "$fichiers" | grep -q '^02_traitement/sorties/' && ! echo "$fichiers" | grep -q '^03_publication/services/[^/]*/indicateurs.json'; then
             echo "nouvelle=1" >> "$GITHUB_OUTPUT"
           fi
 

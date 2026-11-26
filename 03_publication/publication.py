@@ -2,12 +2,13 @@
 
   * refuse de publier si le contrôle qualité est BLOQUANT ;
   * exige un validateur métier (--valide-par) si le contrôle comporte des ALERTES ;
-  * archive la version actuellement publiée dans archives/<version>/ avant de la remplacer ;
+  * archive la version actuellement publiée dans archives/<commune>/<version>/ avant de la remplacer ;
   * produit pour chaque couche un descripteur de service (champs, alias, emprise, nb d'entités),
     une vignette SVG et une fiche dans le catalogue du portail ;
-  * alimente les applications (04_applications/data/donnees.js).
+  * alimente les applications (04_applications/data/<commune>/donnees.js) et la liste des communes
+    publiées (04_applications/data/communes.js).
 
-Usage : python 03_publication/publication.py [--valide-par "Nom Prénom, service"]
+Usage : python 03_publication/publication.py [--commune <code INSEE>] [--valide-par "Nom Prénom, service"]
 """
 from __future__ import annotations
 
@@ -42,24 +43,44 @@ ALIAS = {
     "methode_datation": "Méthode de datation", "quartier": "Quartier", "longueur_m": "Longueur (m)",
     "controle": "Contrôle qualité", "osm_url": "Fiche OpenStreetMap",
     "osm_id": "Identifiant OSM", "type": "Type", "capacite": "Capacité (places)", "support": "Type de support",
-    "couvert": "Couvert", "nom": "Nom", "operateur": "Opérateur / réseau", "annee_apparition": "Année d'apparition",
+    "couvert": "Couvert", "nom": "Nom", "operateur": "Opérateur", "reseau": "Réseau de vélos en libre-service",
+    "annee_apparition": "Année d'apparition",
     "surface_ha": "Surface (ha)", "km_voirie": "Voirie (km)", "km": "Aménagements (km)",
     "km_pour_100km_voirie": "km d'aménagement / 100 km de voirie", "km_depuis_2020": "Réalisé depuis 2020 (km)",
     "code": "Code INSEE",
 }
 
+LIBRE_SERVICE = "Station en libre-service"  # même valeur que 02_traitement/traitement.py
+
 COUCHES = [
     {"id": "amenagements_cyclables", "titre": "Aménagements cyclables", "geometrie": "Ligne", "icone": "layer-line",
-     "description": "Réseau cyclable de Montreuil au format du schéma national des aménagements cyclables (Etalab), "
+     "description": f"Réseau cyclable {C.de(C.NOM_COMMUNE)} au format du schéma national des aménagements cyclables (Etalab), "
                     "enrichi de l'année de réalisation, de la nature des travaux (création / requalification) et du quartier."},
-    {"id": "stationnement_velo", "titre": "Stationnement vélo et stations Vélib'", "geometrie": "Point", "icone": "layer-points",
-     "description": "Arceaux, abris, consignes et stations Vélib' ouverts au public, avec capacité et année d'apparition."},
+    {"id": "stationnement_velo", "titre": "Stationnement vélo et vélos en libre-service", "geometrie": "Point", "icone": "layer-points",
+     "description": "Arceaux, abris, consignes et stations de vélos en libre-service ouverts au public, avec capacité et année d'apparition."},
     {"id": "quartiers", "titre": "Quartiers (regroupement IRIS)", "geometrie": "Polygone", "icone": "layer-polygon",
-     "description": "Onze quartiers reconstitués par regroupement des 41 IRIS INSEE/IGN, avec linéaire de voirie "
-                    "et densité d'aménagements."},
+     "description": "Quartiers reconstitués à partir des IRIS INSEE/IGN, avec linéaire de voirie et densité d'aménagements."},
     {"id": "commune", "titre": "Limite communale", "geometrie": "Polygone", "icone": "layer-polygon",
      "description": "Contour communal (API Découpage administratif)."},
 ]
+
+
+def inscrire_commune() -> None:
+    """Ajoute la commune à 04_applications/data/communes.js, la liste lue par les applications."""
+    fichier = C.DIR_APPLIS / "data" / "communes.js"
+    prefixe = "window.MV_COMMUNES = "
+    liste = {"communes": []}
+    if fichier.exists():
+        texte = fichier.read_text(encoding="utf-8")
+        liste = json.loads(texte[texte.index(prefixe) + len(prefixe):].rstrip().rstrip(";"))
+    autres = [c for c in liste["communes"] if c["dossier"] != C.DOSSIER_COMMUNE]
+    liste["communes"] = sorted(autres + [{"dossier": C.DOSSIER_COMMUNE, "nom": C.NOM_COMMUNE, "code_insee": C.CODE_INSEE}],
+                               key=lambda c: c["nom"])
+    dossiers = [c["dossier"] for c in liste["communes"]]
+    par_defaut = C.COMMUNES.get(C.COMMUNE_PAR_DEFAUT, {}).get("dossier")
+    liste["defaut"] = par_defaut if par_defaut in dossiers else liste.get("defaut", dossiers[0])
+    fichier.write_text("/* Généré par 03_publication/publication.py : communes publiées, ne pas modifier à la main */\n"
+                       + prefixe + json.dumps(liste, ensure_ascii=False) + ";\n", encoding="utf-8")
 
 
 def log(msg: str) -> None:
@@ -144,13 +165,24 @@ def vignette(nom, fond, commune, p, contenu):
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--valide-par", default=None, help="référent métier qui valide une version comportant des alertes")
+    ap.add_argument("--commune", help="code INSEE de la commune (lu par config.py ; Montreuil par défaut)")
     args = ap.parse_args()
 
     qc = json.loads((C.DIR_SORTIES / "controle_qualite.json").read_text(encoding="utf-8"))
     ind = json.loads((C.DIR_SORTIES / "indicateurs.json").read_text(encoding="utf-8"))
     version = ind["meta"]["version"]
+    # Textes qui dépendent de la commune et de ses données
+    reseau = ind["meta"].get("reseau_libre_service")
+    for c in COUCHES:
+        if c["id"] == "stationnement_velo" and reseau:
+            c["titre"] = f"Stationnement vélo et stations {reseau}"
+            c["description"] = f"Arceaux, abris, consignes et stations {reseau} ouverts au public, avec capacité et année d'apparition."
+        if c["id"] == "quartiers" and ind["meta"].get("nb_iris"):
+            nq, ni = ind["meta"]["nb_quartiers"], ind["meta"]["nb_iris"]
+            regroupe = f"{nq} quartiers reconstitués par regroupement des {ni} IRIS INSEE/IGN" if nq < ni else f"{nq} quartiers (IRIS INSEE/IGN)"
+            c["description"] = f"{regroupe}, avec linéaire de voirie et densité d'aménagements."
     if qc["statut_global"] == "BLOQUANT":
-        log("Contrôle qualité BLOQUANT : publication refusée. Voir 02_traitement/sorties/rapport_controle_qualite.md")
+        log(f"Contrôle qualité BLOQUANT : publication refusée. Voir {(C.DIR_SORTIES / 'rapport_controle_qualite.md').relative_to(C.ROOT)}")
         return 2
     if qc["statut_global"] == "ALERTE" and not args.valide_par:
         alertes = [c["controle"] for c in qc["controles"] if c["statut"] == "ALERTE"]
@@ -183,7 +215,7 @@ def main() -> int:
         desc = {"id": c["id"], "titre": c["titre"], "type": "Couche d'entités", "geometrie": c["geometrie"],
                 "nb_entites": len(fc["features"]), "emprise_wgs84": emprise(fc), "systeme": "EPSG:4326",
                 "champs": champs, "version": version, "modifie": maintenant,
-                "url": f"services/{c['id']}.geojson", "description": c["description"]}
+                "url": f"services/{C.DOSSIER_COMMUNE}/{c['id']}.geojson", "description": c["description"]}
         (C.DIR_SERVICES / f"{c['id']}.service.json").write_text(json.dumps(desc, ensure_ascii=False, indent=2), encoding="utf-8")
         couches[c["id"]] = fc
         services.append(desc)
@@ -203,7 +235,7 @@ def main() -> int:
     vignette("amenagements_cyclables", ("#eef0f2", "#ffffff", "#9aa3ad"), commune, p, lignes)
     pts = "".join(
         f'<circle cx="{p(*f["geometry"]["coordinates"]).split(",")[0]}" cy="{p(*f["geometry"]["coordinates"]).split(",")[1]}" '
-        f'r="{6 if f["properties"]["type"] == "Station Vélib\'" else 3.5}" fill="{"#6250d6" if f["properties"]["type"] == "Station Vélib\'" else "#2a78d6"}" '
+        f'r="{6 if f["properties"]["type"] == LIBRE_SERVICE else 3.5}" fill="{"#6250d6" if f["properties"]["type"] == LIBRE_SERVICE else "#2a78d6"}" '
         f'stroke="#fff" stroke-width="1.2"/>'
         for f in couches["stationnement_velo"]["features"])
     vignette("stationnement_velo", ("#eef0f2", "#ffffff", "#9aa3ad"), commune, p, pts)
@@ -250,31 +282,32 @@ def main() -> int:
 
     # -- Catalogue du portail ------------------------------------------------------------
     t = ind["totaux"]
+    srv = f"../03_publication/services/{C.DOSSIER_COMMUNE}"
     catalogue = [
         {"id": "carte", "titre": "Carte des aménagements cyclables", "type": "Application web", "icone": "map",
          "description": "Carte interactive : réseau par type, par année de réalisation ou par nature de travaux, "
                         "curseur temporel, filtres par quartier, recherche d'adresse.",
-         "url": "carte/index.html", "vignette": "../03_publication/services/vignettes/carte_web.svg",
+         "url": "carte/index.html", "vignette": f"{srv}/vignettes/carte_web.svg",
          "partage": "Public", "tags": ["vélo", "mobilité", "carte"]},
         {"id": "tableau", "titre": "Tableau de bord", "type": "Tableau de bord", "icone": "dashboard",
          "description": "Indicateurs clés, réalisations annuelles, bilans par mandat et par quartier.",
-         "url": "tableau-de-bord/index.html", "vignette": "../03_publication/services/vignettes/tableau_de_bord.svg",
+         "url": "tableau-de-bord/index.html", "vignette": f"{srv}/vignettes/tableau_de_bord.svg",
          "partage": "Organisation", "tags": ["indicateurs", "pilotage", "mandat"]},
     ] + [
         {"id": s["id"], "titre": s["titre"], "type": "Couche d'entités", "icone": next(c["icone"] for c in COUCHES if c["id"] == s["id"]),
-         "description": s["description"], "url": f"../03_publication/services/{s['id']}.geojson",
-         "vignette": f"../03_publication/services/vignettes/{s['id']}.svg", "partage": "Public",
+         "description": s["description"], "url": f"{srv}/{s['id']}.geojson",
+         "vignette": f"{srv}/vignettes/{s['id']}.svg", "partage": "Public",
          "nb_entites": s["nb_entites"], "geometrie": s["geometrie"], "service": s["id"],
          "tags": ["données ouvertes", "OSM"]} for s in services
     ] + [
         {"id": "etalab", "titre": "Export au schéma national (transport.data.gouv.fr)", "type": "Fichier GeoJSON", "icone": "file",
          "description": "Fichier conforme au schéma Etalab des aménagements cyclables, prêt à être déposé sur "
-                        "transport.data.gouv.fr / data.gouv.fr.", "url": f"../03_publication/services/{etalab}",
-         "vignette": "../03_publication/services/vignettes/amenagements_cyclables.svg", "partage": "Public",
+                        "transport.data.gouv.fr / data.gouv.fr.", "url": f"{srv}/{etalab}",
+         "vignette": f"{srv}/vignettes/amenagements_cyclables.svg", "partage": "Public",
          "tags": ["schéma national", "interopérabilité"]},
         {"id": "qc", "titre": "Rapport de contrôle qualité", "type": "Document", "icone": "file-report",
          "description": f"Résultat des {len(qc['controles'])} contrôles automatiques de la version {version}.",
-         "url": "../03_publication/services/rapport_controle_qualite.md", "vignette": None, "partage": "Organisation",
+         "url": f"{srv}/rapport_controle_qualite.md", "vignette": None, "partage": "Organisation",
          "tags": ["qualité"]},
     ]
     for it in catalogue:
@@ -294,7 +327,9 @@ def main() -> int:
     (C.DIR_APPLIS_DATA / "donnees.js").write_text(
         "/* Généré par 03_publication/publication.py, ne pas modifier à la main */\n"
         "window.MV_DATA = " + json.dumps(paquet, ensure_ascii=False, separators=(",", ":")) + ";\n", encoding="utf-8")
-    log(f"Version {version} publiée ({t['km_total']} km), applications à jour : 04_applications/")
+    inscrire_commune()
+    log(f"Version {version} publiée pour {C.NOM_COMMUNE} ({t['km_total']} km), applications à jour : "
+        f"{C.DIR_APPLIS_DATA.relative_to(C.ROOT).as_posix()}/")
     return 0
 
 

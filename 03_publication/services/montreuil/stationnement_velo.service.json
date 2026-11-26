@@ -44,7 +44,12 @@
     },
     {
       "nom": "operateur",
-      "alias": "Opérateur / réseau",
+      "alias": "Opérateur",
+      "type": "Texte"
+    },
+    {
+      "nom": "reseau",
+      "alias": "Réseau de vélos en libre-service",
       "type": "Texte"
     },
     {
@@ -65,6 +70,6 @@
   ],
   "version": "2026.11.13",
   "modifie": "2026-11-13T21:24:07+00:00",
-  "url": "services/stationnement_velo.geojson",
+  "url": "services/montreuil/stationnement_velo.geojson",
   "description": "Arceaux, abris, consignes et stations Vélib' ouverts au public, avec capacité et année d'apparition."
 }

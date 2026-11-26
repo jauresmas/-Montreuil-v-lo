@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Carte cyclable de Montreuil</title>
-<meta name="description" content="Carte interactive de suivi annuel des aménagements cyclables de Montreuil">
+<title>Carte cyclable</title>
+<meta name="description" content="Carte interactive de suivi annuel des aménagements cyclables">
 <link rel="stylesheet" href="https://js.arcgis.com/calcite-components/2.13.2/calcite.css">
 <script type="module" src="https://js.arcgis.com/calcite-components/2.13.2/calcite.esm.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
@@ -95,11 +95,11 @@
 <body>
 <calcite-shell>
   <calcite-navigation slot="header">
-    <calcite-navigation-logo slot="logo" icon="biking" heading="Aménagements cyclables de Montreuil"
+    <calcite-navigation-logo slot="logo" icon="biking" heading="Aménagements cyclables"
       description="Carte de suivi annuel"></calcite-navigation-logo>
     <div slot="content-end" class="nav-fin">
       <div class="recherche" role="search">
-        <calcite-input id="recherche" icon="search" placeholder="Rechercher une adresse à Montreuil" clearable scale="m" label="Rechercher une adresse"></calcite-input>
+        <calcite-input id="recherche" icon="search" placeholder="Rechercher une adresse" clearable scale="m" label="Rechercher une adresse"></calcite-input>
         <div id="resultats" class="resultats" hidden></div>
       </div>
       <calcite-action id="vers-tdb" icon="dashboard" text="Tableau de bord" text-enabled class="masque-mobile"></calcite-action>
@@ -186,11 +186,16 @@
   </div>
 </calcite-shell>
 
-<script src="../data/donnees.js"></script>
+<script src="../data/communes.js"></script>
+<script src="../assets/charger.js"></script>
 <script src="../assets/commun.js"></script>
 <script>
 (function () {
   const { D, TYPES, NATURES, RAMPE, GRIS_AVANT, FONDS, A0, A1, fmt, expr, popupHTML, emprise, echapper, libelleAnnee, dateDonnees } = MV;
+  // Nom de la commune : lu dans les données
+  document.title = `Carte cyclable ${MV.commune.de}`;
+  document.querySelector("calcite-navigation-logo").heading = `Aménagements cyclables ${MV.commune.de}`;
+  document.getElementById("recherche").placeholder = `Rechercher une adresse ${MV.commune.a}`;
   const C = D.couches;
   const amen = C.amenagements_cyclables, stat = C.stationnement_velo, quart = C.quartiers, comm = C.commune;
   const TIRETS = TYPES.filter((t) => t.tirets).map((t) => t.id);
@@ -253,10 +258,10 @@
     map.addLayer({ id: "amen-plein", type: "line", source: "amen", layout: rond, paint: { "line-width": expr.largeur() } });
     map.addLayer({ id: "amen-tirets", type: "line", source: "amen", layout: { "line-join": "round" },
       paint: { "line-width": expr.largeur(), "line-dasharray": [2, 1.3] } });
-    map.addLayer({ id: "stat-velo", type: "circle", source: "stat", minzoom: 14, filter: ["!=", ["get", "type"], "Station Vélib'"],
+    map.addLayer({ id: "stat-velo", type: "circle", source: "stat", minzoom: 14, filter: ["!=", ["get", "type"], MV.LIBRE_SERVICE],
       paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 14, 2.6, 17, 6], "circle-color": "#323232",
         "circle-stroke-color": "#ffffff", "circle-stroke-width": 1 } });
-    map.addLayer({ id: "stat-velib", type: "circle", source: "stat", filter: ["==", ["get", "type"], "Station Vélib'"],
+    map.addLayer({ id: "stat-velib", type: "circle", source: "stat", filter: ["==", ["get", "type"], MV.LIBRE_SERVICE],
       paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 11, 3.5, 17, 9], "circle-color": "#6250d6",
         "circle-stroke-color": "#ffffff", "circle-stroke-width": 1.5 } });
     pret = true;
@@ -402,8 +407,8 @@
   // ---------- Liste des couches ----------
   const COUCHES = [
     { cle: "amen", titre: "Aménagements cyclables", desc: `${amen.features.length} entités · lignes`, icone: "layer-line", src: amen },
-    { cle: "velo", titre: "Stationnement vélo", desc: `${stat.features.filter((f) => f.properties.type !== "Station Vélib'").length} entités · points (zoom ≥ 14)`, icone: "layer-points", src: stat },
-    { cle: "velib", titre: "Stations Vélib'", desc: `${stat.features.filter((f) => f.properties.type === "Station Vélib'").length} entités · points`, icone: "layer-points", src: stat },
+    { cle: "velo", titre: "Stationnement vélo", desc: `${stat.features.filter((f) => f.properties.type !== MV.LIBRE_SERVICE).length} entités · points (zoom ≥ 14)`, icone: "layer-points", src: stat },
+    { cle: "velib", titre: MV.stations.titre, desc: `${stat.features.filter((f) => f.properties.type === MV.LIBRE_SERVICE).length} entités · points`, icone: "layer-points", src: stat },
     { cle: "quart", titre: "Quartiers (regroupement IRIS)", desc: `${quart.features.length} entités · polygones`, icone: "layer-polygon", src: quart },
     { cle: "comm", titre: "Limite communale", desc: "1 entité · polygone", icone: "layer-polygon", src: comm },
   ];
@@ -499,9 +504,9 @@
       h += `</div>`;
     }
     if (etat.visible.velo) h += `<div class="legende-couche"><h3>Stationnement vélo</h3><div class="legende-ligne">${pointSVG("#323232", 3.5)}Arceaux, abris, consignes (zoom ≥ 14)</div></div>`;
-    if (etat.visible.velib) h += `<div class="legende-couche"><h3>Stations Vélib'</h3><div class="legende-ligne">${pointSVG("#6250d6", 4.5)}Station de vélos en libre-service</div></div>`;
+    if (etat.visible.velib) h += `<div class="legende-couche"><h3>${echapper(MV.stations.titre)}</h3><div class="legende-ligne">${pointSVG("#6250d6", 4.5)}Station de vélos en libre-service</div></div>`;
     if (etat.visible.quart) h += `<div class="legende-couche"><h3>Quartiers</h3><div class="legende-ligne"><svg class="trait" viewBox="0 0 28 10"><rect x="2" y="1" width="24" height="8" fill="none" stroke="#4a4a4a" stroke-width="1"/></svg>Limite de quartier (regroupement IRIS)</div></div>`;
-    if (etat.visible.comm) h += `<div class="legende-couche"><h3>Limite communale</h3><div class="legende-ligne">${ligneSVG("#2b2b2b")}Montreuil</div></div>`;
+    if (etat.visible.comm) h += `<div class="legende-couche"><h3>Limite communale</h3><div class="legende-ligne">${ligneSVG("#2b2b2b")}${echapper(MV.commune.nom)}</div></div>`;
     document.getElementById("legende").innerHTML = h || `<p style="padding:15px;color:#6a6a6a">Aucune couche visible.</p>`;
   }
   function majBulle() {
@@ -529,7 +534,7 @@
   const ind = D.indicateurs, qc = D.qc;
   const nbAlertes = qc.controles.filter((c) => c.statut === "ALERTE").length;
   document.getElementById("apropos").innerHTML = `
-    <p>Carte de suivi des aménagements cyclables réalisés chaque année à Montreuil (${ind.meta.departement}).
+    <p>Carte de suivi des aménagements cyclables réalisés chaque année ${MV.commune.a} (${ind.meta.departement}).
     Le curseur temporel rejoue la constitution du réseau depuis ${A0}.</p>
     <h3>Version publiée</h3>
     <ul><li>Version <strong>${D.version}</strong>, données OpenStreetMap au ${fmt.date(dateDonnees)}</li>
@@ -545,7 +550,8 @@
     <li>IRIS : © IGN, Géoplateforme · limite communale : API Découpage administratif</li>
     <li>Fonds : © IGN (Plan IGN, BD ORTHO)</li>
     <li>Recherche d'adresse : service de géocodage de la Géoplateforme</li></ul>
-    <p style="color:#6a6a6a;font-size:12px;margin-top:14px">Projet indépendant, non officiel. Réalisé avec Calcite Design System et MapLibre GL JS.</p>`;
+    <p style="color:#6a6a6a;font-size:12px;margin-top:14px">Projet indépendant, non officiel. Réalisé avec Calcite Design System et MapLibre GL JS.</p>
+    <p style="color:#6a6a6a;font-size:12px">${MV.credit}</p>`;
 
   // ---------- Barre d'actions / panneaux ----------
   const shellPanel = document.getElementById("panneau");
@@ -564,11 +570,11 @@
   if (window.innerWidth < 760) {
     shellPanel.collapsed = true; document.querySelector("calcite-action[data-panel]").active = false;
     const logo = document.querySelector("calcite-navigation-logo");
-    logo.heading = "Vélo Montreuil"; logo.description = "";
+    logo.heading = `Vélo ${MV.commune.nom}`; logo.description = "";
     map.once("idle", () => document.querySelector(".maplibregl-ctrl-attrib")?.classList.remove("maplibregl-compact-show"));
   }
-  document.getElementById("vers-tdb").addEventListener("click", () => (location.href = "../tableau-de-bord/index.html"));
-  document.getElementById("vers-portail").addEventListener("click", () => (location.href = "../index.html"));
+  document.getElementById("vers-tdb").addEventListener("click", () => (location.href = MV.lien("../tableau-de-bord/index.html")));
+  document.getElementById("vers-portail").addEventListener("click", () => (location.href = MV.lien("../index.html")));
 
   // ---------- Fenêtres contextuelles ----------
   const popup = new maplibregl.Popup({ className: "popup-fiche", closeButton: false, maxWidth: "none", offset: 8 });
@@ -609,7 +615,7 @@
         const r = await fetch(`https://data.geopf.fr/geocodage/search?q=${encodeURIComponent(q)}&index=address&citycode=${D.indicateurs.meta.code_insee}&limit=6`);
         const j = await r.json();
         zoneRes.innerHTML = j.features.length ? j.features.map((f, i) =>
-          `<button data-i="${i}">${echapper(f.properties.label)}</button>`).join("") : `<div class="vide">Aucune adresse trouvée à Montreuil</div>`;
+          `<button data-i="${i}">${echapper(f.properties.label)}</button>`).join("") : `<div class="vide">Aucune adresse trouvée ${MV.commune.a}</div>`;
         zoneRes.hidden = false;
         zoneRes.onclick = (e) => {
           const b = e.target.closest("button"); if (!b) return;

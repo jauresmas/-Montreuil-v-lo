@@ -7,11 +7,12 @@ Campagne en deux temps, pour garder une validation humaine avant toute republica
        puis s'arrête « en attente de validation métier » (la version publiée reste inchangée)
 
   2) python 05_mise_a_jour/maj_annuelle.py --publier --valide-par "Nom, service"
-       archive la version en ligne (archives/<version>/) puis republie couches et applications
+       archive la version en ligne (archives/<commune>/<version>/) puis republie couches et applications
 
 Options : --sans-collecte (retraite les données brutes déjà présentes)
+          --commune <code INSEE> (autre commune que Montreuil, dans ses propres dossiers)
 
-Chaque exécution est tracée dans 05_mise_a_jour/journal_maj.md.
+Chaque exécution est tracée dans 05_mise_a_jour/journaux/<commune>.md.
 """
 from __future__ import annotations
 
@@ -28,8 +29,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import config as C  # noqa: E402
 
-JOURNAL = C.DIR_MAJ / "journal_maj.md"
-A_VALIDER = C.DIR_MAJ / "a_valider"
+JOURNAL = C.DIR_MAJ / "journaux" / f"{C.DOSSIER_COMMUNE}.md"
+A_VALIDER = C.DIR_MAJ / "a_valider" / C.DOSSIER_COMMUNE
 SAISIE = C.DIR_MAJ / "modele_saisie_chantiers.csv"
 
 
@@ -37,9 +38,10 @@ def journal(msg: str) -> None:
     ligne = f"- {datetime.now():%Y-%m-%d %H:%M} : {msg}"
     print(ligne, flush=True)
     neuf = not JOURNAL.exists()
+    JOURNAL.parent.mkdir(parents=True, exist_ok=True)
     with JOURNAL.open("a", encoding="utf-8") as f:
         if neuf:
-            f.write("# Journal des mises à jour\n\n")
+            f.write(f"# Journal des mises à jour : {C.NOM_COMMUNE}\n\n")
         f.write(ligne + "\n")
 
 
@@ -80,7 +82,7 @@ def rapport_ecarts() -> Path:
         if f["properties"]["id_osm"] not in n:
             ecarts.append({**f, "properties": {**f["properties"], "ecart": "suppression"}})
 
-    A_VALIDER.mkdir(exist_ok=True)
+    A_VALIDER.mkdir(parents=True, exist_ok=True)
     geo = A_VALIDER / f"ecarts_{version}.geojson"
     geo.write_text(json.dumps({"type": "FeatureCollection", "features": ecarts}, ensure_ascii=False), encoding="utf-8")
 
@@ -116,7 +118,8 @@ def rapport_ecarts() -> Path:
                "avec le nom de la personne qui a fusionné. Fermer la pull request sans fusionner revient à refuser la campagne."]
     else:
         md += ["", "## Décision", "", "Après la checklist `checklist_validation_metier.md` :", "",
-               "```", f'python 05_mise_a_jour/maj_annuelle.py --publier --valide-par "Nom, service"', "```"]
+               "```", f'python 05_mise_a_jour/maj_annuelle.py --publier --valide-par "Nom, service"'
+               + ("" if C.EST_PAR_DEFAUT else f" --commune {C.CODE_INSEE}"), "```"]
     chemin = A_VALIDER / f"rapport_ecarts_{version}.md"
     chemin.write_text("\n".join(md), encoding="utf-8")
     return chemin
@@ -127,6 +130,7 @@ def main() -> int:
     ap.add_argument("--publier", action="store_true", help="publier la version traitée après validation métier")
     ap.add_argument("--valide-par", help="nom et service du référent qui valide")
     ap.add_argument("--sans-collecte", action="store_true", help="ne pas re-télécharger les données brutes")
+    ap.add_argument("--commune", help="code INSEE de la commune (Montreuil par défaut)")
     a = ap.parse_args()
 
     if a.publier:
@@ -137,7 +141,7 @@ def main() -> int:
         journal(f"Publication {'réussie' if code == 0 else f'refusée (code {code})'}, validée par {a.valide_par}")
         return code
 
-    journal("Début de campagne" + (" (sans collecte)" if a.sans_collecte else ""))
+    journal(f"Début de campagne pour {C.NOM_COMMUNE} ({C.CODE_INSEE})" + (" (sans collecte)" if a.sans_collecte else ""))
     if not a.sans_collecte:
         if etape("01_donnees/collecte.py") != 0:
             journal("Échec de la collecte : version en ligne conservée")

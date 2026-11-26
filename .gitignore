@@ -3,9 +3,10 @@
 __pycache__/
 *.pyc
 
-# Données brutes : retéléchargées à chaque campagne (seul le manifeste des sources est suivi)
-01_donnees/brutes/*
-!01_donnees/brutes/manifest.json
+# Données brutes : retéléchargées à chaque campagne (seul le manifeste des sources de chaque commune est suivi)
+01_donnees/brutes/**
+!01_donnees/brutes/*/
+!01_donnees/brutes/*/manifest.json
 
 # Copies locales des versions publiées : sur GitHub, l'historique Git en tient lieu
 archives/

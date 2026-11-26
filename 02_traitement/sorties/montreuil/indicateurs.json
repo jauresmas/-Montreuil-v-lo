@@ -1,8 +1,13 @@
 {
   "meta": {
     "commune": "Montreuil",
+    "de_commune": "de Montreuil",
     "code_insee": "93048",
+    "dossier": "montreuil",
     "departement": "Seine-Saint-Denis (93)",
+    "nb_iris": 41,
+    "nb_quartiers": 11,
+    "reseau_libre_service": "Vélib'",
     "version": "2026.11.13",
     "date_traitement": "2026-11-13T21:23:13+00:00",
     "date_donnees_osm": "2026-07-27",
@@ -55,7 +60,7 @@
     "stationnements": 358,
     "places_declarees": 3295,
     "stationnements_sans_capacite": 13,
-    "stations_velib": 28
+    "stations_libre_service": 28
   },
   "par_annee": [
     {
@@ -527,85 +532,85 @@
       "date": "2014-01-01",
       "sites": 10,
       "places": 193,
-      "stations_velib": 15
+      "stations_libre_service": 15
     },
     {
       "date": "2015-01-01",
       "sites": 12,
       "places": 193,
-      "stations_velib": 16
+      "stations_libre_service": 16
     },
     {
       "date": "2016-01-01",
       "sites": 14,
       "places": 193,
-      "stations_velib": 16
+      "stations_libre_service": 16
     },
     {
       "date": "2017-01-01",
       "sites": 18,
       "places": 209,
-      "stations_velib": 16
+      "stations_libre_service": 16
     },
     {
       "date": "2018-01-01",
       "sites": 27,
       "places": 327,
-      "stations_velib": 15
+      "stations_libre_service": 15
     },
     {
       "date": "2019-01-01",
       "sites": 37,
       "places": 381,
-      "stations_velib": 2
+      "stations_libre_service": 2
     },
     {
       "date": "2020-01-01",
       "sites": 45,
       "places": 507,
-      "stations_velib": 21
+      "stations_libre_service": 21
     },
     {
       "date": "2021-01-01",
       "sites": 269,
       "places": 2255,
-      "stations_velib": 25
+      "stations_libre_service": 25
     },
     {
       "date": "2022-01-01",
       "sites": 280,
       "places": 2351,
-      "stations_velib": 25
+      "stations_libre_service": 25
     },
     {
       "date": "2023-01-01",
       "sites": 283,
       "places": 2378,
-      "stations_velib": 25
+      "stations_libre_service": 25
     },
     {
       "date": "2024-01-01",
       "sites": 286,
       "places": 2439,
-      "stations_velib": 25
+      "stations_libre_service": 25
     },
     {
       "date": "2025-01-01",
       "sites": 324,
       "places": 2927,
-      "stations_velib": 25
+      "stations_libre_service": 25
     },
     {
       "date": "2026-01-01",
       "sites": 349,
       "places": 3163,
-      "stations_velib": 27
+      "stations_libre_service": 27
     },
     {
       "date": "2026-07-27",
       "sites": 358,
       "places": 3295,
-      "stations_velib": 28
+      "stations_libre_service": 28
     }
   ],
   "completude": {
