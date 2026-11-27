@@ -1,0 +1,65 @@
+{
+  "commune": "Montpellier",
+  "code_insee": "34172",
+  "osm_date_donnees": "2026-07-27T09:00Z",
+  "periode_historique": [
+    "2014-01-01",
+    "2026-07-27T09:00Z"
+  ],
+  "fichiers": [
+    {
+      "fichier": "commune.geojson",
+      "source": "API Découpage administratif",
+      "url": "https://geo.api.gouv.fr/communes/34172?format=geojson&geometry=contour&fields=nom,code,population,surface,codeDepartement",
+      "extrait_le": "2026-11-27T10:33:04+00:00",
+      "nb_objets": 1,
+      "octets": 16931,
+      "sha256": "ab94df803fd0d14ab815764eb23d93510d38bfe5cd40bc4778688d13fb6451db"
+    },
+    {
+      "fichier": "iris.geojson",
+      "source": "IGN, contours IRIS",
+      "url": "https://data.geopf.fr/wfs/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=STATISTICALUNITS.IRISGE%3Airis_ge&outputFormat=application%2Fjson&CQL_FILTER=code_insee%3D%2734172%27",
+      "extrait_le": "2026-11-27T10:33:05+00:00",
+      "nb_objets": 93,
+      "octets": 415854,
+      "sha256": "5f56100a729a904cceaf31083bbde6567cd44511e9e9533abb6e029badc9ef21"
+    },
+    {
+      "fichier": "osm_amenagements_historique.geojson",
+      "source": "OpenStreetMap via ohsome (elementsFullHistory)",
+      "url": "https://api.ohsome.org/v1/elementsFullHistory/geometry",
+      "extrait_le": "2026-11-27T10:33:12+00:00",
+      "nb_objets": 20157,
+      "octets": 23712116,
+      "sha256": "fc7f2c7acfece0269bd79e7bb75ba652dc376d3a55c407a285ca0d86e361707d"
+    },
+    {
+      "fichier": "osm_stationnement_historique.geojson",
+      "source": "OpenStreetMap via ohsome (elementsFullHistory)",
+      "url": "https://api.ohsome.org/v1/elementsFullHistory/geometry",
+      "extrait_le": "2026-11-27T10:33:45+00:00",
+      "nb_objets": 3897,
+      "octets": 2099826,
+      "sha256": "d3ec3b6e78b6a43d0883eefc9be1fe0e7ee997412de5e42a5160458f537ed581"
+    },
+    {
+      "fichier": "voirie_longueur_annuelle.json",
+      "source": "OpenStreetMap via ohsome",
+      "url": "https://api.ohsome.org/v1/elements/length",
+      "extrait_le": "2026-11-27T10:33:46+00:00",
+      "nb_objets": 14,
+      "octets": 1183,
+      "sha256": "9db59538724dc44c55d95c98e7a6494a86b8e36e6498a5654ec5a5fefb0514a6"
+    },
+    {
+      "fichier": "voirie_longueur_iris.json",
+      "source": "OpenStreetMap via ohsome",
+      "url": "https://api.ohsome.org/v1/elements/length/groupBy/boundary",
+      "extrait_le": "2026-11-27T10:33:49+00:00",
+      "nb_objets": 93,
+      "octets": 12905,
+      "sha256": "9678278d5716411ec4517401d3dc7dcc98c378dcfa67ed26ae0e6777bb2ea578"
+    }
+  ]
+}

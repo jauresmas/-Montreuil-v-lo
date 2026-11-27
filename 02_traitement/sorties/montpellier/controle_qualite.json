@@ -1,0 +1,112 @@
+{
+  "version": "2026.11.27",
+  "date": "2026-11-27T10:33:49+00:00",
+  "statut_global": "ALERTE",
+  "controles": [
+    {
+      "code": "C01",
+      "controle": "Complétude des sources brutes",
+      "statut": "OK",
+      "valeur": "7/7 fichiers",
+      "detail": ""
+    },
+    {
+      "code": "C02",
+      "controle": "Géométries invalides corrigées (make_valid)",
+      "statut": "INFO",
+      "valeur": 1,
+      "detail": ""
+    },
+    {
+      "code": "C03",
+      "controle": "Micro-segments < 2 m et géométries vides supprimés",
+      "statut": "INFO",
+      "valeur": 3,
+      "detail": ""
+    },
+    {
+      "code": "C04",
+      "controle": "Doublons géométriques exacts supprimés",
+      "statut": "OK",
+      "valeur": 0,
+      "detail": ""
+    },
+    {
+      "code": "C10",
+      "controle": "Doublons piste sur la route et piste dessinée à part",
+      "statut": "ALERTE",
+      "valeur": "14 voie(s) corrigée(s) (1.33 km) ; 2 tronçon(s) restant(s) à vérifier",
+      "detail": "Corrigées : Avenue Georges Frêche, Avenue de Maurin, Avenue de la Pompignane, Avenue du Pont Juvénal, Boulevard Vieussens, Boulevard d'Antigone, Boulevard de Strasbourg, Carrefour Jules Rimet, Pont Jean Zuccarelli, Route de Ganges, Rue Doria, Rue Gerhardt, Rue Rouget de Lisle, Rue Saint-Louis. Restants signalés dans le champ « controle »."
+    },
+    {
+      "code": "C05",
+      "controle": "Valeurs conformes aux listes du schéma national",
+      "statut": "OK",
+      "valeur": "0 écart(s)",
+      "detail": ""
+    },
+    {
+      "code": "C06",
+      "controle": "Champs obligatoires renseignés",
+      "statut": "OK",
+      "valeur": "0 valeur(s) manquante(s)",
+      "detail": ""
+    },
+    {
+      "code": "C07",
+      "controle": "Unicité de l'identifiant id_local",
+      "statut": "OK",
+      "valeur": "0 doublon(s)",
+      "detail": ""
+    },
+    {
+      "code": "C08",
+      "controle": "Emprise : objets dans la commune (+ tampon de limite)",
+      "statut": "OK",
+      "valeur": "0 hors emprise",
+      "detail": ""
+    },
+    {
+      "code": "C09",
+      "controle": "Cohérence : somme des bilans annuels = linéaire total",
+      "statut": "OK",
+      "valeur": "190.20 km / 190.20 km",
+      "detail": ""
+    },
+    {
+      "code": "C14",
+      "controle": "Continuité : sous-réseaux disjoints (tolérance 3 m)",
+      "statut": "INFO",
+      "valeur": "143 sous-réseaux ; le principal porte 20% du linéaire",
+      "detail": ""
+    },
+    {
+      "code": "C11",
+      "controle": "Complétude attributaire (part du linéaire renseigné)",
+      "statut": "INFO",
+      "valeur": "nom de voie 40% ; revêtement 62% ; vitesse (trafic_vit) 30% ; éclairage 32% ; largeur 9%",
+      "detail": ""
+    },
+    {
+      "code": "C15",
+      "controle": "Datation",
+      "statut": "INFO",
+      "valeur": "61% du linéaire daté (dont 4.3% par start_date) ; 39% antérieur à 2014",
+      "detail": ""
+    },
+    {
+      "code": "C12",
+      "controle": "Variation du linéaire vs version publiée",
+      "statut": "INFO",
+      "valeur": "première publication",
+      "detail": ""
+    },
+    {
+      "code": "C13",
+      "controle": "Fraîcheur des données OSM",
+      "statut": "ALERTE",
+      "valeur": "123 jours",
+      "detail": "données au 27/07/2026 (décalage de mise à jour de l'API ohsome)"
+    }
+  ]
+}

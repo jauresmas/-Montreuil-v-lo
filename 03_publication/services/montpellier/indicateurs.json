@@ -1,0 +1,1361 @@
+{
+  "meta": {
+    "commune": "Montpellier",
+    "de_commune": "de Montpellier",
+    "code_insee": "34172",
+    "dossier": "montpellier",
+    "departement": "Hérault (34)",
+    "nb_iris": 93,
+    "nb_quartiers": 93,
+    "reseau_libre_service": "Vélomagg'",
+    "version": "2026.11.27",
+    "date_traitement": "2026-11-27T10:33:49+00:00",
+    "date_donnees_osm": "2026-07-27",
+    "annee_reference": 2014,
+    "annee_partielle": 2026,
+    "statut_qc": "ALERTE",
+    "population": 310240,
+    "sources": [
+      {
+        "fichier": "commune.geojson",
+        "source": "API Découpage administratif",
+        "extrait_le": "2026-11-27T10:33:04+00:00"
+      },
+      {
+        "fichier": "iris.geojson",
+        "source": "IGN, contours IRIS",
+        "extrait_le": "2026-11-27T10:33:05+00:00"
+      },
+      {
+        "fichier": "osm_amenagements_historique.geojson",
+        "source": "OpenStreetMap via ohsome (elementsFullHistory)",
+        "extrait_le": "2026-11-27T10:33:12+00:00"
+      },
+      {
+        "fichier": "osm_stationnement_historique.geojson",
+        "source": "OpenStreetMap via ohsome (elementsFullHistory)",
+        "extrait_le": "2026-11-27T10:33:45+00:00"
+      },
+      {
+        "fichier": "voirie_longueur_annuelle.json",
+        "source": "OpenStreetMap via ohsome",
+        "extrait_le": "2026-11-27T10:33:46+00:00"
+      },
+      {
+        "fichier": "voirie_longueur_iris.json",
+        "source": "OpenStreetMap via ohsome",
+        "extrait_le": "2026-11-27T10:33:49+00:00"
+      }
+    ]
+  },
+  "totaux": {
+    "km_total": 190.2,
+    "nb_objets": 1632,
+    "km_site_propre": 136.53,
+    "part_site_propre": 0.718,
+    "km_voirie": 707.72,
+    "km_pour_100km_voirie": 26.9,
+    "sous_reseaux": 143,
+    "part_reseau_principal": 0.203,
+    "stationnements": 1612,
+    "places_declarees": 12240,
+    "stationnements_sans_capacite": 60,
+    "stations_libre_service": 58
+  },
+  "par_annee": [
+    {
+      "annee": null,
+      "libelle": "Avant 2014",
+      "km": 75.09,
+      "km_creation": 0.0,
+      "km_requalification": 0.0,
+      "km_site_propre": 58.57,
+      "km_cumule": 75.09,
+      "par_type": {
+        "Piste cyclable": 58.29,
+        "Voie verte / mixte": 0.27,
+        "Bande cyclable": 14.95,
+        "Couloir bus-vélo": 0.0,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 1.58,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2014,
+      "libelle": "2014",
+      "km": 4.39,
+      "km_creation": 3.06,
+      "km_requalification": 1.33,
+      "km_site_propre": 3.76,
+      "km_cumule": 79.48,
+      "par_type": {
+        "Piste cyclable": 3.76,
+        "Voie verte / mixte": 0.0,
+        "Bande cyclable": 0.48,
+        "Couloir bus-vélo": 0.0,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 0.15,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2015,
+      "libelle": "2015",
+      "km": 1.45,
+      "km_creation": 1.24,
+      "km_requalification": 0.21,
+      "km_site_propre": 1.29,
+      "km_cumule": 80.94,
+      "par_type": {
+        "Piste cyclable": 1.25,
+        "Voie verte / mixte": 0.04,
+        "Bande cyclable": 0.17,
+        "Couloir bus-vélo": 0.0,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 0.0,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2016,
+      "libelle": "2016",
+      "km": 2.37,
+      "km_creation": 2.36,
+      "km_requalification": 0.01,
+      "km_site_propre": 2.34,
+      "km_cumule": 83.31,
+      "par_type": {
+        "Piste cyclable": 2.28,
+        "Voie verte / mixte": 0.06,
+        "Bande cyclable": 0.03,
+        "Couloir bus-vélo": 0.0,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 0.0,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2017,
+      "libelle": "2017",
+      "km": 7.48,
+      "km_creation": 5.3,
+      "km_requalification": 2.18,
+      "km_site_propre": 6.78,
+      "km_cumule": 90.78,
+      "par_type": {
+        "Piste cyclable": 3.34,
+        "Voie verte / mixte": 3.44,
+        "Bande cyclable": 0.7,
+        "Couloir bus-vélo": 0.0,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 0.0,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2018,
+      "libelle": "2018",
+      "km": 4.66,
+      "km_creation": 3.26,
+      "km_requalification": 1.4,
+      "km_site_propre": 4.06,
+      "km_cumule": 95.44,
+      "par_type": {
+        "Piste cyclable": 2.67,
+        "Voie verte / mixte": 1.39,
+        "Bande cyclable": 0.6,
+        "Couloir bus-vélo": 0.0,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 0.0,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2019,
+      "libelle": "2019",
+      "km": 4.45,
+      "km_creation": 3.92,
+      "km_requalification": 0.54,
+      "km_site_propre": 2.44,
+      "km_cumule": 99.89,
+      "par_type": {
+        "Piste cyclable": 1.73,
+        "Voie verte / mixte": 0.71,
+        "Bande cyclable": 0.6,
+        "Couloir bus-vélo": 0.0,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 1.41,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2020,
+      "libelle": "2020",
+      "km": 16.4,
+      "km_creation": 15.32,
+      "km_requalification": 1.09,
+      "km_site_propre": 4.58,
+      "km_cumule": 116.3,
+      "par_type": {
+        "Piste cyclable": 4.58,
+        "Voie verte / mixte": 0.0,
+        "Bande cyclable": 1.4,
+        "Couloir bus-vélo": 8.52,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 1.91,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2021,
+      "libelle": "2021",
+      "km": 8.06,
+      "km_creation": 5.58,
+      "km_requalification": 2.47,
+      "km_site_propre": 3.92,
+      "km_cumule": 124.36,
+      "par_type": {
+        "Piste cyclable": 1.57,
+        "Voie verte / mixte": 2.34,
+        "Bande cyclable": 2.98,
+        "Couloir bus-vélo": 0.27,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 0.89,
+        "Autre (marquage partagé)": 0.0
+      }
+    },
+    {
+      "annee": 2022,
+      "libelle": "2022",
+      "km": 6.26,
+      "km_creation": 4.26,
+      "km_requalification": 2.0,
+      "km_site_propre": 3.14,
+      "km_cumule": 130.61,
+      "par_type": {
+        "Piste cyclable": 2.58,
+        "Voie verte / mixte": 0.57,
+        "Bande cyclable": 2.37,
+        "Couloir bus-vélo": 0.1,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 0.48,
+        "Autre (marquage partagé)": 0.16
+      }
+    },
+    {
+      "annee": 2023,
+      "libelle": "2023",
+      "km": 11.18,
+      "km_creation": 9.22,
+      "km_requalification": 1.96,
+      "km_site_propre": 6.74,
+      "km_cumule": 141.79,
+      "par_type": {
+        "Piste cyclable": 6.19,
+        "Voie verte / mixte": 0.54,
+        "Bande cyclable": 2.27,
+        "Couloir bus-vélo": 0.31,
+        "Vélorue": 0.0,
+        "Double-sens cyclable": 0.63,
+        "Autre (marquage partagé)": 1.23
+      }
+    },
+    {
+      "annee": 2024,
+      "libelle": "2024",
+      "km": 11.97,
+      "km_creation": 7.84,
+      "km_requalification": 4.13,
+      "km_site_propre": 9.04,
+      "km_cumule": 153.76,
+      "par_type": {
+        "Piste cyclable": 8.63,
+        "Voie verte / mixte": 0.42,
+        "Bande cyclable": 1.04,
+        "Couloir bus-vélo": 0.03,
+        "Vélorue": 0.57,
+        "Double-sens cyclable": 1.02,
+        "Autre (marquage partagé)": 0.25
+      }
+    },
+    {
+      "annee": 2025,
+      "libelle": "2025",
+      "km": 27.13,
+      "km_creation": 20.11,
+      "km_requalification": 7.02,
+      "km_site_propre": 24.19,
+      "km_cumule": 180.89,
+      "par_type": {
+        "Piste cyclable": 23.31,
+        "Voie verte / mixte": 0.87,
+        "Bande cyclable": 1.13,
+        "Couloir bus-vélo": 0.18,
+        "Vélorue": 0.24,
+        "Double-sens cyclable": 1.05,
+        "Autre (marquage partagé)": 0.34
+      }
+    },
+    {
+      "annee": 2026,
+      "libelle": "2026 (au 27/07)",
+      "km": 9.31,
+      "km_creation": 7.07,
+      "km_requalification": 2.24,
+      "km_site_propre": 5.69,
+      "km_cumule": 190.2,
+      "par_type": {
+        "Piste cyclable": 4.98,
+        "Voie verte / mixte": 0.71,
+        "Bande cyclable": 0.55,
+        "Couloir bus-vélo": 0.02,
+        "Vélorue": 0.18,
+        "Double-sens cyclable": 2.77,
+        "Autre (marquage partagé)": 0.09
+      }
+    }
+  ],
+  "par_type": [
+    {
+      "type": "Piste cyclable",
+      "km": 125.16
+    },
+    {
+      "type": "Voie verte / mixte",
+      "km": 11.38
+    },
+    {
+      "type": "Bande cyclable",
+      "km": 29.27
+    },
+    {
+      "type": "Couloir bus-vélo",
+      "km": 9.43
+    },
+    {
+      "type": "Vélorue",
+      "km": 0.99
+    },
+    {
+      "type": "Double-sens cyclable",
+      "km": 11.9
+    },
+    {
+      "type": "Autre (marquage partagé)",
+      "km": 2.08
+    }
+  ],
+  "par_quartier": [
+    {
+      "quartier": "Agriculture",
+      "km": 1.91,
+      "km_voirie": 5.57,
+      "km_pour_100km_voirie": 34.3,
+      "part_site_propre": 0.342,
+      "km_depuis_2020": 0.88,
+      "surface_ha": 58.0
+    },
+    {
+      "quartier": "Agropolis",
+      "km": 4.22,
+      "km_voirie": 19.8,
+      "km_pour_100km_voirie": 21.3,
+      "part_site_propre": 0.988,
+      "km_depuis_2020": 0.85,
+      "surface_ha": 228.6
+    },
+    {
+      "quartier": "Aiguelongue",
+      "km": 0.0,
+      "km_voirie": 10.64,
+      "km_pour_100km_voirie": 0.0,
+      "part_site_propre": 0,
+      "km_depuis_2020": 0.0,
+      "surface_ha": 114.6
+    },
+    {
+      "quartier": "Aiguerelles",
+      "km": 1.11,
+      "km_voirie": 8.13,
+      "km_pour_100km_voirie": 13.7,
+      "part_site_propre": 0.884,
+      "km_depuis_2020": 0.62,
+      "surface_ha": 50.6
+    },
+    {
+      "quartier": "Alco",
+      "km": 1.78,
+      "km_voirie": 6.81,
+      "km_pour_100km_voirie": 26.1,
+      "part_site_propre": 0.604,
+      "km_depuis_2020": 0.78,
+      "surface_ha": 46.3
+    },
+    {
+      "quartier": "Archives Départementales",
+      "km": 2.25,
+      "km_voirie": 5.23,
+      "km_pour_100km_voirie": 42.9,
+      "part_site_propre": 0.669,
+      "km_depuis_2020": 0.07,
+      "surface_ha": 28.4
+    },
+    {
+      "quartier": "Assas",
+      "km": 2.66,
+      "km_voirie": 6.51,
+      "km_pour_100km_voirie": 40.9,
+      "part_site_propre": 0.329,
+      "km_depuis_2020": 2.08,
+      "surface_ha": 30.8
+    },
+    {
+      "quartier": "Astruc",
+      "km": 2.01,
+      "km_voirie": 7.36,
+      "km_pour_100km_voirie": 27.3,
+      "part_site_propre": 1.0,
+      "km_depuis_2020": 1.07,
+      "surface_ha": 48.0
+    },
+    {
+      "quartier": "Avenue de Lodève",
+      "km": 2.32,
+      "km_voirie": 4.42,
+      "km_pour_100km_voirie": 52.4,
+      "part_site_propre": 0.535,
+      "km_depuis_2020": 0.82,
+      "surface_ha": 27.0
+    },
+    {
+      "quartier": "Bassin Jacques Cœur",
+      "km": 1.61,
+      "km_voirie": 3.0,
+      "km_pour_100km_voirie": 53.6,
+      "part_site_propre": 0.839,
+      "km_depuis_2020": 0.55,
+      "surface_ha": 16.3
+    },
+    {
+      "quartier": "Beaux-Arts",
+      "km": 1.02,
+      "km_voirie": 5.25,
+      "km_pour_100km_voirie": 19.4,
+      "part_site_propre": 0.654,
+      "km_depuis_2020": 0.38,
+      "surface_ha": 30.8
+    },
+    {
+      "quartier": "Bel-Air",
+      "km": 1.0,
+      "km_voirie": 1.32,
+      "km_pour_100km_voirie": 76.0,
+      "part_site_propre": 0.973,
+      "km_depuis_2020": 0.03,
+      "surface_ha": 16.2
+    },
+    {
+      "quartier": "Blayac",
+      "km": 5.78,
+      "km_voirie": 21.08,
+      "km_pour_100km_voirie": 27.4,
+      "part_site_propre": 0.832,
+      "km_depuis_2020": 2.2,
+      "surface_ha": 232.7
+    },
+    {
+      "quartier": "Bologne",
+      "km": 0.0,
+      "km_voirie": 1.56,
+      "km_pour_100km_voirie": 0.0,
+      "part_site_propre": 0,
+      "km_depuis_2020": 0.0,
+      "surface_ha": 8.7
+    },
+    {
+      "quartier": "Bouisses",
+      "km": 3.14,
+      "km_voirie": 16.71,
+      "km_pour_100km_voirie": 18.8,
+      "part_site_propre": 0.373,
+      "km_depuis_2020": 1.53,
+      "surface_ha": 72.6
+    },
+    {
+      "quartier": "Boutonnet",
+      "km": 1.58,
+      "km_voirie": 4.05,
+      "km_pour_100km_voirie": 39.0,
+      "part_site_propre": 0.336,
+      "km_depuis_2020": 1.18,
+      "surface_ha": 24.1
+    },
+    {
+      "quartier": "Casseyrols",
+      "km": 0.29,
+      "km_voirie": 3.07,
+      "km_pour_100km_voirie": 9.6,
+      "part_site_propre": 0.0,
+      "km_depuis_2020": 0.14,
+      "surface_ha": 28.7
+    },
+    {
+      "quartier": "Celleneuve",
+      "km": 1.56,
+      "km_voirie": 7.13,
+      "km_pour_100km_voirie": 21.9,
+      "part_site_propre": 0.908,
+      "km_depuis_2020": 0.14,
+      "surface_ha": 51.2
+    },
+    {
+      "quartier": "Chaptal",
+      "km": 3.63,
+      "km_voirie": 7.23,
+      "km_pour_100km_voirie": 50.2,
+      "part_site_propre": 0.422,
+      "km_depuis_2020": 3.17,
+      "surface_ha": 31.9
+    },
+    {
+      "quartier": "Charpak",
+      "km": 1.73,
+      "km_voirie": 2.9,
+      "km_pour_100km_voirie": 59.7,
+      "part_site_propre": 0.99,
+      "km_depuis_2020": 0.97,
+      "surface_ha": 21.9
+    },
+    {
+      "quartier": "Comédie",
+      "km": 1.25,
+      "km_voirie": 3.43,
+      "km_pour_100km_voirie": 36.5,
+      "part_site_propre": 0.947,
+      "km_depuis_2020": 1.19,
+      "surface_ha": 34.0
+    },
+    {
+      "quartier": "Croix d'Argent",
+      "km": 1.06,
+      "km_voirie": 11.1,
+      "km_pour_100km_voirie": 9.5,
+      "part_site_propre": 0.527,
+      "km_depuis_2020": 1.02,
+      "surface_ha": 66.5
+    },
+    {
+      "quartier": "Estanove",
+      "km": 0.36,
+      "km_voirie": 6.6,
+      "km_pour_100km_voirie": 5.5,
+      "part_site_propre": 1.0,
+      "km_depuis_2020": 0.36,
+      "surface_ha": 38.2
+    },
+    {
+      "quartier": "Eureka",
+      "km": 1.44,
+      "km_voirie": 3.68,
+      "km_pour_100km_voirie": 39.2,
+      "part_site_propre": 0.992,
+      "km_depuis_2020": 0.18,
+      "surface_ha": 43.8
+    },
+    {
+      "quartier": "Euromédecine",
+      "km": 6.7,
+      "km_voirie": 21.82,
+      "km_pour_100km_voirie": 30.7,
+      "part_site_propre": 0.384,
+      "km_depuis_2020": 3.15,
+      "surface_ha": 171.2
+    },
+    {
+      "quartier": "Fac de Pharmacie",
+      "km": 4.24,
+      "km_voirie": 6.24,
+      "km_pour_100km_voirie": 67.9,
+      "part_site_propre": 0.36,
+      "km_depuis_2020": 2.31,
+      "surface_ha": 41.6
+    },
+    {
+      "quartier": "Gambetta",
+      "km": 3.82,
+      "km_voirie": 6.46,
+      "km_pour_100km_voirie": 59.2,
+      "part_site_propre": 0.321,
+      "km_depuis_2020": 3.34,
+      "surface_ha": 26.1
+    },
+    {
+      "quartier": "Garosud",
+      "km": 4.59,
+      "km_voirie": 18.22,
+      "km_pour_100km_voirie": 25.2,
+      "part_site_propre": 0.995,
+      "km_depuis_2020": 1.12,
+      "surface_ha": 184.5
+    },
+    {
+      "quartier": "Grammont",
+      "km": 4.74,
+      "km_voirie": 29.05,
+      "km_pour_100km_voirie": 16.3,
+      "part_site_propre": 0.969,
+      "km_depuis_2020": 0.2,
+      "surface_ha": 399.6
+    },
+    {
+      "quartier": "Justice",
+      "km": 0.97,
+      "km_voirie": 7.8,
+      "km_pour_100km_voirie": 12.4,
+      "part_site_propre": 0.263,
+      "km_depuis_2020": 0.97,
+      "surface_ha": 53.8
+    },
+    {
+      "quartier": "La Colline",
+      "km": 0.87,
+      "km_voirie": 12.34,
+      "km_pour_100km_voirie": 7.1,
+      "part_site_propre": 0.722,
+      "km_depuis_2020": 0.81,
+      "surface_ha": 64.0
+    },
+    {
+      "quartier": "La Fontaine",
+      "km": 1.84,
+      "km_voirie": 5.97,
+      "km_pour_100km_voirie": 30.8,
+      "part_site_propre": 0.733,
+      "km_depuis_2020": 0.97,
+      "surface_ha": 27.2
+    },
+    {
+      "quartier": "La Guirlande",
+      "km": 0.31,
+      "km_voirie": 6.2,
+      "km_pour_100km_voirie": 4.9,
+      "part_site_propre": 0.394,
+      "km_depuis_2020": 0.31,
+      "surface_ha": 28.8
+    },
+    {
+      "quartier": "La Lironde",
+      "km": 5.23,
+      "km_voirie": 10.09,
+      "km_pour_100km_voirie": 51.9,
+      "part_site_propre": 0.785,
+      "km_depuis_2020": 2.54,
+      "surface_ha": 65.5
+    },
+    {
+      "quartier": "La Piscine",
+      "km": 4.66,
+      "km_voirie": 8.48,
+      "km_pour_100km_voirie": 55.0,
+      "part_site_propre": 0.951,
+      "km_depuis_2020": 1.97,
+      "surface_ha": 69.6
+    },
+    {
+      "quartier": "La Rauze",
+      "km": 2.14,
+      "km_voirie": 9.1,
+      "km_pour_100km_voirie": 23.5,
+      "part_site_propre": 1.0,
+      "km_depuis_2020": 0.76,
+      "surface_ha": 82.2
+    },
+    {
+      "quartier": "Lapeyronie",
+      "km": 2.16,
+      "km_voirie": 6.79,
+      "km_pour_100km_voirie": 31.7,
+      "part_site_propre": 0.571,
+      "km_depuis_2020": 1.41,
+      "surface_ha": 85.0
+    },
+    {
+      "quartier": "Le Mail Nord",
+      "km": 0.07,
+      "km_voirie": 0.65,
+      "km_pour_100km_voirie": 10.5,
+      "part_site_propre": 0.0,
+      "km_depuis_2020": 0.07,
+      "surface_ha": 5.4
+    },
+    {
+      "quartier": "Le Mail Sud",
+      "km": 0.0,
+      "km_voirie": 1.02,
+      "km_pour_100km_voirie": 0.0,
+      "part_site_propre": 0,
+      "km_depuis_2020": 0.0,
+      "surface_ha": 8.5
+    },
+    {
+      "quartier": "Le Petit Bard",
+      "km": 1.02,
+      "km_voirie": 2.88,
+      "km_pour_100km_voirie": 35.3,
+      "part_site_propre": 0.614,
+      "km_depuis_2020": 0.44,
+      "surface_ha": 17.9
+    },
+    {
+      "quartier": "Lepic",
+      "km": 3.24,
+      "km_voirie": 8.75,
+      "km_pour_100km_voirie": 37.0,
+      "part_site_propre": 0.58,
+      "km_depuis_2020": 2.9,
+      "surface_ha": 46.7
+    },
+    {
+      "quartier": "Les Aubes",
+      "km": 0.05,
+      "km_voirie": 8.67,
+      "km_pour_100km_voirie": 0.6,
+      "part_site_propre": 1.0,
+      "km_depuis_2020": 0.05,
+      "surface_ha": 54.4
+    },
+    {
+      "quartier": "Les Garrigues",
+      "km": 2.47,
+      "km_voirie": 8.91,
+      "km_pour_100km_voirie": 27.7,
+      "part_site_propre": 0.679,
+      "km_depuis_2020": 0.79,
+      "surface_ha": 38.7
+    },
+    {
+      "quartier": "Les Grèzes",
+      "km": 6.36,
+      "km_voirie": 24.21,
+      "km_pour_100km_voirie": 26.3,
+      "part_site_propre": 0.716,
+      "km_depuis_2020": 4.34,
+      "surface_ha": 242.5
+    },
+    {
+      "quartier": "Les Gémeaux",
+      "km": 2.32,
+      "km_voirie": 6.91,
+      "km_pour_100km_voirie": 33.6,
+      "part_site_propre": 0.749,
+      "km_depuis_2020": 1.51,
+      "surface_ha": 41.4
+    },
+    {
+      "quartier": "Les Tonnelles",
+      "km": 1.35,
+      "km_voirie": 5.8,
+      "km_pour_100km_voirie": 23.3,
+      "part_site_propre": 0.858,
+      "km_depuis_2020": 0.46,
+      "surface_ha": 25.4
+    },
+    {
+      "quartier": "Les Tours",
+      "km": 0.26,
+      "km_voirie": 6.07,
+      "km_pour_100km_voirie": 4.4,
+      "part_site_propre": 1.0,
+      "km_depuis_2020": 0.26,
+      "surface_ha": 70.2
+    },
+    {
+      "quartier": "Lunaret",
+      "km": 0.4,
+      "km_voirie": 2.31,
+      "km_pour_100km_voirie": 17.2,
+      "part_site_propre": 0.819,
+      "km_depuis_2020": 0.33,
+      "surface_ha": 127.1
+    },
+    {
+      "quartier": "Malbosc",
+      "km": 3.19,
+      "km_voirie": 12.72,
+      "km_pour_100km_voirie": 25.0,
+      "part_site_propre": 0.771,
+      "km_depuis_2020": 0.19,
+      "surface_ha": 94.1
+    },
+    {
+      "quartier": "Marquerose",
+      "km": 2.39,
+      "km_voirie": 15.86,
+      "km_pour_100km_voirie": 15.1,
+      "part_site_propre": 0.762,
+      "km_depuis_2020": 0.61,
+      "surface_ha": 120.6
+    },
+    {
+      "quartier": "Mas Drevon-Maurin",
+      "km": 0.74,
+      "km_voirie": 9.77,
+      "km_pour_100km_voirie": 7.6,
+      "part_site_propre": 0.032,
+      "km_depuis_2020": 0.0,
+      "surface_ha": 61.5
+    },
+    {
+      "quartier": "Millénaire",
+      "km": 3.08,
+      "km_voirie": 7.9,
+      "km_pour_100km_voirie": 39.0,
+      "part_site_propre": 0.666,
+      "km_depuis_2020": 0.04,
+      "surface_ha": 42.1
+    },
+    {
+      "quartier": "Mion",
+      "km": 2.75,
+      "km_voirie": 9.68,
+      "km_pour_100km_voirie": 28.5,
+      "part_site_propre": 0.445,
+      "km_depuis_2020": 1.16,
+      "surface_ha": 49.3
+    },
+    {
+      "quartier": "Moulin de l'Évêque",
+      "km": 1.02,
+      "km_voirie": 4.05,
+      "km_pour_100km_voirie": 25.2,
+      "part_site_propre": 1.0,
+      "km_depuis_2020": 0.11,
+      "surface_ha": 31.5
+    },
+    {
+      "quartier": "Méditerrannée",
+      "km": 1.8,
+      "km_voirie": 5.73,
+      "km_pour_100km_voirie": 31.4,
+      "part_site_propre": 0.613,
+      "km_depuis_2020": 0.98,
+      "surface_ha": 20.9
+    },
+    {
+      "quartier": "Méric",
+      "km": 3.1,
+      "km_voirie": 14.53,
+      "km_pour_100km_voirie": 21.3,
+      "part_site_propre": 0.589,
+      "km_depuis_2020": 1.48,
+      "surface_ha": 103.7
+    },
+    {
+      "quartier": "Nazareth",
+      "km": 3.8,
+      "km_voirie": 6.88,
+      "km_pour_100km_voirie": 55.3,
+      "part_site_propre": 0.693,
+      "km_depuis_2020": 1.87,
+      "surface_ha": 65.3
+    },
+    {
+      "quartier": "Nombre d'Or",
+      "km": 3.15,
+      "km_voirie": 8.22,
+      "km_pour_100km_voirie": 38.4,
+      "part_site_propre": 0.931,
+      "km_depuis_2020": 1.14,
+      "surface_ha": 47.1
+    },
+    {
+      "quartier": "Notre-Dame de la Paix",
+      "km": 1.1,
+      "km_voirie": 8.16,
+      "km_pour_100km_voirie": 13.5,
+      "part_site_propre": 0.682,
+      "km_depuis_2020": 0.75,
+      "surface_ha": 55.6
+    },
+    {
+      "quartier": "Occitanie",
+      "km": 1.98,
+      "km_voirie": 9.07,
+      "km_pour_100km_voirie": 21.9,
+      "part_site_propre": 1.0,
+      "km_depuis_2020": 0.99,
+      "surface_ha": 66.1
+    },
+    {
+      "quartier": "Odysseum",
+      "km": 9.25,
+      "km_voirie": 25.86,
+      "km_pour_100km_voirie": 35.8,
+      "part_site_propre": 0.747,
+      "km_depuis_2020": 5.69,
+      "surface_ha": 369.9
+    },
+    {
+      "quartier": "Ovalie",
+      "km": 0.13,
+      "km_voirie": 3.31,
+      "km_pour_100km_voirie": 4.0,
+      "part_site_propre": 1.0,
+      "km_depuis_2020": 0.13,
+      "surface_ha": 21.3
+    },
+    {
+      "quartier": "Oxford",
+      "km": 0.49,
+      "km_voirie": 3.31,
+      "km_pour_100km_voirie": 14.9,
+      "part_site_propre": 0.0,
+      "km_depuis_2020": 0.0,
+      "surface_ha": 18.3
+    },
+    {
+      "quartier": "Parc Montcalm",
+      "km": 0.77,
+      "km_voirie": 4.67,
+      "km_pour_100km_voirie": 16.5,
+      "part_site_propre": 0.392,
+      "km_depuis_2020": 0.71,
+      "surface_ha": 57.2
+    },
+    {
+      "quartier": "Pas du Loup",
+      "km": 0.96,
+      "km_voirie": 3.42,
+      "km_pour_100km_voirie": 28.2,
+      "part_site_propre": 0.661,
+      "km_depuis_2020": 0.43,
+      "surface_ha": 14.6
+    },
+    {
+      "quartier": "Peyrou",
+      "km": 1.03,
+      "km_voirie": 3.52,
+      "km_pour_100km_voirie": 29.3,
+      "part_site_propre": 0.72,
+      "km_depuis_2020": 0.61,
+      "surface_ha": 29.2
+    },
+    {
+      "quartier": "Pilory",
+      "km": 1.71,
+      "km_voirie": 5.98,
+      "km_pour_100km_voirie": 28.6,
+      "part_site_propre": 0.928,
+      "km_depuis_2020": 0.25,
+      "surface_ha": 33.0
+    },
+    {
+      "quartier": "Place de l'Europe",
+      "km": 1.27,
+      "km_voirie": 3.76,
+      "km_pour_100km_voirie": 33.7,
+      "part_site_propre": 0.956,
+      "km_depuis_2020": 0.51,
+      "surface_ha": 17.3
+    },
+    {
+      "quartier": "Pompignane",
+      "km": 2.6,
+      "km_voirie": 8.5,
+      "km_pour_100km_voirie": 30.5,
+      "part_site_propre": 0.828,
+      "km_depuis_2020": 0.26,
+      "surface_ha": 51.7
+    },
+    {
+      "quartier": "Pont Trinquat",
+      "km": 1.68,
+      "km_voirie": 5.73,
+      "km_pour_100km_voirie": 29.3,
+      "part_site_propre": 0.927,
+      "km_depuis_2020": 1.34,
+      "surface_ha": 27.1
+    },
+    {
+      "quartier": "Pont de Sète",
+      "km": 0.52,
+      "km_voirie": 2.36,
+      "km_pour_100km_voirie": 22.2,
+      "part_site_propre": 0.723,
+      "km_depuis_2020": 0.35,
+      "surface_ha": 16.9
+    },
+    {
+      "quartier": "Préfecture",
+      "km": 0.0,
+      "km_voirie": 0.75,
+      "km_pour_100km_voirie": 0.0,
+      "part_site_propre": 0,
+      "km_depuis_2020": 0.0,
+      "surface_ha": 14.1
+    },
+    {
+      "quartier": "Rieucoulon",
+      "km": 0.76,
+      "km_voirie": 4.85,
+      "km_pour_100km_voirie": 15.8,
+      "part_site_propre": 0.906,
+      "km_depuis_2020": 0.76,
+      "surface_ha": 68.6
+    },
+    {
+      "quartier": "Rimbaud",
+      "km": 1.15,
+      "km_voirie": 5.0,
+      "km_pour_100km_voirie": 23.0,
+      "part_site_propre": 0.826,
+      "km_depuis_2020": 0.0,
+      "surface_ha": 27.5
+    },
+    {
+      "quartier": "Rives du Lez",
+      "km": 2.1,
+      "km_voirie": 4.99,
+      "km_pour_100km_voirie": 42.0,
+      "part_site_propre": 0.851,
+      "km_depuis_2020": 0.6,
+      "surface_ha": 24.1
+    },
+    {
+      "quartier": "République",
+      "km": 3.09,
+      "km_voirie": 4.18,
+      "km_pour_100km_voirie": 74.0,
+      "part_site_propre": 1.0,
+      "km_depuis_2020": 1.41,
+      "surface_ha": 55.3
+    },
+    {
+      "quartier": "Sabathé",
+      "km": 2.32,
+      "km_voirie": 8.84,
+      "km_pour_100km_voirie": 26.2,
+      "part_site_propre": 0.453,
+      "km_depuis_2020": 0.61,
+      "surface_ha": 41.5
+    },
+    {
+      "quartier": "Saint-Denis",
+      "km": 2.19,
+      "km_voirie": 5.75,
+      "km_pour_100km_voirie": 38.0,
+      "part_site_propre": 0.866,
+      "km_depuis_2020": 0.88,
+      "surface_ha": 41.5
+    },
+    {
+      "quartier": "Saint-François",
+      "km": 2.05,
+      "km_voirie": 4.52,
+      "km_pour_100km_voirie": 45.3,
+      "part_site_propre": 0.313,
+      "km_depuis_2020": 0.8,
+      "surface_ha": 17.6
+    },
+    {
+      "quartier": "Saint-Martin",
+      "km": 2.32,
+      "km_voirie": 7.64,
+      "km_pour_100km_voirie": 30.3,
+      "part_site_propre": 0.562,
+      "km_depuis_2020": 0.93,
+      "surface_ha": 36.7
+    },
+    {
+      "quartier": "Saint-Roch",
+      "km": 0.0,
+      "km_voirie": 0.0,
+      "km_pour_100km_voirie": null,
+      "part_site_propre": 0,
+      "km_depuis_2020": 0.0,
+      "surface_ha": 7.5
+    },
+    {
+      "quartier": "Saint-Éloi",
+      "km": 1.86,
+      "km_voirie": 4.35,
+      "km_pour_100km_voirie": 42.7,
+      "part_site_propre": 0.898,
+      "km_depuis_2020": 1.47,
+      "surface_ha": 40.9
+    },
+    {
+      "quartier": "Sainte-Odile",
+      "km": 0.89,
+      "km_voirie": 3.37,
+      "km_pour_100km_voirie": 26.4,
+      "part_site_propre": 0.773,
+      "km_depuis_2020": 0.51,
+      "surface_ha": 27.4
+    },
+    {
+      "quartier": "Salaison",
+      "km": 1.7,
+      "km_voirie": 3.81,
+      "km_pour_100km_voirie": 44.6,
+      "part_site_propre": 0.852,
+      "km_depuis_2020": 0.68,
+      "surface_ha": 22.0
+    },
+    {
+      "quartier": "Soulas",
+      "km": 0.89,
+      "km_voirie": 7.5,
+      "km_pour_100km_voirie": 11.9,
+      "part_site_propre": 0.132,
+      "km_depuis_2020": 0.0,
+      "surface_ha": 42.1
+    },
+    {
+      "quartier": "Tastavin",
+      "km": 0.74,
+      "km_voirie": 3.37,
+      "km_pour_100km_voirie": 21.8,
+      "part_site_propre": 0.19,
+      "km_depuis_2020": 0.23,
+      "surface_ha": 17.2
+    },
+    {
+      "quartier": "Tournezy",
+      "km": 3.23,
+      "km_voirie": 21.41,
+      "km_pour_100km_voirie": 15.1,
+      "part_site_propre": 0.945,
+      "km_depuis_2020": 1.67,
+      "surface_ha": 155.2
+    },
+    {
+      "quartier": "Ursulines",
+      "km": 0.0,
+      "km_voirie": 0.0,
+      "km_pour_100km_voirie": null,
+      "part_site_propre": 0,
+      "km_depuis_2020": 0.0,
+      "surface_ha": 14.2
+    },
+    {
+      "quartier": "Verdanson",
+      "km": 0.92,
+      "km_voirie": 5.44,
+      "km_pour_100km_voirie": 16.8,
+      "part_site_propre": 0.9,
+      "km_depuis_2020": 0.18,
+      "surface_ha": 23.0
+    },
+    {
+      "quartier": "Vert Bois",
+      "km": 4.58,
+      "km_voirie": 5.59,
+      "km_pour_100km_voirie": 82.0,
+      "part_site_propre": 0.908,
+      "km_depuis_2020": 3.2,
+      "surface_ha": 139.6
+    },
+    {
+      "quartier": "Yves du Manoir",
+      "km": 2.88,
+      "km_voirie": 8.57,
+      "km_pour_100km_voirie": 33.6,
+      "part_site_propre": 0.938,
+      "km_depuis_2020": 2.55,
+      "surface_ha": 53.3
+    },
+    {
+      "quartier": "École Normale",
+      "km": 3.91,
+      "km_voirie": 7.5,
+      "km_pour_100km_voirie": 52.1,
+      "part_site_propre": 0.789,
+      "km_depuis_2020": 2.43,
+      "surface_ha": 44.8
+    },
+    {
+      "quartier": "École d'Architecture-Triolet",
+      "km": 0.59,
+      "km_voirie": 9.74,
+      "km_pour_100km_voirie": 6.0,
+      "part_site_propre": 1.0,
+      "km_depuis_2020": 0.58,
+      "surface_ha": 56.0
+    }
+  ],
+  "par_mandat": [
+    {
+      "id": "m2014",
+      "libelle": "Mandat 2014-2020",
+      "debut": 2014,
+      "fin": 2019,
+      "km": 24.8,
+      "km_creation": 19.14,
+      "km_requalification": 5.66,
+      "km_site_propre": 20.67
+    },
+    {
+      "id": "m2020",
+      "libelle": "Mandat 2020-2026",
+      "debut": 2020,
+      "fin": 2026,
+      "km": 90.3,
+      "km_creation": 69.39,
+      "km_requalification": 20.91,
+      "km_site_propre": 57.3
+    }
+  ],
+  "voirie_serie": [
+    {
+      "date": "2014-01-01",
+      "km": 725.02
+    },
+    {
+      "date": "2015-01-01",
+      "km": 725.84
+    },
+    {
+      "date": "2016-01-01",
+      "km": 724.23
+    },
+    {
+      "date": "2017-01-01",
+      "km": 714.26
+    },
+    {
+      "date": "2018-01-01",
+      "km": 722.0
+    },
+    {
+      "date": "2019-01-01",
+      "km": 724.08
+    },
+    {
+      "date": "2020-01-01",
+      "km": 723.56
+    },
+    {
+      "date": "2021-01-01",
+      "km": 726.05
+    },
+    {
+      "date": "2022-01-01",
+      "km": 723.87
+    },
+    {
+      "date": "2023-01-01",
+      "km": 714.42
+    },
+    {
+      "date": "2024-01-01",
+      "km": 712.39
+    },
+    {
+      "date": "2025-01-01",
+      "km": 706.54
+    },
+    {
+      "date": "2026-01-01",
+      "km": 707.79
+    },
+    {
+      "date": "2026-07-27",
+      "km": 707.72
+    }
+  ],
+  "stationnement_serie": [
+    {
+      "date": "2014-01-01",
+      "sites": 61,
+      "places": 763,
+      "stations_libre_service": 54
+    },
+    {
+      "date": "2015-01-01",
+      "sites": 71,
+      "places": 711,
+      "stations_libre_service": 53
+    },
+    {
+      "date": "2016-01-01",
+      "sites": 100,
+      "places": 869,
+      "stations_libre_service": 64
+    },
+    {
+      "date": "2017-01-01",
+      "sites": 312,
+      "places": 2362,
+      "stations_libre_service": 64
+    },
+    {
+      "date": "2018-01-01",
+      "sites": 345,
+      "places": 2498,
+      "stations_libre_service": 64
+    },
+    {
+      "date": "2019-01-01",
+      "sites": 427,
+      "places": 3072,
+      "stations_libre_service": 65
+    },
+    {
+      "date": "2020-01-01",
+      "sites": 500,
+      "places": 3541,
+      "stations_libre_service": 65
+    },
+    {
+      "date": "2021-01-01",
+      "sites": 609,
+      "places": 4118,
+      "stations_libre_service": 65
+    },
+    {
+      "date": "2022-01-01",
+      "sites": 722,
+      "places": 4960,
+      "stations_libre_service": 65
+    },
+    {
+      "date": "2023-01-01",
+      "sites": 839,
+      "places": 5776,
+      "stations_libre_service": 64
+    },
+    {
+      "date": "2024-01-01",
+      "sites": 1063,
+      "places": 7171,
+      "stations_libre_service": 62
+    },
+    {
+      "date": "2025-01-01",
+      "sites": 1175,
+      "places": 8529,
+      "stations_libre_service": 58
+    },
+    {
+      "date": "2026-01-01",
+      "sites": 1437,
+      "places": 10605,
+      "stations_libre_service": 58
+    },
+    {
+      "date": "2026-07-27",
+      "sites": 1612,
+      "places": 12240,
+      "stations_libre_service": 58
+    }
+  ],
+  "completude": {
+    "nom de voie": 0.401,
+    "revêtement": 0.625,
+    "vitesse (trafic_vit)": 0.296,
+    "éclairage": 0.324,
+    "largeur": 0.091
+  }
+}

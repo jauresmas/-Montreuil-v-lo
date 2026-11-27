@@ -1,0 +1,75 @@
+{
+  "id": "stationnement_velo",
+  "titre": "Stationnement vélo et stations Vélomagg'",
+  "type": "Couche d'entités",
+  "geometrie": "Point",
+  "nb_entites": 1671,
+  "emprise_wgs84": [
+    3.8115,
+    43.57193,
+    3.93566,
+    43.64791
+  ],
+  "systeme": "EPSG:4326",
+  "champs": [
+    {
+      "nom": "osm_id",
+      "alias": "Identifiant OSM",
+      "type": "Texte"
+    },
+    {
+      "nom": "type",
+      "alias": "Type",
+      "type": "Texte"
+    },
+    {
+      "nom": "capacite",
+      "alias": "Capacité (places)",
+      "type": "Réel"
+    },
+    {
+      "nom": "support",
+      "alias": "Type de support",
+      "type": "Texte"
+    },
+    {
+      "nom": "couvert",
+      "alias": "Couvert",
+      "type": "Booléen"
+    },
+    {
+      "nom": "nom",
+      "alias": "Nom",
+      "type": "Texte"
+    },
+    {
+      "nom": "operateur",
+      "alias": "Opérateur",
+      "type": "Texte"
+    },
+    {
+      "nom": "reseau",
+      "alias": "Réseau de vélos en libre-service",
+      "type": "Texte"
+    },
+    {
+      "nom": "annee_apparition",
+      "alias": "Année d'apparition",
+      "type": "Réel"
+    },
+    {
+      "nom": "quartier",
+      "alias": "Quartier",
+      "type": "Texte"
+    },
+    {
+      "nom": "osm_url",
+      "alias": "Fiche OpenStreetMap",
+      "type": "Texte"
+    }
+  ],
+  "version": "2026.11.27",
+  "modifie": "2026-11-27T10:39:20+00:00",
+  "url": "services/montpellier/stationnement_velo.geojson",
+  "description": "Arceaux, abris, consignes et stations Vélomagg' ouverts au public, avec capacité et année d'apparition."
+}

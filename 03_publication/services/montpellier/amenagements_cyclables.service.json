@@ -1,0 +1,215 @@
+{
+  "id": "amenagements_cyclables",
+  "titre": "Aménagements cyclables",
+  "type": "Couche d'entités",
+  "geometrie": "Ligne",
+  "nb_entites": 1632,
+  "emprise_wgs84": [
+    3.80877,
+    43.572,
+    3.93018,
+    43.65317
+  ],
+  "systeme": "EPSG:4326",
+  "champs": [
+    {
+      "nom": "id_local",
+      "alias": "Identifiant local",
+      "type": "Texte"
+    },
+    {
+      "nom": "id_osm",
+      "alias": "Identifiant OSM",
+      "type": "Texte"
+    },
+    {
+      "nom": "num_iti",
+      "alias": "N° d'itinéraire",
+      "type": "Texte"
+    },
+    {
+      "nom": "code_com_d",
+      "alias": "Commune (côté droit)",
+      "type": "Texte"
+    },
+    {
+      "nom": "ame_d",
+      "alias": "Aménagement côté droit",
+      "type": "Texte"
+    },
+    {
+      "nom": "regime_d",
+      "alias": "Régime côté droit",
+      "type": "Texte"
+    },
+    {
+      "nom": "sens_d",
+      "alias": "Sens côté droit",
+      "type": "Texte"
+    },
+    {
+      "nom": "largeur_d",
+      "alias": "Largeur côté droit (m)",
+      "type": "Réel"
+    },
+    {
+      "nom": "local_d",
+      "alias": "Localisation côté droit",
+      "type": "Texte"
+    },
+    {
+      "nom": "statut_d",
+      "alias": "Statut côté droit",
+      "type": "Texte"
+    },
+    {
+      "nom": "revet_d",
+      "alias": "Revêtement côté droit",
+      "type": "Texte"
+    },
+    {
+      "nom": "code_com_g",
+      "alias": "Commune (côté gauche)",
+      "type": "Texte"
+    },
+    {
+      "nom": "ame_g",
+      "alias": "Aménagement côté gauche",
+      "type": "Texte"
+    },
+    {
+      "nom": "regime_g",
+      "alias": "Régime côté gauche",
+      "type": "Texte"
+    },
+    {
+      "nom": "sens_g",
+      "alias": "Sens côté gauche",
+      "type": "Texte"
+    },
+    {
+      "nom": "largeur_g",
+      "alias": "Largeur côté gauche (m)",
+      "type": "Texte"
+    },
+    {
+      "nom": "local_g",
+      "alias": "Localisation côté gauche",
+      "type": "Texte"
+    },
+    {
+      "nom": "statut_g",
+      "alias": "Statut côté gauche",
+      "type": "Texte"
+    },
+    {
+      "nom": "revet_g",
+      "alias": "Revêtement côté gauche",
+      "type": "Texte"
+    },
+    {
+      "nom": "access_ame",
+      "alias": "Accessibilité",
+      "type": "Texte"
+    },
+    {
+      "nom": "date_maj",
+      "alias": "Dernière modification",
+      "type": "Texte"
+    },
+    {
+      "nom": "trafic_vit",
+      "alias": "Vitesse limite (km/h)",
+      "type": "Réel"
+    },
+    {
+      "nom": "lumiere",
+      "alias": "Éclairage",
+      "type": "Booléen"
+    },
+    {
+      "nom": "d_service",
+      "alias": "Mise en service",
+      "type": "Texte"
+    },
+    {
+      "nom": "comm",
+      "alias": "Commentaire",
+      "type": "Texte"
+    },
+    {
+      "nom": "source",
+      "alias": "Source",
+      "type": "Texte"
+    },
+    {
+      "nom": "project_c",
+      "alias": "Projection",
+      "type": "Texte"
+    },
+    {
+      "nom": "ref_geo",
+      "alias": "Référentiel géométrique",
+      "type": "Texte"
+    },
+    {
+      "nom": "nom_voie",
+      "alias": "Voie",
+      "type": "Texte"
+    },
+    {
+      "nom": "type_amenagement",
+      "alias": "Type d'aménagement",
+      "type": "Texte"
+    },
+    {
+      "nom": "site_propre",
+      "alias": "Site propre",
+      "type": "Booléen"
+    },
+    {
+      "nom": "annee_realisation",
+      "alias": "Année de réalisation",
+      "type": "Réel"
+    },
+    {
+      "nom": "periode",
+      "alias": "Période",
+      "type": "Texte"
+    },
+    {
+      "nom": "nature",
+      "alias": "Nature des travaux",
+      "type": "Texte"
+    },
+    {
+      "nom": "methode_datation",
+      "alias": "Méthode de datation",
+      "type": "Texte"
+    },
+    {
+      "nom": "quartier",
+      "alias": "Quartier",
+      "type": "Texte"
+    },
+    {
+      "nom": "longueur_m",
+      "alias": "Longueur (m)",
+      "type": "Réel"
+    },
+    {
+      "nom": "controle",
+      "alias": "Contrôle qualité",
+      "type": "Texte"
+    },
+    {
+      "nom": "osm_url",
+      "alias": "Fiche OpenStreetMap",
+      "type": "Texte"
+    }
+  ],
+  "version": "2026.11.27",
+  "modifie": "2026-11-27T10:39:20+00:00",
+  "url": "services/montpellier/amenagements_cyclables.geojson",
+  "description": "Réseau cyclable de Montpellier au format du schéma national des aménagements cyclables (Etalab), enrichi de l'année de réalisation, de la nature des travaux (création / requalification) et du quartier."
+}

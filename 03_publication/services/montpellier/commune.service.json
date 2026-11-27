@@ -1,0 +1,30 @@
+{
+  "id": "commune",
+  "titre": "Limite communale",
+  "type": "Couche d'entités",
+  "geometrie": "Polygone",
+  "nb_entites": 1,
+  "emprise_wgs84": [
+    3.80705,
+    43.56672,
+    3.94129,
+    43.65329
+  ],
+  "systeme": "EPSG:4326",
+  "champs": [
+    {
+      "nom": "nom",
+      "alias": "Nom",
+      "type": "Texte"
+    },
+    {
+      "nom": "code",
+      "alias": "Code INSEE",
+      "type": "Texte"
+    }
+  ],
+  "version": "2026.11.27",
+  "modifie": "2026-11-27T10:39:20+00:00",
+  "url": "services/montpellier/commune.geojson",
+  "description": "Contour communal (API Découpage administratif)."
+}
