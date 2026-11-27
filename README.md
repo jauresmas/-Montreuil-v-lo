@@ -78,7 +78,7 @@ au 1er janvier de chaque année (tampon de 7 m, 80 % de recouvrement) :
 
 ## Mise à jour annuelle sur GitHub
 
-Deux workflows GitHub Actions font tourner la chaîne sans poste de travail :
+Trois workflows GitHub Actions font tourner la chaîne sans poste de travail :
 
 1. **`mise-a-jour-annuelle.yml`**, le 15 janvier (ou à la demande depuis l'onglet Actions) : pour **chaque commune
    publiée**, l'une après l'autre, collecte, traitement et contrôle qualité. Si rien ne bloque, il ouvre une
@@ -89,6 +89,17 @@ Deux workflows GitHub Actions font tourner la chaîne sans poste de travail :
    plus récent que la version en ligne, c'est-à-dire celles dont la pull request de campagne vient d'être fusionnée.
    Il les republie avec le nom de la personne qui a fusionné (la fusion vaut validation métier), puis met le site
    en ligne sur GitHub Pages.
+3. **`controle-pull-request.yml`**, à chaque pull request (contributions extérieures comprises) : il vérifie ce
+   qu'un relecteur vérifierait avant de fusionner et affiche ✅ ou ❌ sur la pull request, avec le détail dans le
+   résumé du workflow :
+   - communes touchées, code ou workflows modifiés (signalés « à relire ») ;
+   - contrôle qualité non bloquant, version publiée identique au traitement, données des applications à jour ;
+   - liste des communes et comparaison à jour, crédit et licence présents ;
+   - portail, carte, tableau de bord et comparaison qui s'ouvrent sans erreur et affichent la bonne commune.
+
+   Le script de contrôle (`05_mise_a_jour/controle_pr.py`) est toujours pris dans `main` : une pull request ne
+   peut pas affaiblir son propre contrôle. Pour une première contribution d'une personne extérieure, GitHub
+   demande d'autoriser le lancement du contrôle (bouton *Approve and run* sur la pull request).
 
 Réglages à faire une fois dans le dépôt (**Settings**) :
 
@@ -152,8 +163,8 @@ config.py                    paramètres communs (commune, année de référence
                              services/comparaison.json
 04_applications/             index.html (portail), carte/, tableau-de-bord/, comparaison/, assets/,
                              data/<commune>/donnees.js, data/communes.js, data/comparaison.js
-05_mise_a_jour/              maj_annuelle.py, checklist, modèle de saisie, journaux/<commune>.md
-.github/workflows/           campagne annuelle et mise en ligne
+05_mise_a_jour/              maj_annuelle.py, controle_pr.py, checklist, modèle de saisie, journaux/<commune>.md
+.github/workflows/           campagne annuelle, mise en ligne, contrôle des pull requests
 docs/captures/               captures d'écran des applications
 ```
 

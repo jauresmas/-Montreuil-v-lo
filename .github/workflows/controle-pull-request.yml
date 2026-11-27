@@ -1,0 +1,55 @@
+# Contrôle automatique de chaque pull request (contributions extérieures comprises).
+#
+# Vérifie ce qu'un relecteur vérifierait à la main avant de fusionner : communes touchées, code modifié,
+# contrôle qualité, cohérence entre traitement et version publiée, liste des communes et comparaison à jour,
+# crédit et licence présents, applications qui s'ouvrent sans erreur. Le résultat s'affiche sur la pull request
+# (✅ ou ❌) et le détail dans le résumé du workflow.
+#
+# Le script de contrôle est pris dans main, jamais dans la pull request : une contribution ne peut pas affaiblir
+# son propre contrôle. Lancé à la main depuis l'onglet Actions, il contrôle le dernier commit de main.
+
+name: Contrôle des pull requests
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  controle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Script de contrôle (branche main)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.ref || github.ref }}
+          path: controle
+
+      - name: Contenu de la pull request (état après fusion)
+        uses: actions/checkout@v4
+        with:
+          path: pr
+          fetch-depth: 2
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installation du navigateur de test
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Fichiers modifiés
+        working-directory: pr
+        run: |
+          git diff --name-only HEAD^1 HEAD > ../fichiers.txt
+          cat ../fichiers.txt
+
+      - name: Contrôle des données et des applications
+        env:
+          PYTHONIOENCODING: utf-8
+        run: python controle/05_mise_a_jour/controle_pr.py --pr pr --fichiers fichiers.txt --applis
